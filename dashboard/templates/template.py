@@ -7,8 +7,8 @@ from typing import Callable
 import reflex as rx
 
 from .. import styles
-from ..components.navbar import navbar
-from ..components.sidebar import sidebar
+from ..components.ui.template.navbar import navbar
+from ..components.ui.template.sidebar import sidebar
 
 # Meta tags for the app.
 default_meta = [
@@ -86,25 +86,32 @@ def template(
         all_meta = [*default_meta, *(meta or [])]
 
         def templated_page():
-            return rx.flex(
-                navbar(),
-                sidebar(),
-               rx.box(
-                    page_content(),
-                    class_name="w-full p-4 md:p-6 lg:p-8 min-h-screen",
+            return rx.box(
+                rx.box(
+                    navbar(),
+                    class_name="sticky top-0 z-50"
                 ),
-                flex_direction=[
-                    "column",
-                    "column",
-                    "column",
-                    "column",
-                    "column",
-                    "row",
-                ],
-                width="100%",
-                margin="auto",
-                position="relative",
-                class_name="bg-background"
+                rx.flex(
+                    sidebar(),
+                    rx.box(
+                        rx.box(
+                            class_name="absolute inset-0 bg-gradient-to-br from-background/90 via-[#0f0f0f]/80 to-[#1a1a1a]/90 dark:from-background/90 dark:via-[#0a0a0a]/80 dark:to-[#161616]/90 backdrop-blur-sm z-0"
+                        ),
+                        rx.box(
+                            class_name="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent dark:from-primary/10 z-0"
+                        ),
+                        rx.box(
+                            class_name="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:20px_20px] dark:opacity-30 z-0"
+                        ),
+                        rx.box(
+                            page_content(),
+                            class_name="relative z-10 w-full p-4 md:p-6 lg:p-8",
+                        ),
+                        class_name="relative flex-1 min-h-[calc(100vh-64px)] bg-gradient-to-br from-background via-[#0f0f0f] to-[#1a1a1a] dark:from-background dark:via-[#0a0a0a] dark:to-[#161616] transition-all duration-500",
+                    ),
+                    class_name="flex flex-col md:flex-row"
+                ),
+                class_name="w-full min-h-screen"
             )
 
         @rx.page(
