@@ -14,138 +14,126 @@ def bot_management() -> rx.Component:
         The UI for the bot management page.
     """
     return rx.vstack(
-        rx.heading("Gerenciamento do Bot Telegram", size="5"),
-        rx.text("Monitoramento em tempo real do bot e análise de uso", size="3", color="gray"),
+        rx.heading("Gerenciamento do Bot Telegram", class_name="text-2xl font-bold text-foreground"),
+        rx.text("Monitoramento em tempo real do bot e análise de uso", class_name="text-base text-muted-foreground"),
         
         # Bot status overview
         rx.grid(
             rx.card(
                 rx.vstack(
                     rx.hstack(
-                        rx.icon("circle", size=16, color="green"),
-                        rx.text("Status", size="3", color="gray"),
-                        spacing="2",
+                        rx.icon("circle", size=16, class_name="text-green-500"),
+                        rx.text("Status", class_name="text-sm text-muted-foreground"),
+                        class_name="items-center space-x-2",
                     ),
-                    rx.text("Online", size="4", weight="bold", color="green"),
-                    spacing="1",
+                    rx.text("Online", class_name="text-lg font-bold text-green-500"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
             rx.card(
                 rx.vstack(
-                    rx.text("Usuários Ativos", size="3", color="gray"),
-                    rx.text("342", size="4", weight="bold"),
-                    spacing="1",
+                    rx.text("Usuários Ativos", class_name="text-sm text-muted-foreground"),
+                    rx.text("342", class_name="text-lg font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
             rx.card(
                 rx.vstack(
-                    rx.text("Mensagens/Hoje", size="3", color="gray"),
-                    rx.text("1.2K", size="4", weight="bold"),
-                    spacing="1",
+                    rx.text("Mensagens/Hoje", class_name="text-sm text-muted-foreground"),
+                    rx.text("1.2K", class_name="text-lg font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
             rx.card(
                 rx.vstack(
-                    rx.text("Tempo Resposta", size="3", color="gray"),
-                    rx.text("1.2s", size="4", weight="bold"),
-                    spacing="1",
+                    rx.text("Tempo Resposta", class_name="text-sm text-muted-foreground"),
+                    rx.text("1.2s", class_name="text-lg font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
-            gap="4",
-            grid_template_columns=["repeat(2, 1fr)", "repeat(4, 1fr)"],
-            width="100%",
+            class_name="grid grid-cols-2 md:grid-cols-4 gap-4 w-full",
         ),
         
         # Control buttons
         rx.hstack(
             rx.button(
                 "Reiniciar Bot",
-                size="3",
-                color_scheme="yellow",
+                class_name="bg-yellow-500 text-yellow-900 hover:bg-yellow-600 px-4 py-2 rounded-md text-sm font-medium",
                 on_click=GiftCardState.restart_bot,
             ),
             rx.button(
                 "Limpar Logs",
-                size="3",
-                color_scheme="red",
+                class_name="bg-red-500 text-red-900 hover:bg-red-600 px-4 py-2 rounded-md text-sm font-medium",
                 on_click=GiftCardState.clear_logs,
             ),
             rx.button(
                 "Exportar Logs",
-                size="3",
-                color_scheme="blue",
+                class_name="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium",
                 on_click=rx.download(
                     data="bot_logs",
                     filename="logs_telegram_bot.json"
                 ),
             ),
-            spacing="4",
-            align="center",
+            class_name="items-center space-x-4",
         ),
         
         # Bot metrics charts
         rx.card(
             rx.vstack(
-                rx.text("Métricas do Bot", size="4", weight="medium"),
-                rx.text("Gráficos de uso e performance", size="2", color="gray"),
-                spacing="2",
+                rx.text("Métricas do Bot", class_name="text-lg font-medium text-foreground"),
+                rx.text("Gráficos de uso e performance", class_name="text-sm text-muted-foreground"),
+                class_name="space-y-2",
             ),
-            padding="4",
-            width="100%",
+            class_name="p-4 w-full",
         ),
         
         # Bot commands usage
         rx.card(
             rx.vstack(
-                rx.text("Comandos Mais Usados", size="4", weight="medium"),
+                rx.text("Comandos Mais Usados", class_name="text-lg font-medium text-foreground"),
                 rx.vstack(
                     rx.hstack(
-                        rx.text("/start", size="3"),
+                        rx.text("/start", class_name="text-sm text-foreground"),
                         rx.spacer(),
-                        rx.text("245 vezes", size="2", color="gray"),
-                        width="100%",
+                        rx.text("245 vezes", class_name="text-xs text-muted-foreground"),
+                        class_name="w-full",
                     ),
                     rx.hstack(
-                        rx.text("/comprar", size="3"),
+                        rx.text("/comprar", class_name="text-sm text-foreground"),
                         rx.spacer(),
-                        rx.text("189 vezes", size="2", color="gray"),
-                        width="100%",
+                        rx.text("189 vezes", class_name="text-xs text-muted-foreground"),
+                        class_name="w-full",
                     ),
                     rx.hstack(
-                        rx.text("/saldo", size="3"),
+                        rx.text("/saldo", class_name="text-sm text-foreground"),
                         rx.spacer(),
-                        rx.text("156 vezes", size="2", color="gray"),
-                        width="100%",
+                        rx.text("156 vezes", class_name="text-xs text-muted-foreground"),
+                        class_name="w-full",
                     ),
-                    spacing="2",
+                    class_name="space-y-2",
                 ),
-                spacing="3",
+                class_name="space-y-3",
             ),
-            padding="4",
-            width="100%",
+            class_name="p-4 w-full",
         ),
         
         # Bot logs
         rx.card(
             rx.vstack(
-                rx.text("Logs do Bot", size="4", weight="medium"),
-                rx.text("Últimas atividades do bot", size="2", color="gray"),
+                rx.text("Logs do Bot", class_name="text-lg font-medium text-foreground"),
+                rx.text("Últimas atividades do bot", class_name="text-sm text-muted-foreground"),
                 rx.text(
                     "2024-01-15 10:30:45 - Bot iniciado\n2024-01-15 10:31:12 - Novo usuário: @usuario123\n2024-01-15 10:32:01 - Compra realizada: R$ 50.00\n2024-01-15 10:33:28 - PIX confirmado",
-                    font_family="monospace",
-                    size="2",
-                    white_space="pre-wrap",
+                    class_name="font-mono text-xs text-foreground whitespace-pre-wrap",
                 ),
-                spacing="2",
+                class_name="space-y-2",
             ),
-            padding="4",
-            width="100%",
+            class_name="p-4 w-full",
         ),
         
-        spacing="6",
-        width="100%",
+        class_name="space-y-6 w-full",
     )

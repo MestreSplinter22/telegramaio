@@ -14,67 +14,62 @@ def giftcards() -> rx.Component:
         The UI for the gift cards page.
     """
     return rx.vstack(
-        rx.heading("Catálogo de Gift Cards", size="5"),
-        rx.text("Gerencie produtos, estoque e margens de lucro", size="3", color="gray"),
+        rx.heading("Catálogo de Gift Cards", class_name="text-2xl font-bold text-foreground"),
+        rx.text("Gerencie produtos, estoque e margens de lucro", class_name="text-base text-muted-foreground"),
         
         # Action buttons
         rx.hstack(
             rx.button(
                 "Adicionar Novo Produto",
-                size="3",
-                color_scheme="green",
+                class_name="bg-green-500 text-green-900 hover:bg-green-600 px-4 py-2 rounded-md text-sm font-medium",
                 on_click=GiftCardState.set_show_add_giftcard_modal(True),
             ),
             rx.button(
                 "Exportar Relatório",
-                size="3",
-                color_scheme="blue",
+                class_name="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium",
                 on_click=rx.download(
                     data="giftcards_report",
                     filename="catalogo_giftcards.csv"
                 ),
             ),
-            spacing="4",
-            align="center",
+            class_name="items-center space-x-4",
         ),
         
         # Summary statistics
         rx.grid(
             rx.card(
                 rx.vstack(
-                    rx.text("Total de Produtos", size="3", color="gray"),
-                    rx.text(GiftCardState.gift_cards.length(), size="5", weight="bold"),
-                    spacing="1",
+                    rx.text("Total de Produtos", class_name="text-sm text-muted-foreground"),
+                    rx.text(GiftCardState.gift_cards.length(), class_name="text-xl font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
             rx.card(
                 rx.vstack(
-                    rx.text("Vendas Totais", size="3", color="gray"),
-                    rx.text("156", size="5", weight="bold"),
-                    spacing="1",
+                    rx.text("Vendas Totais", class_name="text-sm text-muted-foreground"),
+                    rx.text("156", class_name="text-xl font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
             rx.card(
                 rx.vstack(
-                    rx.text("Lucro Estimado", size="3", color="gray"),
-                    rx.text("R$ 12,450.00", size="5", weight="bold"),
-                    spacing="1",
+                    rx.text("Lucro Estimado", class_name="text-sm text-muted-foreground"),
+                    rx.text("R$ 12,450.00", class_name="text-xl font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
             rx.card(
                 rx.vstack(
-                    rx.text("Estoque Total", size="3", color="gray"),
-                    rx.text("1,247", size="5", weight="bold"),
-                    spacing="1",
+                    rx.text("Estoque Total", class_name="text-sm text-muted-foreground"),
+                    rx.text("1,247", class_name="text-xl font-bold text-foreground"),
+                    class_name="space-y-1",
                 ),
-                padding="4",
+                class_name="p-4",
             ),
-            gap="4",
-            grid_template_columns=["repeat(2, 1fr)", "repeat(4, 1fr)"],
-            width="100%",
+            class_name="grid grid-cols-2 md:grid-cols-4 gap-4 w-full",
         ),
         
         # Gift cards grid
@@ -83,24 +78,20 @@ def giftcards() -> rx.Component:
                         GiftCardState.gift_cards,
                         lambda giftcard: rx.card(
                             rx.vstack(
-                                rx.text(giftcard.name, weight="medium"),
-                                rx.text(giftcard.category, color="gray"),
-                                rx.text(f"R$ {giftcard.selling_price:.2f}", weight="bold"),
-                                rx.text(f"Estoque: {giftcard.stock}", size="2"),
-                                rx.text(f"Vendas: {giftcard.sold_count}", size="2"),
-                                spacing="2",
-                                align_items="start",
+                                rx.text(giftcard.name, class_name="font-medium text-foreground"),
+                                rx.text(giftcard.category, class_name="text-muted-foreground"),
+                                rx.text(f"R$ {giftcard.selling_price:.2f}", class_name="font-bold text-foreground"),
+                                rx.text(f"Estoque: {giftcard.stock}", class_name="text-xs text-muted-foreground"),
+                                rx.text(f"Vendas: {giftcard.sold_count}", class_name="text-xs text-muted-foreground"),
+                                class_name="space-y-2 items-start",
                             ),
-                            width="100%",
+                            class_name="w-full",
                         )
                     ),
-                    columns="3",
-                    spacing="4",
-                    width="100%",
+                    class_name="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full",
                 ),
         
 
         
-        spacing="6",
-        width="100%",
+        class_name="space-y-6 w-full",
     )

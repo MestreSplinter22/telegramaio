@@ -15,43 +15,38 @@ def users() -> rx.Component:
         The UI for the users page.
     """
     return rx.vstack(
-        rx.heading("Gestão de Usuários", size="5"),
-        rx.text("Gerencie usuários do bot Telegram e suas carteiras", size="3", color="gray"),
+        rx.heading("Gestão de Usuários", class_name="text-2xl font-bold text-foreground"),
+        rx.text("Gerencie usuários do bot Telegram e suas carteiras", class_name="text-base text-muted-foreground"),
         
         # Filters and search
         rx.hstack(
             rx.input(
-                rx.input.slot(rx.icon("search"), padding_left="0"),
+                rx.input.slot(rx.icon("search"), class_name="pl-0"),
                 placeholder="Buscar por nome, username ou email...",
-                size="3",
-                width="300px",
+                class_name="w-72 bg-background border border-input rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring",
                 on_change=GiftCardState.set_search_query,
                 value=GiftCardState.search_query,
             ),
             rx.select(
                 ["all", "active", "suspended", "banned"],
                 placeholder="Status",
-                size="3",
-                width="150px",
+                class_name="w-36 bg-background border border-input rounded-md px-3 py-2 text-sm",
                 on_change=GiftCardState.set_status_filter,
                 value=GiftCardState.status_filter,
             ),
             rx.button(
                 "Exportar CSV",
-                size="3",
-                color_scheme="blue",
+                class_name="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium",
                 on_click=rx.download(
                     data="users_data",
                     filename="usuarios_telegram.csv"
                 ),
             ),
-            spacing="4",
-            align="center",
+            class_name="items-center space-x-4",
         ),
         
         # Users table
         users_table(),
         
-        spacing="6",
-        width="100%",
+        class_name="space-y-6 w-full",
     )
