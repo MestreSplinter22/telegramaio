@@ -3,7 +3,8 @@
 import reflex as rx
 from ..backend.giftcard_state import GiftCardState
 from ..templates import template
-from ..views.transactions_table import transactions_table
+from ..views.transactions.transactions_table import transactions_table
+from ..views.transactions.transactions_summary import transactions_summary
 
 
 
@@ -60,33 +61,7 @@ def transactions() -> rx.Component:
         ),
         
         # Summary cards
-        rx.grid(
-            rx.card(
-                rx.vstack(
-                    rx.text("Total de Transações", class_name="text-sm text-muted-foreground"),
-                    rx.text(GiftCardState.total_transactions, class_name="text-xl font-bold text-foreground"),
-                    class_name="space-y-1",
-                ),
-                class_name="p-4",
-            ),
-            rx.card(
-                rx.vstack(
-                    rx.text("Receita Total", class_name="text-sm text-muted-foreground"),
-                    rx.text(f"R$ {GiftCardState.total_revenue:.2f}", class_name="text-xl font-bold text-foreground"),
-                    class_name="space-y-1",
-                ),
-                class_name="p-4",
-            ),
-            rx.card(
-                rx.vstack(
-                    rx.text("PIX Processados", class_name="text-sm text-muted-foreground"),
-                    rx.text("247", class_name="text-xl font-bold text-foreground"),
-                    class_name="space-y-1",
-                ),
-                class_name="p-4",
-            ),
-            class_name="grid grid-cols-1 md:grid-cols-3 gap-4 w-full",
-        ),
+        transactions_summary(),
         
         # Transactions table
         transactions_table(),

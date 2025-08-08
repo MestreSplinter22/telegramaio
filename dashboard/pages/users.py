@@ -3,7 +3,7 @@
 import reflex as rx
 from ..backend.giftcard_state import GiftCardState, User
 from ..templates import template
-from ..views.users_table import users_table
+from ..views.users.users_table import users_table
 
 
 
