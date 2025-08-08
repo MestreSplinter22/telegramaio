@@ -4,9 +4,9 @@ from dashboard import styles
 
 
 def card(*children, **props):
+    """Card component with Tailwind CSS styling using theme variables."""
     return rx.card(
         *children,
-        box_shadow=styles.box_shadow_style,
-        size="3",
+        class_name="bg-card text-card-foreground border border-border rounded-lg shadow-lg",
         **props,
     )

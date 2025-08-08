@@ -8,6 +8,13 @@ from .pages import *
 
 # Create the app.
 app = rx.App(
-    style=styles.base_style,
-    stylesheets=styles.base_stylesheets,
+    theme=rx.theme(appearance="light"),
+    stylesheets=["/style.css"],
+)
+app.add_page(
+    rx.center(
+        rx.text("Tailwind & Reflex!"),
+        class_name="bg-background w-full h-[100vh]",
+    ),
+    "/teste",
 )
