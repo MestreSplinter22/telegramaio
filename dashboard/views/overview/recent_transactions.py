@@ -1,7 +1,7 @@
 """Recent transactions component for overview page."""
 
 import reflex as rx
-from ..backend.giftcard_state import GiftCardState
+from ...backend.giftcard_state import GiftCardState
 
 
 def transaction_status_badge(status: str) -> rx.Component:

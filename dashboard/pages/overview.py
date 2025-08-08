@@ -5,10 +5,10 @@ from ..components.card import card
 from ..components.notification import notification
 from ..backend.giftcard_state import GiftCardState
 from ..templates import template
-from ..views.dashboard_stats import dashboard_stats
-from ..views.revenue_chart import revenue_chart
-from ..views.recent_transactions import recent_transactions
-from ..views.bot_status import bot_status_card
+from ..views.overview.dashboard_stats import dashboard_stats
+from ..views.overview.revenue_chart import revenue_chart
+from ..views.overview.recent_transactions import recent_transactions
+from ..views.overview.bot_status import bot_status_card
 
 
 @template(route="/", title="Overview", on_load=GiftCardState.load_sample_data)

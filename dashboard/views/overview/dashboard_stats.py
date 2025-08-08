@@ -1,31 +1,29 @@
 """Dashboard stats cards component."""
 
 import reflex as rx
-from ..backend.giftcard_state import GiftCardState
+from ...backend.giftcard_state import GiftCardState
+from ...components.card import card
 
 
 def stat_card(icon: str, title: str, value: str, subtitle: str, color: str = "blue") -> rx.Component:
     """Individual stat card component."""
-    return rx.card(
+    return card(
         rx.vstack(
             rx.hstack(
-                rx.icon(icon, size=24, color=rx.color(color, 11)),
+                rx.icon(icon, class_name=f"h-6 w-6 text-{color}-500"),
                 rx.spacer(),
-                rx.icon("trending-up", size=16, color=rx.color("green", 9)),
-                width="100%",
+                rx.icon("trending-up", class_name="h-4 w-4 text-green-500"),
+                class_name="w-full",
             ),
             rx.vstack(
-                rx.text(value, size="6", weight="bold"),
-                rx.text(title, size="3", color="gray"),
-                rx.text(subtitle, size="2", color="gray"),
-                spacing="1",
-                align_items="start",
+                rx.text(value, class_name="text-2xl font-bold text-foreground"),
+                rx.text(title, class_name="text-sm text-muted-foreground"),
+                rx.text(subtitle, class_name="text-xs text-muted-foreground"),
+                class_name="space-y-1 items-start",
             ),
-            spacing="3",
-            align_items="start",
+            class_name="space-y-3 items-start",
         ),
-        padding="6",
-        width="100%",
+        class_name="w-full p-6",
     )
 
 
@@ -74,14 +72,5 @@ def dashboard_stats() -> rx.Component:
             "Uptime - 2ms resposta",
             "teal"
         ),
-        gap="4",
-        grid_template_columns=[
-            "1fr",
-            "repeat(2, 1fr)",
-            "repeat(3, 1fr)",
-            "repeat(3, 1fr)",
-            "repeat(3, 1fr)",
-            "repeat(6, 1fr)",
-        ],
-        width="100%",
+        class_name="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 w-full",
     )

@@ -8,7 +8,7 @@ from .pages import *
 
 # Create the app.
 app = rx.App(
-    theme=rx.theme(appearance="light"),
+    theme=rx.theme(appearance="dark"),
     stylesheets=["/style.css"],
 )
 app.add_page(

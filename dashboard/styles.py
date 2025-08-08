@@ -1,94 +1,63 @@
-"""Styles for the app."""
-
+"""Styles for the app using Tailwind CSS classes."""
 import reflex as rx
 
-border_radius = "var(--radius-2)"
-border = f"1px solid {rx.color('gray', 5)}"
-text_color = rx.color("gray", 11)
-gray_color = rx.color("gray", 11)
-gray_bg_color = rx.color("gray", 3)
-accent_text_color = rx.color("accent", 10)
-accent_color = rx.color("accent", 1)
-accent_bg_color = rx.color("accent", 3)
-hover_accent_color = {"_hover": {"color": accent_text_color}}
-hover_accent_bg = {"_hover": {"background_color": accent_color}}
-content_width_vw = "90vw"
-sidebar_width = "32em"
-sidebar_content_width = "16em"
-max_width = "1480px"
-color_box_size = ["2.25rem", "2.25rem", "2.5rem"]
+# Tailwind CSS utility classes for consistent styling
+border_radius = "rounded-lg"
+border = "border border-border"
+text_color = "text-foreground"
+gray_color = "text-muted-foreground"
+gray_bg_color = "bg-muted"
+accent_text_color = "text-accent"
+accent_color = "bg-accent"
+accent_bg_color = "bg-accent/10"
+hover_accent_color = "hover:text-accent"
+hover_accent_bg = "hover:bg-accent/20"
+content_width_vw = "w-[90vw]"
+sidebar_width = "w-[32em]"
+sidebar_content_width = "w-[16em]"
+max_width = "max-w-[1480px]"
+color_box_size = ["w-[2.25rem] h-[2.25rem]", "w-[2.25rem] h-[2.25rem]", "w-[2.5rem] h-[2.5rem]"]
 
-
+# Template styling using Tailwind classes
 template_page_style = {
-    "padding_top": ["1em", "1em", "2em"],
-    "padding_x": ["auto", "auto", "2em"],
+    "class_name": "pt-4 md:pt-8 px-auto md:px-8",
 }
 
 template_content_style = {
-    "padding": "1em",
-    "margin_bottom": "2em",
-    "min_height": "90vh",
+    "class_name": "p-4 mb-8 min-h-[90vh]",
 }
 
 link_style = {
-    "color": accent_text_color,
-    "text_decoration": "none",
-    **hover_accent_color,
+    "class_name": "text-foreground no-underline hover:text-accent",
 }
 
 overlapping_button_style = {
-    "background_color": "white",
-    "border_radius": border_radius,
+    "class_name": "bg-white rounded-lg",
 }
 
 markdown_style = {
-    "code": lambda text: rx.code(text, color_scheme="gray"),
-    "codeblock": lambda text, **props: rx.code_block(text, **props, margin_y="1em"),
+    "code": lambda text: rx.code(text, class_name="text-sm"),
+    "codeblock": lambda text, **props: rx.code_block(text, **props, class_name="my-4"),
     "a": lambda text, **props: rx.link(
         text,
         **props,
-        font_weight="bold",
-        text_decoration="underline",
-        text_decoration_color=accent_text_color,
+        class_name="font-bold underline decoration-accent hover:decoration-accent/80",
     ),
 }
 
 notification_badge_style = {
-    "width": "1.25rem",
-    "height": "1.25rem",
-    "display": "flex",
-    "align_items": "center",
-    "justify_content": "center",
-    "position": "absolute",
-    "right": "-0.35rem",
-    "top": "-0.35rem",
+    "class_name": "w-5 h-5 flex items-center justify-center absolute -right-1 -top-1",
 }
 
 ghost_input_style = {
-    "--text-field-selection-color": "",
-    "--text-field-focus-color": "transparent",
-    "--text-field-border-width": "1px",
-    "background_clip": "content-box",
-    "background_color": "transparent",
-    "box_shadow": "inset 0 0 0 var(--text-field-border-width) transparent",
-    "color": "",
+    "class_name": "bg-transparent border-transparent focus:border-transparent focus:ring-0",
 }
 
-box_shadow_style = "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)"
+box_shadow_style = "shadow-md"
 
 color_picker_style = {
-    "border_radius": "max(var(--radius-3), var(--radius-full))",
-    "box_shadow": box_shadow_style,
-    "cursor": "pointer",
-    "display": "flex",
-    "align_items": "center",
-    "justify_content": "center",
-    "transition": "transform 0.15s ease-in-out",
-    "_active": {
-        "transform": "translateY(2px) scale(0.95)",
-    },
+    "class_name": "rounded-full shadow-md cursor-pointer flex items-center justify-center transition-transform active:scale-95 active:translate-y-0.5",
 }
-
 
 base_stylesheets = [
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
@@ -96,5 +65,5 @@ base_stylesheets = [
 ]
 
 base_style = {
-    "font_family": "Inter",
+    "class_name": "font-sans",
 }

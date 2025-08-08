@@ -89,22 +89,9 @@ def template(
             return rx.flex(
                 navbar(),
                 sidebar(),
-                rx.flex(
-                    rx.vstack(
-                        page_content(),
-                        width="100%",
-                        **styles.template_content_style,
-                    ),
-                    width="100%",
-                    **styles.template_page_style,
-                    max_width=[
-                        "100%",
-                        "100%",
-                        "100%",
-                        "100%",
-                        "100%",
-                        styles.max_width,
-                    ],
+               rx.box(
+                    page_content(),
+                    class_name="w-full p-4 md:p-6 lg:p-8 min-h-screen",
                 ),
                 flex_direction=[
                     "column",
@@ -117,6 +104,7 @@ def template(
                 width="100%",
                 margin="auto",
                 position="relative",
+                class_name="bg-background"
             )
 
         @rx.page(
