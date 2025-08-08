@@ -3,25 +3,21 @@ from reflex.components.radix.themes.base import (
     LiteralAccentColor,
 )
 
-from dashboard import styles
-
 
 def notification(icon: str, color: LiteralAccentColor, count: int) -> rx.Component:
     return rx.box(
         rx.icon_button(
             rx.icon(icon),
-            padding="0.5rem",
-            radius="full",
+            class_name="p-2 rounded-full bg-muted text-muted-foreground",
             variant="soft",
             color_scheme=color,
             size="3",
         ),
         rx.badge(
             rx.text(count, size="1"),
-            radius="full",
+            class_name="absolute -top-1 -right-1 rounded-full bg-destructive text-destructive-foreground",
             variant="solid",
             color_scheme=color,
-            style=styles.notification_badge_style,
         ),
-        position="relative",
+        class_name="relative",
     )

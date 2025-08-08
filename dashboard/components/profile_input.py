@@ -11,20 +11,16 @@ def profile_input(
 ) -> rx.Component:
     return rx.vstack(
         rx.hstack(
-            rx.icon(icon, size=16, stroke_width=1.5),
-            rx.text(label),
-            width="100%",
-            align="center",
-            spacing="2",
+            rx.icon(icon, size=16, stroke_width=1.5, class_name="text-muted-foreground"),
+            rx.text(label, class_name="text-sm font-medium text-foreground"),
+            class_name="w-full items-center space-x-2",
         ),
         rx.input(
             placeholder=placeholder,
             type=type,
             default_value=default_value,
-            width="100%",
+            class_name="w-full bg-background border border-input rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
             name=name,
         ),
-        direction="column",
-        spacing="1",
-        width="100%",
+        class_name="flex flex-col space-y-1 w-full",
     )

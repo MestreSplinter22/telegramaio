@@ -3,20 +3,17 @@ import reflex as rx
 
 def _badge(status: str):
     badge_mapping = {
-        "Completed": ("check", "Completed", "green"),
-        "Pending": ("loader", "Pending", "yellow"),
-        "Canceled": ("ban", "Canceled", "red"),
+        "Completed": ("check", "Completed", "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800"),
+        "Pending": ("loader", "Pending", "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800"),
+        "Canceled": ("ban", "Canceled", "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800"),
     }
-    icon, text, color_scheme = badge_mapping.get(
-        status, ("loader", "Pending", "yellow")
+    icon, text, class_name = badge_mapping.get(
+        status, ("loader", "Pending", "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800")
     )
     return rx.badge(
-        rx.icon(icon, size=16),
+        rx.icon(icon, size=16, class_name="mr-1"),
         text,
-        color_scheme=color_scheme,
-        radius="large",
-        variant="surface",
-        size="2",
+        class_name=f"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border {class_name}",
     )
 
 

@@ -2,8 +2,6 @@
 
 import reflex as rx
 
-from .. import styles
-
 
 def sidebar_header() -> rx.Component:
     """Sidebar header.
@@ -21,8 +19,7 @@ def sidebar_header() -> rx.Component:
         rx.spacer(),
         align="center",
         width="100%",
-        padding="0.35em",
-        margin_bottom="1em",
+        class_name="p-1.5 mb-4",
     )
 
 
@@ -37,21 +34,21 @@ def sidebar_footer() -> rx.Component:
         rx.link(
             rx.text("Docs", size="3"),
             href="https://reflex.dev/docs/getting-started/introduction/",
-            color_scheme="gray",
+            class_name="text-muted-foreground hover:text-foreground",
             underline="none",
         ),
         rx.link(
             rx.text("Blog", size="3"),
             href="https://reflex.dev/blog/",
-            color_scheme="gray",
+            class_name="text-muted-foreground hover:text-foreground",
             underline="none",
         ),
         rx.spacer(),
-        rx.color_mode.button(style={"opacity": "0.8", "scale": "0.95"}),
+        rx.color_mode.button(class_name="opacity-80 scale-95"),
         justify="start",
         align="center",
         width="100%",
-        padding="0.35em",
+        class_name="p-1.5",
     )
 
 
@@ -88,36 +85,30 @@ def sidebar_item(text: str, url: str) -> rx.Component:
                 sidebar_item_icon("layout-dashboard"),
             ),
             rx.text(text, size="3", weight="regular"),
-            color=rx.cond(
+            class_name=rx.cond(
                 active,
-                styles.accent_text_color,
-                styles.text_color,
+                "text-primary",
+                "text-foreground",
             ),
-            style={
-                "_hover": {
-                    "background_color": rx.cond(
-                        active,
-                        styles.accent_bg_color,
-                        styles.gray_bg_color,
-                    ),
-                    "color": rx.cond(
-                        active,
-                        styles.accent_text_color,
-                        styles.text_color,
-                    ),
-                    "opacity": "1",
-                },
-                "opacity": rx.cond(
-                    active,
-                    "1",
-                    "0.95",
-                ),
-            },
+            opacity=rx.cond(
+                active,
+                "1",
+                "0.95",
+            ),
             align="center",
-            border_radius=styles.border_radius,
+            border_radius="md",
             width="100%",
             spacing="2",
             padding="0.35em",
+            transition="all 0.2s",
+            _hover={
+                "background_color": rx.cond(
+                    active,
+                    "var(--accent)",
+                    "var(--muted)",
+                ),
+                "background_opacity": "0.5",
+            },
         ),
         underline="none",
         href=url,
@@ -175,12 +166,12 @@ def sidebar() -> rx.Component:
             sidebar_footer(),
             justify="end",
             align="end",
-            width=styles.sidebar_content_width,
+            width="100%",
             height="100dvh",
-            padding="1em",
+            class_name="p-4 bg-background",
         ),
         display=["none", "none", "none", "none", "none", "flex"],
-        max_width=styles.sidebar_width,
+        max_width="250px",
         width="auto",
         height="100%",
         position="sticky",
@@ -188,5 +179,5 @@ def sidebar() -> rx.Component:
         top="0px",
         left="0px",
         flex="1",
-        bg=rx.color("gray", 2),
+        class_name="bg-background",
     )
