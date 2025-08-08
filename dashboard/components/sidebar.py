@@ -128,7 +128,7 @@ def sidebar() -> rx.Component:
         "/",
         "/users",
         "/transactions",
-        "/giftcards",
+        "/products",
         "/bot-management",
         "/settings",
     ]
