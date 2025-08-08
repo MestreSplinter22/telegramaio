@@ -168,7 +168,7 @@ def sidebar() -> rx.Component:
             align="end",
             width="100%",
             height="100dvh",
-            class_name="p-4 bg-background",
+            class_name="p-4 bg-navbar",
         ),
         display=["none", "none", "none", "none", "none", "flex"],
         max_width="250px",
@@ -179,5 +179,5 @@ def sidebar() -> rx.Component:
         top="0px",
         left="0px",
         flex="1",
-        class_name="bg-background",
+        class_name="bg-navbar",
     )

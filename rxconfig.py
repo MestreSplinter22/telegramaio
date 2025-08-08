@@ -6,6 +6,7 @@ tailwind_config = {
         "extend": {
             "colors": {
                 "background": "var(--background)",
+                "navbar": "var(--navbar)",
                 "foreground": "var(--foreground)",
                 "card": {
                     "DEFAULT": "var(--card)",

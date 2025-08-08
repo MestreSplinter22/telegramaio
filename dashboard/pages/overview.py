@@ -19,9 +19,6 @@ def overview() -> rx.Component:
         The UI for the overview page.
     """
     return rx.vstack(
-        rx.heading("Dashboard Telegram Gift Cards", class_name="text-3xl font-bold text-foreground"),
-        rx.text("Monitoramento e gestão do sistema de vendas via Telegram", class_name="text-lg text-muted-foreground"),
-        
         # Main dashboard stats
         dashboard_stats(),
         
