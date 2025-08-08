@@ -32,15 +32,7 @@ def overview() -> rx.Component:
                 revenue_chart(),
                 class_name="w-full",
             ),
-            card(
-                rx.hstack(
-                    rx.icon("robot", size=20, class_name="text-primary"),
-                    rx.text("Status do Bot", class_name="text-lg font-medium text-foreground"),
-                    class_name="items-center space-x-2",
-                ),
-                bot_status_card(),
-                class_name="w-full",
-            ),
+            card(bot_status_card(), class_name="w-full"),
             card(
                 rx.hstack(
                     rx.icon("activity", size=20, class_name="text-primary"),
