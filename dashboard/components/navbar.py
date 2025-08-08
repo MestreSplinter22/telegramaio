@@ -2,8 +2,6 @@
 
 import reflex as rx
 
-from dashboard import styles
-
 
 def menu_item_icon(icon: str) -> rx.Component:
     return rx.icon(icon, size=20)
@@ -38,36 +36,30 @@ def menu_item(text: str, url: str) -> rx.Component:
                 menu_item_icon("layout-dashboard"),
             ),
             rx.text(text, size="4", weight="regular"),
-            color=rx.cond(
+            class_name=rx.cond(
                 active,
-                styles.accent_text_color,
-                styles.text_color,
+                "text-primary",
+                "text-foreground",
             ),
-            style={
-                "_hover": {
-                    "background_color": rx.cond(
-                        active,
-                        styles.accent_bg_color,
-                        styles.gray_bg_color,
-                    ),
-                    "color": rx.cond(
-                        active,
-                        styles.accent_text_color,
-                        styles.text_color,
-                    ),
-                    "opacity": "1",
-                },
-                "opacity": rx.cond(
-                    active,
-                    "1",
-                    "0.95",
-                ),
-            },
+            opacity=rx.cond(
+                active,
+                "1",
+                "0.95",
+            ),
             align="center",
-            border_radius=styles.border_radius,
+            border_radius="md",
             width="100%",
             spacing="2",
             padding="0.35em",
+            transition="all 0.2s",
+            _hover={
+                "background_color": rx.cond(
+                    active,
+                    "var(--accent)",
+                    "var(--muted)",
+                ),
+                "background_opacity": "0.5",
+            },
         ),
         underline="none",
         href=url,
@@ -86,17 +78,17 @@ def navbar_footer() -> rx.Component:
         rx.link(
             rx.text("Docs", size="3"),
             href="https://reflex.dev/docs/getting-started/introduction/",
-            color_scheme="gray",
+            class_name="text-muted-foreground hover:text-foreground",
             underline="none",
         ),
         rx.link(
             rx.text("Blog", size="3"),
             href="https://reflex.dev/blog/",
-            color_scheme="gray",
+            class_name="text-muted-foreground hover:text-foreground",
             underline="none",
         ),
         rx.spacer(),
-        rx.color_mode.button(style={"opacity": "0.8", "scale": "0.95"}),
+        rx.color_mode.button(class_name="opacity-80 scale-95"),
         justify="start",
         align="center",
         width="100%",
@@ -138,35 +130,36 @@ def menu_button() -> rx.Component:
         rx.drawer.overlay(z_index="5"),
         rx.drawer.portal(
             rx.drawer.content(
-                rx.vstack(
-                    rx.hstack(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.spacer(),
+                            rx.drawer.close(rx.icon(tag="x")),
+                            justify="end",
+                            width="100%",
+                        ),
+                        rx.divider(),
+                        *[
+                            menu_item(
+                                text=page.get(
+                                    "title", page["route"].strip("/").capitalize()
+                                ),
+                                url=page["route"],
+                            )
+                            for page in ordered_pages
+                        ],
                         rx.spacer(),
-                        rx.drawer.close(rx.icon(tag="x")),
-                        justify="end",
+                        navbar_footer(),
+                        spacing="4",
                         width="100%",
+                        class_name="bg-background",
                     ),
-                    rx.divider(),
-                    *[
-                        menu_item(
-                            text=page.get(
-                                "title", page["route"].strip("/").capitalize()
-                            ),
-                            url=page["route"],
-                        )
-                        for page in ordered_pages
-                    ],
-                    rx.spacer(),
-                    navbar_footer(),
-                    spacing="4",
-                    width="100%",
+                    top="auto",
+                    left="auto",
+                    height="100%",
+                    width="20em",
+                    padding="1em",
+                    class_name="bg-background border-l border-border",
                 ),
-                top="auto",
-                left="auto",
-                height="100%",
-                width="20em",
-                padding="1em",
-                bg=rx.color("gray", 1),
-            ),
             width="100%",
         ),
         direction="right",
@@ -196,8 +189,7 @@ def navbar() -> rx.Component:
         ),
         display=["block", "block", "block", "block", "block", "none"],
         position="sticky",
-        background_color=rx.color("gray", 1),
+        class_name="bg-background border-b border-border",
         top="0px",
         z_index="5",
-        border_bottom=styles.border,
     )
