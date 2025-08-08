@@ -19,8 +19,8 @@ def overview() -> rx.Component:
         The UI for the overview page.
     """
     return rx.vstack(
-        rx.heading("Dashboard Telegram Gift Cards", size="6"),
-        rx.text("Monitoramento e gestão do sistema de vendas via Telegram", size="4", color="gray"),
+        rx.heading("Dashboard Telegram Gift Cards", class_name="text-3xl font-bold text-foreground"),
+        rx.text("Monitoramento e gestão do sistema de vendas via Telegram", class_name="text-lg text-muted-foreground"),
         
         # Main dashboard stats
         dashboard_stats(),
@@ -28,44 +28,33 @@ def overview() -> rx.Component:
         rx.grid(
             card(
                 rx.hstack(
-                    rx.icon("trending-up", size=20),
-                    rx.text("Performance Financeira", size="4", weight="medium"),
-                    align="center",
-                    spacing="2",
+                    rx.icon("trending-up", size=20, class_name="text-primary"),
+                    rx.text("Performance Financeira", class_name="text-lg font-medium text-foreground"),
+                    class_name="items-center space-x-2",
                 ),
                 revenue_chart(),
-                width="100%",
+                class_name="w-full",
             ),
             card(
                 rx.hstack(
-                    rx.icon("robot", size=20),
-                    rx.text("Status do Bot", size="4", weight="medium"),
-                    align="center",
-                    spacing="2",
+                    rx.icon("robot", size=20, class_name="text-primary"),
+                    rx.text("Status do Bot", class_name="text-lg font-medium text-foreground"),
+                    class_name="items-center space-x-2",
                 ),
                 bot_status_card(),
-                width="100%",
+                class_name="w-full",
             ),
             card(
                 rx.hstack(
-                    rx.icon("activity", size=20),
-                    rx.text("Transações Recentes", size="4", weight="medium"),
-                    align="center",
-                    spacing="2",
+                    rx.icon("activity", size=20, class_name="text-primary"),
+                    rx.text("Transações Recentes", class_name="text-lg font-medium text-foreground"),
+                    class_name="items-center space-x-2",
                 ),
                 recent_transactions(),
-                width="100%",
+                class_name="w-full",
             ),
-            gap="1.5rem",
-            grid_template_columns=[
-                "1fr",
-                "repeat(1, 1fr)",
-                "repeat(2, 1fr)",
-                "repeat(3, 1fr)",
-            ],
-            width="100%",
+            class_name="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full",
         ),
         
-        spacing="6",
-        width="100%",
+        class_name="space-y-8 w-full",
     )
