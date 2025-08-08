@@ -2,7 +2,7 @@
 
 import reflex as rx
 from ...backend.giftcard_state import GiftCardState, User
-from ...components.card import card
+from ...components.ui.card import card
 
 
 def user_status_badge(status: str) -> rx.Component:

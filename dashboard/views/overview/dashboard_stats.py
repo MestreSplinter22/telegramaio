@@ -2,7 +2,7 @@
 
 import reflex as rx
 from ...backend.giftcard_state import GiftCardState
-from ...components.card import card
+from ...components.ui.card import card
 
 
 def stat_card(icon: str, title: str, value: str, subtitle: str, color: str = "blue") -> rx.Component:

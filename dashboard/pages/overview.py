@@ -1,7 +1,7 @@
 """Main overview page for gift card dashboard."""
 
 import reflex as rx
-from ..components.card import card
+from ..components.ui.card import card
 from ..components.notification import notification
 from ..backend.giftcard_state import GiftCardState
 from ..templates import template
