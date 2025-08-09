@@ -4,13 +4,35 @@
 import reflex as rx
 from fastapi import FastAPI
 
+# Importar dotenv para carregar variáveis de ambiente
+from dotenv import load_dotenv
+
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
+
 from . import styles
 from .pages import *
 from .backend.models import create_all
 from .backend.api import register_all_routes
 
+
+import asyncio
+from contextlib import asynccontextmanager
+from .backend.telegram.startup import startup_telegram_bot, shutdown_telegram_bot
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan para gerenciar o ciclo de vida do aplicativo"""
+    # Inicialização
+    await startup_telegram_bot()
+    try:
+        yield
+    finally:
+        # Cleanup
+        await shutdown_telegram_bot()
+
 # Criar uma instância FastAPI para o api_transformer
-fastapi_app = FastAPI(title="TelegramaIO API")
+fastapi_app = FastAPI(title="TelegramaIO API", lifespan=lifespan)
 
 # Register all API routes centrally
 register_all_routes(fastapi_app)

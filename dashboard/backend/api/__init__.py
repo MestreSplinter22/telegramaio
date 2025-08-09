@@ -11,6 +11,7 @@ from .transactions import register_transactions_routes
 from .giftcards import register_giftcards_routes
 from .botlogs import register_botlogs_routes
 from .dailystats import register_dailystats_routes
+from ..telegram.routes import register_telegram_routes
 
 # List of all available registration functions
 # Add new registration functions here as APIs are created
@@ -22,6 +23,7 @@ API_REGISTRARS = [
     register_giftcards_routes,
     register_botlogs_routes,
     register_dailystats_routes,
+    register_telegram_routes,
 ]
 
 def register_all_routes(app):
