@@ -23,25 +23,9 @@ def overview() -> rx.Component:
         dashboard_stats(),
         
         rx.grid(
-            card(
-                rx.hstack(
-                    rx.icon("trending-up", size=20, class_name="text-primary"),
-                    rx.text("Performance Financeira", class_name="text-lg font-medium text-foreground"),
-                    class_name="items-center space-x-2",
-                ),
-                revenue_chart(),
-                class_name="w-full",
-            ),
+            card(revenue_chart(), class_name="w-full"),
             card(bot_status_card(), class_name="w-full"),
-            card(
-                rx.hstack(
-                    rx.icon("activity", size=20, class_name="text-primary"),
-                    rx.text("Transações Recentes", class_name="text-lg font-medium text-foreground"),
-                    class_name="items-center space-x-2",
-                ),
-                recent_transactions(),
-                class_name="w-full",
-            ),
+            card(recent_transactions(), class_name="w-full"),
             class_name="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full",
         ),
         
