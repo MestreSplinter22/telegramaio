@@ -23,12 +23,12 @@ from .backend.telegram.startup import startup_telegram_bot, shutdown_telegram_bo
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan para gerenciar o ciclo de vida do aplicativo"""
-    # Inicialização
-    await startup_telegram_bot()
+    # Bot do Telegram não será inicializado automaticamente
+    # Use os endpoints /api/telegram/start e /api/telegram/stop para controle manual
     try:
         yield
     finally:
-        # Cleanup
+        # Limpar recursos apenas se o bot estiver rodando
         await shutdown_telegram_bot()
 
 # Criar uma instância FastAPI para o api_transformer
