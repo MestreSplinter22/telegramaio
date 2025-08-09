@@ -3,9 +3,10 @@ import reflex as rx
 
 def _badge(status: str):
     badge_mapping = {
-        "Completed": ("check", "Completed", "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800"),
-        "Pending": ("loader", "Pending", "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800"),
-        "Canceled": ("ban", "Canceled", "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800"),
+        "Completed": ("check", "Sucesso", "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800"),
+        "Pending": ("loader", "Pendente", "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800"),
+        "Canceled": ("ban", "Cancelado", "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800"),
+        "Failed": ("x", "Falha", "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800"),
     }
     icon, text, class_name = badge_mapping.get(
         status, ("loader", "Pending", "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800")
@@ -18,10 +19,10 @@ def _badge(status: str):
 
 
 def status_badge(status: str):
-    return rx.match(
+  return rx.match(
         status,
-        ("Completed", _badge("Completed")),
-        ("Pending", _badge("Pending")),
-        ("Canceled", _badge("Canceled")),
-        _badge("Pending"),
+        ("completed", _badge("Completed")),
+        ("pending", _badge("Pending")),
+        ("canceled", _badge("Canceled")),
+        ("failed", _badge("Failed")),
     )

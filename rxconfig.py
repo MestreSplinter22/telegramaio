@@ -49,6 +49,7 @@ tailwind_config = {
 
 config = rx.Config(
     app_name="dashboard",
+    db_url="sqlite:///telegramaio.db",
     plugins=[
         rx.plugins.TailwindV4Plugin(tailwind_config),
     ],

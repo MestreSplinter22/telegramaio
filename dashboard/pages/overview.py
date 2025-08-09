@@ -19,6 +19,12 @@ def overview() -> rx.Component:
         The UI for the overview page.
     """
     return rx.vstack(
+        rx.hstack(
+            rx.icon("bar-chart-3", size=22, style={"color": "var(--icon)"}),
+            rx.text("Métricas do Dashboard", class_name="text-xl font-semibold text-foreground"),
+            class_name="justify-center items-center",
+        ),
+        rx.box(class_name="border-b border-border w-full my-2"),
         # Main dashboard stats
         dashboard_stats(),
         

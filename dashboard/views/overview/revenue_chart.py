@@ -9,7 +9,7 @@ def revenue_chart() -> rx.Component:
     return rx.vstack(
         # Header
         rx.hstack(
-            rx.icon("trending-up", size=22, class_name="text-primary"),
+            rx.icon("trending-up", size=22, style={"color": "var(--icon-tertiary)"}),
             rx.text("Performance Financeira", class_name="text-xl font-semibold text-foreground"),
             class_name="justify-center items-center gap-2",
         ),
@@ -20,17 +20,17 @@ def revenue_chart() -> rx.Component:
             rx.recharts.line_chart(
                 rx.recharts.line(
                     data_key="revenue",
-                    stroke=rx.color("green", 9),
+                    stroke=rx.color("yellow", 9),
                     stroke_width=2,
                     dot=False,
                 ),
                 rx.recharts.x_axis(
                     data_key="day",
-                    stroke=rx.color("gray", 7),
+                    stroke=rx.color("gray", 8),
                     font_size=12,
                 ),
                 rx.recharts.y_axis(
-                    stroke=rx.color("gray", 7),
+                    stroke=rx.color("gray", 8),
                     font_size=12,
                     tick_formatter="R${value}"
                 ),

@@ -2,24 +2,10 @@
 
 import reflex as rx
 from ...backend.giftcard_state import GiftCardState
+from ...components.ui.status_badge import status_badge
 
 
-def transaction_status_badge(status: str) -> rx.Component:
-    """Transaction status badge."""
-    color_map = {
-        "completed": ("green", "Concluída"),
-        "pending": ("yellow", "Pendente"),
-        "failed": ("red", "Falhou"),
-        "refunded": ("blue", "Reembolsada")
-    }
-    color, text = color_map.get(status, ("gray", status))
-    
-    return rx.badge(
-        text,
-        color_scheme=color,
-        variant="surface",
-        size="1",
-    )
+
 
 
 def recent_transactions() -> rx.Component:
@@ -27,7 +13,7 @@ def recent_transactions() -> rx.Component:
     return rx.vstack(
         # Header
         rx.hstack(
-            rx.icon("activity", size=22, class_name="text-primary"),
+            rx.icon("activity", size=22, style={"color": "var(--icon-secondary)"}),
             rx.text("Transações Recentes", class_name="text-xl font-semibold text-foreground"),
             class_name="justify-center items-center gap-2",
         ),
@@ -46,7 +32,7 @@ def recent_transactions() -> rx.Component:
                             align_items="start",
                         ),
                         rx.spacer(),
-                        transaction_status_badge(transaction.status),
+                        status_badge(transaction.status),
                         class_name="w-full items-center py-2",
                     )
                 ),

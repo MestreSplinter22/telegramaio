@@ -1,9 +1,17 @@
-"""Gift card and Telegram bot state management."""
+"""Gift card and Telegram bot state management with SQLite integration."""
 
 from typing import List, Optional
 import reflex as rx
 from datetime import datetime, timedelta
 import random
+from .models.models import (
+    User as UserModel,
+    Transaction as TransactionModel,
+    GiftCard as GiftCardModel,
+    BotLog as BotLogModel,
+    BotConfig as BotConfigModel,
+    DailyStatistics as DailyStatisticsModel,
+)
 
 
 class User(rx.Base):
@@ -103,8 +111,9 @@ class GiftCardState(rx.State):
     show_user_details_modal: bool = False
     show_transaction_details_modal: bool = False
     
-    def load_sample_data(self):
+    async def load_sample_data(self):
         """Load sample data for development."""
+        # For now, keep using sample data
         # Generate sample users
         sample_users = []
         for i in range(1, 51):
@@ -191,6 +200,52 @@ class GiftCardState(rx.State):
         self.total_transactions = len(sample_transactions)
         self.total_gift_cards_sold = len([t for t in sample_transactions if t.type == "purchase"])
         self.total_balance = sum(u.balance for u in sample_users)
+
+    # Database methods for future use
+    async def create_user(self, telegram_id: int, username: str, **kwargs) -> str:
+        """Create a new user in the database."""
+        # Placeholder for database operation
+        return f"user_{telegram_id}"
+
+    async def get_user_by_telegram_id(self, telegram_id: int) -> Optional[UserModel]:
+        """Get user by Telegram ID."""
+        # Placeholder for database operation
+        return None
+
+    async def update_user_balance(self, user_id: str, amount: float) -> bool:
+        """Update user balance."""
+        # Placeholder for database operation
+        return True
+
+    async def create_transaction(self, user_id: str, type: str, amount: float, **kwargs) -> str:
+        """Create a new transaction."""
+        # Placeholder for database operation
+        return f"trans_{datetime.now().timestamp()}"
+
+    async def get_transactions_by_user(self, user_id: str) -> List[TransactionModel]:
+        """Get all transactions for a user."""
+        # Placeholder for database operation
+        return []
+
+    async def create_gift_card(self, **kwargs) -> str:
+        """Create a new gift card product."""
+        # Placeholder for database operation
+        return f"gc_{datetime.now().timestamp()}"
+
+    async def update_gift_card_stock(self, gift_card_id: str, quantity: int) -> bool:
+        """Update gift card stock."""
+        # Placeholder for database operation
+        return True
+
+    async def log_bot_activity(self, level: str, message: str, **kwargs) -> str:
+        """Log bot activity."""
+        # Placeholder for database operation
+        return f"log_{datetime.now().timestamp()}"
+
+    async def get_daily_statistics(self, date: datetime) -> Optional[DailyStatisticsModel]:
+        """Get daily statistics."""
+        # Placeholder for database operation
+        return None
     
     def get_filtered_transactions(self) -> List[Transaction]:
         """Get transactions based on current filters."""
