@@ -6,14 +6,22 @@
 # Import registration functions
 from .healthy import register_healthy_routes
 from .botconfig import register_botconfig_routes
+from .users import register_user_routes
+from .transactions import register_transactions_routes
+from .giftcards import register_giftcards_routes
+from .botlogs import register_botlogs_routes
+from .dailystats import register_dailystats_routes
 
 # List of all available registration functions
 # Add new registration functions here as APIs are created
 API_REGISTRARS = [
     register_healthy_routes,
     register_botconfig_routes,
-    # register_users_routes,  # Example for future APIs
-    # register_products_routes,  # Example for future APIs
+    register_user_routes,
+    register_transactions_routes,
+    register_giftcards_routes,
+    register_botlogs_routes,
+    register_dailystats_routes,
 ]
 
 def register_all_routes(app):

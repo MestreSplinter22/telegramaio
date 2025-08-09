@@ -37,10 +37,55 @@ def register_your_api_routes(app: FastAPI):
 
 - **botconfig**: Bot configuration management (`/api/botconfig`)
   - File: `backend/api/botconfig/__init__.py`
-  - Purpose: CRUD operations for BotConfig table using Reflex ORM
-  - Endpoints:
-    - `POST /api/botconfig` - Create new configuration
-    - `GET /api/botconfig` - Get all configurations
-    - `GET /api/botconfig/{key}` - Get configuration by key
-    - `PUT /api/botconfig/{key}` - Update configuration by key
-    - `DELETE /api/botconfig/{key}` - Delete configuration by key
+  - Purpose:## Current APIs
+
+- **healthy** - Health check endpoint
+  - `GET /api/healthy` - Check API and database health
+
+- **botconfig** - CRUD operations for BotConfig table using Reflex ORM
+  - `POST /api/botconfig` - Create new configuration
+  - `GET /api/botconfig` - List all configurations
+  - `GET /api/botconfig/{key}` - Get configuration by key
+  - `PUT /api/botconfig/{key}` - Update configuration by key
+  - `DELETE /api/botconfig/{key}` - Delete configuration by key
+
+- **users** - CRUD operations for User table using Reflex ORM
+  - `POST /api/users` - Create new user
+  - `GET /api/users` - List all users
+  - `GET /api/users/{telegram_id}` - Get user by telegram_id
+  - `PUT /api/users/{telegram_id}` - Update user by telegram_id
+  - `DELETE /api/users/{telegram_id}` - Delete user by telegram_id
+
+- **transactions** - CRUD operations for Transaction table using Reflex ORM
+  - `POST /api/transactions` - Create new transaction
+  - `GET /api/transactions` - List all transactions
+  - `GET /api/transactions/{transaction_id}` - Get transaction by ID
+  - `GET /api/transactions/user/{user_id}` - Get transactions by user
+  - `PUT /api/transactions/{transaction_id}` - Update transaction by ID
+  - `DELETE /api/transactions/{transaction_id}` - Delete transaction by ID
+
+- **giftcards** - CRUD operations for GiftCard table using Reflex ORM
+  - `POST /api/giftcards` - Create new gift card
+  - `GET /api/giftcards` - List all gift cards
+  - `GET /api/giftcards/{code}` - Get gift card by code
+  - `GET /api/giftcards/category/{category}` - Get gift cards by category
+  - `GET /api/giftcards/status/{status}` - Get gift cards by status
+  - `PUT /api/giftcards/{code}` - Update gift card by code
+  - `DELETE /api/giftcards/{code}` - Delete gift card by code
+
+- **botlogs** - CRUD operations for BotLog table using Reflex ORM
+  - `POST /api/botlogs` - Create new bot log
+  - `GET /api/botlogs` - List all bot logs
+  - `GET /api/botlogs/{log_id}` - Get bot log by ID
+  - `GET /api/botlogs/user/{user_id}` - Get bot logs by user
+  - `GET /api/botlogs/level/{level}` - Get bot logs by level
+  - `DELETE /api/botlogs/{log_id}` - Delete bot log by ID
+  - `DELETE /api/botlogs/user/{user_id}` - Delete all bot logs for user
+
+- **dailystats** - CRUD operations for DailyStatistics table using Reflex ORM
+  - `POST /api/dailystats` - Create new daily statistics
+  - `GET /api/dailystats` - List all daily statistics
+  - `GET /api/dailystats/{date}` - Get daily stats by date (YYYY-MM-DD)
+  - `GET /api/dailystats/latest` - Get latest daily statistics
+  - `PUT /api/dailystats/{date}` - Update daily stats by date
+  - `DELETE /api/dailystats/{date}` - Delete daily stats by date
