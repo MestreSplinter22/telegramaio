@@ -1,8 +1,10 @@
 import asyncio
 import logging
 import os
-from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message
+from aiogram.enums import ParseMode
+from aiogram.filters import Command
 
 # Configurar logging
 logging.basicConfig(
@@ -24,14 +26,25 @@ if not BOT_TOKEN:
 # Variável global para verificar se o bot está rodando
 bot_running = False
 application_instance = None
+dispatcher_instance = None
 
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+# Criar instância do bot e dispatcher
+bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+dp = Dispatcher()
+
+@dp.message(Command("start"))
+async def start_command(message: Message) -> None:
     """Handler para o comando /start"""
-    await update.message.reply_text("Hello World! Bot iniciado com sucesso!")
+    await message.answer("Hello World! Bot iniciado com sucesso!")
+
+@dp.message(Command("help"))
+async def help_command(message: Message) -> None:
+    """Handler para o comando /help"""
+    await message.answer("Comandos disponíveis:\n/start - Iniciar o bot\n/help - Ajuda")
 
 async def start_telegram_bot():
-    """Inicia o bot do Telegram"""
-    global bot_running, application_instance
+    """Inicia o bot do Telegram usando aiogram"""
+    global bot_running, application_instance, dispatcher_instance
     
     if not BOT_TOKEN:
         logger.error("❌ Token do bot não configurado! Defina TELEGRAM_BOT_TOKEN no ambiente.")
@@ -41,27 +54,24 @@ async def start_telegram_bot():
     logger.debug(f"Token completo: {BOT_TOKEN}")
     
     try:
-        logger.info("Criando aplicação do bot...")
-        application = Application.builder().token(BOT_TOKEN).build()
+        logger.info("Inicializando bot com aiogram...")
         
-        # Adicionar handlers
-        logger.info("Adicionando handlers...")
-        application.add_handler(CommandHandler("start", start_command))
+        # Registrar handlers no dispatcher
+        logger.info("Registrando handlers...")
         
-        # Iniciar o bot
-        logger.info("Inicializando aplicação...")
-        await application.initialize()
-        await application.start()
-        
+        # Iniciar o polling
         logger.info("Iniciando polling...")
-        await application.updater.start_polling(timeout=30)
+        
+        # Criar task para o dispatcher
+        task = asyncio.create_task(dp.start_polling(bot))
         
         bot_running = True
-        application_instance = application
+        application_instance = task
+        dispatcher_instance = dp
         logger.info("✅ Bot do Telegram iniciado com sucesso!")
         logger.info("Bot está aguardando comandos...")
         
-        return application
+        return task
         
     except Exception as e:
         logger.error(f"❌ Erro ao iniciar o bot: {e}")
@@ -70,18 +80,23 @@ async def start_telegram_bot():
 
 async def stop_telegram_bot(application=None):
     """Para o bot do Telegram"""
-    global bot_running, application_instance
-    app_to_stop = application or application_instance
+    global bot_running, application_instance, dispatcher_instance
     
     try:
-        if app_to_stop:
-            await app_to_stop.stop()
-            await app_to_stop.shutdown()
+        if application_instance:
+            logger.info("Parando bot do Telegram...")
+            if dispatcher_instance:
+                await dp.stop_polling()
+            
             bot_running = False
             application_instance = None
+            dispatcher_instance = None
             logger.info("Bot do Telegram encerrado com sucesso!")
+            return True
+        return True
     except Exception as e:
         logger.error(f"Erro ao parar o bot: {e}")
+        return False
 
 def is_bot_running():
     """Retorna True se o bot está rodando"""
