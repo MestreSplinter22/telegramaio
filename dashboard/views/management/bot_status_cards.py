@@ -2,6 +2,7 @@
 
 import reflex as rx
 from ...components.ui.card import card
+from ...backend.giftcard_state import GiftCardState
 
 
 def bot_status_card(title: str, value: str, status: str = "default") -> rx.Component:
@@ -27,10 +28,10 @@ def bot_status_card(title: str, value: str, status: str = "default") -> rx.Compo
     return card(
         rx.vstack(
             rx.hstack(
-                rx.icon("circle", size=16, class_name=status_color) if status != "default" else rx.box(),
+                rx.icon("circle", size=16, class_name=status_color),
                 rx.text(title, class_name="text-sm text-muted-foreground"),
                 class_name="items-center space-x-2",
-            ) if status != "default" else rx.text(title, class_name="text-sm text-muted-foreground"),
+            ),
             rx.text(value, class_name=f"text-lg font-bold {status_color}"),
             class_name="space-y-1",
         ),
@@ -39,11 +40,51 @@ def bot_status_card(title: str, value: str, status: str = "default") -> rx.Compo
 
 
 def bot_status_cards() -> rx.Component:
-    """Bot status overview cards."""
+    """Bot status overview cards with real API data."""
     return rx.grid(
-        bot_status_card("Status", "Online", "green"),
-        bot_status_card("Usuários Ativos", "342", "default"),
-        bot_status_card("Mensagens/Hoje", "1.2K", "default"),
-        bot_status_card("Tempo Resposta", "1.2s", "default"),
+        rx.card(
+            rx.vstack(
+                rx.text("Status", class_name="text-sm text-muted-foreground"),
+                rx.text(
+                    rx.cond(GiftCardState.bot_running, "Online", "Offline"),
+                    class_name="text-lg font-bold text-green-500"
+                ),
+                class_name="space-y-1",
+            ),
+            class_name="p-4",
+        ),
+        rx.card(
+            rx.vstack(
+                rx.text("Usuários Ativos", class_name="text-sm text-muted-foreground"),
+                rx.text(
+                    GiftCardState.bot_active_users,
+                    class_name="text-lg font-bold text-foreground"
+                ),
+                class_name="space-y-1",
+            ),
+            class_name="p-4",
+        ),
+        rx.card(
+            rx.vstack(
+                rx.text("Mensagens/Hoje", class_name="text-sm text-muted-foreground"),
+                rx.text(
+                    GiftCardState.bot_messages_today,
+                    class_name="text-lg font-bold text-foreground"
+                ),
+                class_name="space-y-1",
+            ),
+            class_name="p-4",
+        ),
+        rx.card(
+            rx.vstack(
+                rx.text("Tempo Resposta", class_name="text-sm text-muted-foreground"),
+                rx.text(
+                    GiftCardState.bot_response_time,
+                    class_name="text-lg font-bold text-foreground"
+                ),
+                class_name="space-y-1",
+            ),
+            class_name="p-4",
+        ),
         class_name="grid grid-cols-2 md:grid-cols-4 gap-4 w-full",
     )

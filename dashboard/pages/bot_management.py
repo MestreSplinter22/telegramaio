@@ -19,6 +19,7 @@ def bot_management() -> rx.Component:
         The UI for the bot management page.
     """
     return rx.vstack(
+        rx.fragment(on_mount=GiftCardState.get_bot_status),
         rx.hstack(
             rx.vstack(
                 rx.heading("Gerenciamento do Bot Telegram", class_name="text-2xl font-bold text-foreground"),
