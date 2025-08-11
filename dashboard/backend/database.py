@@ -9,5 +9,5 @@ async def init_database():
     pass
 
 def get_db_session():
-    """Get a database session for async operations."""
+    """Get a database session for operations."""
     return rx.session()

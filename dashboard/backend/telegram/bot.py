@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
+from dashboard.backend.telegram.handlers.start_handler import router as start_router
 
 # Configurar logging
 logging.basicConfig(
@@ -32,10 +33,7 @@ dispatcher_instance = None
 bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
 
-@dp.message(Command("start"))
-async def start_command(message: Message) -> None:
-    """Handler para o comando /start"""
-    await message.answer("Hello World! Bot iniciado com sucesso!")
+
 
 @dp.message(Command("help"))
 async def help_command(message: Message) -> None:
@@ -58,6 +56,7 @@ async def start_telegram_bot():
         
         # Registrar handlers no dispatcher
         logger.info("Registrando handlers...")
+        dp.include_router(start_router)
         
         # Iniciar o polling
         logger.info("Iniciando polling...")
