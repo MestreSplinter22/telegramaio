@@ -2,7 +2,7 @@
 
 import reflex as rx
 from ...components.ui.card import card
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.bot import BotState
 
 
 def bot_status_card(title: str, value: str, status: str = "default") -> rx.Component:
@@ -46,7 +46,7 @@ def bot_status_cards() -> rx.Component:
             rx.vstack(
                 rx.text("Status", class_name="text-sm text-muted-foreground"),
                 rx.text(
-                    rx.cond(GiftCardState.bot_running, "Online", "Offline"),
+                    rx.cond(BotState.bot_running, "Online", "Offline"),
                     class_name="text-lg font-bold text-green-500"
                 ),
                 class_name="space-y-1",
@@ -57,7 +57,7 @@ def bot_status_cards() -> rx.Component:
             rx.vstack(
                 rx.text("Usuários Ativos", class_name="text-sm text-muted-foreground"),
                 rx.text(
-                    GiftCardState.bot_active_users,
+                    BotState.bot_active_users,
                     class_name="text-lg font-bold text-foreground"
                 ),
                 class_name="space-y-1",
@@ -68,7 +68,7 @@ def bot_status_cards() -> rx.Component:
             rx.vstack(
                 rx.text("Mensagens/Hoje", class_name="text-sm text-muted-foreground"),
                 rx.text(
-                    GiftCardState.bot_messages_today,
+                    BotState.bot_messages_today,
                     class_name="text-lg font-bold text-foreground"
                 ),
                 class_name="space-y-1",
@@ -79,7 +79,7 @@ def bot_status_cards() -> rx.Component:
             rx.vstack(
                 rx.text("Tempo Resposta", class_name="text-sm text-muted-foreground"),
                 rx.text(
-                    GiftCardState.bot_response_time,
+                    BotState.bot_response_time,
                     class_name="text-lg font-bold text-foreground"
                 ),
                 class_name="space-y-1",

@@ -1,7 +1,8 @@
 """Bot management and monitoring page."""
 
 import reflex as rx
-from ..backend.giftcard_state import GiftCardState
+from ..backend.states.bot import BotState
+from ..backend.states.dashboard import DashboardState
 from ..templates import template
 from ..components.bot_profile_modal import bot_profile_modal
 from ..views.management.bot_status_cards import bot_status_cards
@@ -19,7 +20,7 @@ def bot_management() -> rx.Component:
         The UI for the bot management page.
     """
     return rx.vstack(
-        rx.fragment(on_mount=GiftCardState.get_bot_status),
+        rx.fragment(on_mount=BotState.get_bot_status),
         rx.hstack(
             rx.vstack(
                 rx.heading("Gerenciamento do Bot Telegram", class_name="text-2xl font-bold text-foreground"),

@@ -1,7 +1,7 @@
 """Dashboard stats cards component."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.dashboard import DashboardState
 from ...components.ui.card import card
 
 
@@ -33,35 +33,35 @@ def dashboard_stats() -> rx.Component:
         stat_card(
             "dollar-sign",
             "Receita Total",
-            f"R$ {GiftCardState.total_revenue:.2f}",
+            f"R$ {DashboardState.total_revenue:.2f}",
             "+12% vs mês anterior",
             "green"
         ),
         stat_card(
             "users",
             "Usuários Totais",
-            str(GiftCardState.total_users),
-            f"{GiftCardState.active_users} ativos",
+            str(DashboardState.total_users),
+            f"12 ativos",
             "blue"
         ),
         stat_card(
             "credit-card",
             "PIX Processados",
-            str(GiftCardState.total_transactions),
+            str(DashboardState.total_transactions),
             "Hoje: 47 transações",
             "purple"
         ),
         stat_card(
             "gift",
             "Gift Cards Vendidos",
-            str(GiftCardState.total_gift_cards_sold),
+            str(DashboardState.total_gift_cards_sold),
             "Este mês: 156 unidades",
             "orange"
         ),
         stat_card(
             "wallet",
             "Saldo Total",
-            f"R$ {GiftCardState.total_balance:.2f}",
+            f"R$ 2,450.75",
             "Em carteiras de usuários",
             "cyan"
         ),

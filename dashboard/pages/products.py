@@ -1,14 +1,14 @@
 """Gift cards catalog management page."""
 
 import reflex as rx
-from ..backend.giftcard_state import GiftCardState
+from ..backend.states.giftcards import GiftCardProductState
 from ..templates import template
 from ..views.products.products_summary import products_summary
 from ..views.products.giftcards_grid import giftcards_grid
 
 
 
-@template(route="/products", title="Catálogo de Gift Cards")
+@template(route="/products", title="Catálogo de Gift Cards", on_load=GiftCardProductState.load_gift_cards)
 def products() -> rx.Component:
     """Gift cards catalog management page.
 
@@ -24,7 +24,7 @@ def products() -> rx.Component:
             rx.button(
                 "Adicionar Novo Produto",
                 class_name="bg-green-500 text-green-900 hover:bg-green-600 px-4 py-2 rounded-md text-sm font-medium",
-                on_click=GiftCardState.set_show_add_giftcard_modal(True),
+                on_click=GiftCardProductState.toggle_add_product,
             ),
             rx.button(
                 "Exportar Relatório",

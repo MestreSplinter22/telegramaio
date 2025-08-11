@@ -1,7 +1,7 @@
 """Transactions summary cards component for gift card dashboard."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.transactions import TransactionState
 from ...components.ui.card import card
 
 
@@ -27,12 +27,12 @@ def transactions_summary() -> rx.Component:
     return rx.grid(
         transactions_summary_card(
             "Total de Transações",
-            GiftCardState.total_transactions,
+            TransactionState.total_transactions,
             "transações processadas"
         ),
         transactions_summary_card(
             "Receita Total",
-            f"R$ {GiftCardState.total_revenue:.2f}",
+            f"R$ {TransactionState.total_revenue:.2f}",
             "em vendas"
         ),
         transactions_summary_card(

@@ -1,7 +1,7 @@
 """Products summary cards component for gift card dashboard."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.giftcards import GiftCardProductState
 from ...components.ui.card import card
 
 
@@ -27,7 +27,7 @@ def products_summary() -> rx.Component:
     return rx.grid(
         products_summary_card(
             "Total de Produtos",
-            GiftCardState.gift_cards.length(),
+            GiftCardProductState.filtered_gift_cards.length(),
             "produtos cadastrados"
         ),
         products_summary_card(

@@ -1,14 +1,15 @@
 """Transactions management page for gift card dashboard."""
 
 import reflex as rx
-from ..backend.giftcard_state import GiftCardState
+from ..backend.states.transactions import TransactionState
+from ..backend.states.dashboard import DashboardState
 from ..templates import template
 from ..views.transactions.transactions_table import transactions_table
 from ..views.transactions.transactions_summary import transactions_summary
 
 
 
-@template(route="/transactions", title="Gestão de Transações")
+@template(route="/transactions", title="Gestão de Transações", on_load=TransactionState.load_transactions)
 def transactions() -> rx.Component:
     """Transactions management page.
 
@@ -25,29 +26,29 @@ def transactions() -> rx.Component:
                 rx.input.slot(rx.icon("search"), class_name="pl-0"),
                 placeholder="Buscar transações...",
                 class_name="w-[250px] h-10 px-3 py-2 text-sm rounded-md border border-input bg-background",
-                on_change=GiftCardState.set_search_query,
-                value=GiftCardState.search_query,
+                on_change=TransactionState.set_transaction_search,
+                    value=TransactionState.transaction_search,
             ),
             rx.select(
                 ["all", "deposit", "purchase", "refund", "manual_adjustment"],
                 placeholder="Tipo",
                 class_name="w-[150px] h-10 px-3 py-2 text-sm rounded-md border border-input bg-background",
-                on_change=GiftCardState.set_transaction_type_filter,
-                value=GiftCardState.transaction_type_filter,
+                on_change=TransactionState.set_transaction_type_filter,
+                    value=TransactionState.transaction_type_filter,
             ),
             rx.select(
                 ["all", "pending", "completed", "failed", "refunded"],
                 placeholder="Status",
                 class_name="w-[150px] h-10 px-3 py-2 text-sm rounded-md border border-input bg-background",
-                on_change=GiftCardState.set_status_filter,
-                value=GiftCardState.status_filter,
+                on_change=TransactionState.set_status_filter,
+                    value=TransactionState.transaction_status_filter,
             ),
             rx.select(
                 ["1d", "7d", "30d", "90d", "all"],
                 placeholder="Período",
                 class_name="w-[120px] h-10 px-3 py-2 text-sm rounded-md border border-input bg-background",
-                on_change=GiftCardState.set_date_range,
-                value=GiftCardState.date_range,
+                on_change=TransactionState.set_date_range,
+                    value=TransactionState.transaction_date_filter,
             ),
             rx.button(
                 "Exportar Excel",

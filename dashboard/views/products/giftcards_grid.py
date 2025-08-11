@@ -1,7 +1,7 @@
 """Gift cards grid component for products catalog."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.giftcards import GiftCardProductState
 from ...components.ui.card import card
 
 
@@ -24,7 +24,7 @@ def giftcards_grid() -> rx.Component:
     """Gift cards grid component."""
     return rx.grid(
         rx.foreach(
-            GiftCardState.gift_cards,
+            GiftCardProductState.filtered_gift_cards,
             giftcard_item
         ),
         class_name="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full",

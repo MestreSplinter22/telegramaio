@@ -1,7 +1,7 @@
 """Revenue chart component for gift card dashboard."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.dashboard import DashboardState
 
 
 def revenue_chart() -> rx.Component:

@@ -1,13 +1,14 @@
 """Users management page for gift card dashboard."""
 
 import reflex as rx
-from ..backend.giftcard_state import GiftCardState, User
+from ..backend.states.users import UserState
+from ..backend.states.models.base import User
 from ..templates import template
 from ..views.users.users_table import users_table
 
 
 
-@template(route="/users", title="Gestão de Usuários")
+@template(route="/users", title="Gestão de Usuários", on_load=UserState.load_users)
 def users() -> rx.Component:
     """Users management page.
 
@@ -24,15 +25,15 @@ def users() -> rx.Component:
                 rx.input.slot(rx.icon("search"), class_name="pl-0"),
                 placeholder="Buscar por nome, username ou email...",
                 class_name="w-72 bg-background border border-input rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring",
-                on_change=GiftCardState.set_search_query,
-                value=GiftCardState.search_query,
+                on_change=UserState.set_user_search,
+                    value=UserState.user_search,
             ),
             rx.select(
                 ["all", "active", "suspended", "banned"],
                 placeholder="Status",
                 class_name="w-36 bg-background border border-input rounded-md px-3 py-2 text-sm",
-                on_change=GiftCardState.set_status_filter,
-                value=GiftCardState.status_filter,
+                on_change=UserState.set_user_status_filter,
+                    value=UserState.user_status_filter,
             ),
             rx.button(
                 "Exportar CSV",

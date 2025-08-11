@@ -1,7 +1,8 @@
 """Users table component for gift card dashboard."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState, User
+from ...backend.states.users import UserState
+from ...backend.states.models.base import User
 from ...components.ui.card import card
 
 
@@ -47,7 +48,7 @@ def users_table() -> rx.Component:
             rx.hstack(
                 rx.text("Usuários", class_name="text-lg font-medium text-foreground"),
                 rx.spacer(),
-                rx.text(f"Total: {GiftCardState.users.length()} usuários", class_name="text-sm text-muted-foreground"),
+                rx.text(f"Total: {UserState.users.length()} usuários", class_name="text-sm text-muted-foreground"),
                 class_name="w-full",
             ),
             rx.table.root(
@@ -64,7 +65,7 @@ def users_table() -> rx.Component:
                 ),
                 rx.table.body(
                     rx.foreach(
-                        GiftCardState.users,
+                        UserState.users,
                         lambda user: rx.table.row(
                             rx.table.cell(
                                 rx.vstack(
@@ -98,7 +99,7 @@ def users_table() -> rx.Component:
                                         "Ver Detalhes",
                                         size="2",
                                         variant="ghost",
-                                        on_click=GiftCardState.set_selected_user(user),
+                                        on_click=UserState.set_selected_user(user),
                                         class_name="text-xs",
                                     ),
                                     rx.button(

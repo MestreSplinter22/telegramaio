@@ -3,7 +3,7 @@
 import reflex as rx
 from ..components.ui.card import card
 from ..components.notification import notification
-from ..backend.giftcard_state import GiftCardState
+from ..backend.states.dashboard import DashboardState
 from ..templates import template
 from ..views.overview.dashboard_stats import dashboard_stats
 from ..views.overview.revenue_chart import revenue_chart
@@ -11,7 +11,7 @@ from ..views.overview.recent_transactions import recent_transactions
 from ..views.overview.bot_status import bot_status_card
 
 
-@template(route="/", title="Overview", on_load=GiftCardState.load_sample_data)
+@template(route="/", title="Overview", on_load=DashboardState.load_dashboard_data)
 def overview() -> rx.Component:
     """The main overview page for gift card dashboard.
 

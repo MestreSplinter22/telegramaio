@@ -1,7 +1,7 @@
 """Transactions table component."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.transactions import TransactionState
 from ...components.ui.card import card
 
 
@@ -53,7 +53,7 @@ def transactions_table() -> rx.Component:
             rx.hstack(
                 rx.text("Transações", class_name="text-lg font-medium text-foreground"),
                 rx.spacer(),
-                rx.text(f"Total: {GiftCardState.filtered_transactions.length()} transações", class_name="text-sm text-muted-foreground"),
+                rx.text(f"Total: {TransactionState.filtered_transactions.length()} transações", class_name="text-sm text-muted-foreground"),
                 class_name="w-full",
             ),
             rx.table.root(
@@ -69,7 +69,7 @@ def transactions_table() -> rx.Component:
                 ),
                 rx.table.body(
                     rx.foreach(
-                        GiftCardState.filtered_transactions,
+                        TransactionState.filtered_transactions,
                         lambda transaction: rx.table.row(
                             rx.table.cell(transaction.id[:8] + "...", class_name="text-sm text-foreground"),
                             rx.table.cell(transaction.type, class_name="text-sm text-foreground"),
@@ -80,7 +80,7 @@ def transactions_table() -> rx.Component:
                                 rx.button(
                                     "Detalhes",
                                     size="1",
-                                    on_click=lambda: GiftCardState.set_selected_transaction(transaction),
+                                    on_click=lambda: TransactionState.set_selected_transaction(transaction),
                                     class_name="text-xs",
                                 )
                             ),

@@ -1,7 +1,7 @@
 """Recent transactions component for overview page."""
 
 import reflex as rx
-from ...backend.giftcard_state import GiftCardState
+from ...backend.states.transactions import TransactionState
 from ...components.ui.status_badge import status_badge
 
 
@@ -23,7 +23,7 @@ def recent_transactions() -> rx.Component:
         rx.box(
             rx.vstack(
                 rx.foreach(
-                    GiftCardState.transactions[:5],
+                    TransactionState.filtered_transactions[:5],
                     lambda transaction: rx.hstack(
                         rx.vstack(
                             rx.text(transaction.description, class_name="text-sm font-medium text-foreground"),
