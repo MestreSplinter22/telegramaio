@@ -9,5 +9,9 @@ async def init_database():
     pass
 
 def get_db_session():
-    """Get a database session for operations."""
+    """Get a database session for operations.
+    
+    Note: Use rx.session() context manager for proper session handling.
+    This function is kept for compatibility but rx.session() is preferred.
+    """
     return rx.session()

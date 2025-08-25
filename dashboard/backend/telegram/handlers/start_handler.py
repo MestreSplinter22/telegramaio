@@ -5,16 +5,27 @@ from dashboard.backend.models.models import User
 from dashboard.backend.database import get_db_session
 import logging
 from datetime import datetime
+import reflex as rx
+from typing import Optional
 
 router = Router()
 logger = logging.getLogger(__name__)
 
-async def get_or_create_user(telegram_id: int, username: str = None, full_name: str = None) -> User:
-    from dashboard.backend.database import get_db_session
+async def get_or_create_user(telegram_id: int, username: Optional[str] = None, full_name: Optional[str] = None) -> dict:
+    """Get or create a user and return as dictionary to avoid session issues."""
     
-    session = get_db_session()
-    try:
-        result = session.query(User).filter(User.telegram_id == str(telegram_id)).first()
+    with rx.session() as session:
+        # Find existing user - usando approach mais simples que funciona com Reflex
+        try:
+            # Try to find user
+            result = None
+            for user in session.query(User).all():
+                if user.telegram_id == str(telegram_id):
+                    result = user
+                    break
+        except Exception as e:
+            logger.error(f"Error querying users: {e}")
+            result = None
         
         if not result:
             # Split full_name into first_name and last_name
@@ -42,7 +53,20 @@ async def get_or_create_user(telegram_id: int, username: str = None, full_name: 
             session.commit()
             session.refresh(user)
             logger.info(f"New user created: {telegram_id}")
-            return user
+            
+            # Return as dictionary to avoid detached instance
+            return {
+                'telegram_id': user.telegram_id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'balance': user.balance,
+                'total_spent': user.total_spent,
+                'status': user.status,
+                'risk_score': user.risk_score,
+                'created_at': user.created_at,
+                'updated_at': user.updated_at
+            }
         else:
             # Update username if changed
             if username and result.username != username:
@@ -60,13 +84,29 @@ async def get_or_create_user(telegram_id: int, username: str = None, full_name: 
                     result.last_name = last_name
             
             result.updated_at = datetime.utcnow()
+            session.add(result)
             session.commit()
-            return result
-    finally:
-        session.close()
+            session.refresh(result)
+            
+            # Return as dictionary to avoid detached instance
+            return {
+                'telegram_id': result.telegram_id,
+                'username': result.username,
+                'first_name': result.first_name,
+                'last_name': result.last_name,
+                'balance': result.balance,
+                'total_spent': result.total_spent,
+                'status': result.status,
+                'risk_score': result.risk_score,
+                'created_at': result.created_at,
+                'updated_at': result.updated_at
+            }
 
 @router.message(Command("start"))
 async def start_command(message: types.Message):
+    if not message.from_user:
+        return
+    
     telegram_id = message.from_user.id
     username = message.from_user.username
     first_name = message.from_user.first_name or ""
@@ -81,7 +121,7 @@ async def start_command(message: types.Message):
         f"📢 <a href='https://t.me/akatsukicentral'>Grupo</a>\n"
         f"🧾 Seu perfil:\n"
         f"  ├👤 <b>ID:</b> <code>{telegram_id}</code>\n"
-        f"  └💸 <b>Saldo:</b> R$ <b>{user.balance:.2f}</b>\n\n"
+        f"  └💸 <b>Saldo:</b> R$ <b>{user['balance']:.2f}</b>\n\n"
         f"🟢 <b>BÔNUS DE RECARGA ATIVO</b>\n"
         f"💸 <b>RECEBE 100% DE BÔNUS</b>\n\n"
         f"🔽 <b>VALOR MÍNIMO: R$ 50</b>"

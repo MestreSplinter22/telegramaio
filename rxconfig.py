@@ -53,4 +53,7 @@ config = rx.Config(
     plugins=[
         rx.plugins.TailwindV4Plugin(tailwind_config),
     ],
+    disable_plugins=[
+        "reflex.plugins.sitemap.SitemapPlugin"
+    ],
 )
