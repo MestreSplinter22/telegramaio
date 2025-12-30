@@ -8,3 +8,12 @@ assets/external/
 .web
 __pycache__/
 venv/
+*.db
+*.db-wal
+*.db-shm
+.db
+.qoder
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
