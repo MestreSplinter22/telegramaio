@@ -185,7 +185,7 @@
     },
     "pay_25c1": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ 10,00** usando o botão abaixo.",
+      "text": "💳 *Pagamento Pendente* {amount}\n\nPor favor, realize o pagamento de **R$ 10,00** usando o botão abaixo.\n\n{pix_copia_cola}",
       "amount": 10.0,
       "gateway": "openpix",
       "buttons": [

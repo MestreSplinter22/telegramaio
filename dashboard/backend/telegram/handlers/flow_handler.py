@@ -4,7 +4,6 @@ import json
 import asyncio
 import base64
 import uuid
-import re
 from aiogram import Router, F, types
 from aiogram.types import BufferedInputFile
 import reflex as rx
@@ -17,7 +16,7 @@ from dashboard.backend.gateways.openpix_service import OpenPixService
 
 router = Router()
 
-def load_flow_screens():
+def load_flow_screens_fresh():
     path = "dashboard/backend/telegram/flows/start_flow.json"
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -30,7 +29,7 @@ def load_flow_screens():
 @router.callback_query(F.data.startswith("goto_"))
 async def navigation_handler(callback: types.CallbackQuery):
     target_screen_key = callback.data.replace("goto_", "")
-    screens = load_flow_screens()
+    screens = load_flow_screens_fresh()
     
     if target_screen_key in screens:
         screen_data = screens[target_screen_key]
@@ -63,32 +62,27 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
     amount = float(node_data.get("amount", 10.00))
     gateway_name_preferida = node_data.get("gateway") 
     
-    # --- CORREÇÃO: Extrair o ID da tela de sucesso do botão ---
+    # --- Extração do ID da tela de sucesso ---
     success_screen_id = None
-    
-    # Tenta pegar do campo direto (caso exista no futuro)
     if "on_success" in node_data:
         success_screen_id = node_data["on_success"]
     
-    # Se não, tenta pegar do primeiro botão (lógica padrão do FlowBuilder)
+    # Fallback: tenta pegar do botão se não tiver definido explicitamente
     if not success_screen_id and "buttons" in node_data and node_data["buttons"]:
         try:
-            # Pega o callback do primeiro botão da primeira linha
             first_btn = node_data["buttons"][0][0]
             cb = first_btn.get("callback", "")
             if cb.startswith("goto_"):
                 success_screen_id = cb.replace("goto_", "")
-        except Exception as e:
-            print(f"Erro ao extrair success_screen_id: {e}")
-    # -----------------------------------------------------------
-
+        except Exception:
+            pass
+    
     processing_msg = await callback.message.answer("🔄 <b>Gerando QR Code PIX...</b>", parse_mode="HTML")
     
     try:
         with rx.session() as session:
-            # 1. Lógica de Seleção de Gateway
+            # 1. Busca Gateway
             query = session.query(GatewayConfig).filter(GatewayConfig.is_active == True)
-            
             if gateway_name_preferida:
                 gateway = query.filter(GatewayConfig.name == gateway_name_preferida).first()
             else:
@@ -97,7 +91,7 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
             if not gateway:
                 gateway = session.query(GatewayConfig).filter(GatewayConfig.is_active == True).first()
                 if not gateway:
-                    await processing_msg.edit_text("❌ Erro: Nenhuma gateway de pagamento ativa.")
+                    await processing_msg.edit_text("❌ Erro: Nenhuma gateway ativa.")
                     return
 
             # 2. Usuário
@@ -115,17 +109,14 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
             # 3. Gerar PIX
             txid = uuid.uuid4().hex
             pix_data = {}
+            nome_pagador = context["name"]
             
-            # Dados fake para geração (em prod usar user.cpf)
-            cpf_user = "12345678909" 
-            email_user = "cliente@email.com"
-
             if gateway.name == "efi_bank":
                 service = EfiPixService(gateway)
                 efi_resp = service.create_immediate_charge(
                     txid=txid,
-                    cpf=cpf_user, 
-                    nome=context["name"],
+                    cpf="12345678909" if gateway.is_sandbox else "00000000000",
+                    nome=nome_pagador,
                     valor=f"{amount:.2f}"
                 )
                 pix_data = {
@@ -138,9 +129,9 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
                 service = SuitPayService(gateway)
                 suit_resp = service.create_pix_payment(
                     txid=txid,
-                    cpf=cpf_user,
-                    nome=context["name"],
-                    email=email_user,
+                    cpf="00000000000",
+                    nome=nome_pagador,
+                    email="cliente@email.com",
                     valor=amount
                 )
                 pix_data = {
@@ -153,9 +144,10 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
                 service = OpenPixService(gateway)
                 op_resp = service.create_charge(
                     txid=txid,
-                    nome=context["name"],
-                    cpf=cpf_user,
-                    valor=amount
+                    nome=nome_pagador,
+                    cpf=None, 
+                    valor=amount,
+                    email="cliente@sememail.com"
                 )
                 pix_data = {
                     "pix_copia_cola": op_resp.get("pix_copia_cola"),
@@ -163,17 +155,16 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
                     "external_id": op_resp.get("txid")
                 }
 
-            # 4. Salvar Transação (ATUALIZADO COM A CHAVE CORRETA)
+            # 4. Salvar Transação
             extra_data_payload = {
                 "txid": txid, 
-                "gateway_id": gateway.id,
+                "gateway_id": gateway.id, 
                 "external_id": pix_data.get("external_id")
             }
             
-            # Importante: Usar a chave 'success_screen_id' que o routes.py espera
+            # --- PADRONIZAÇÃO: Salvamos como success_screen_id ---
             if success_screen_id:
                 extra_data_payload["success_screen_id"] = success_screen_id
-                print(f"✅ Success Screen ID salvo: {success_screen_id}")
 
             new_txn = Transaction(
                 user_id=str(user.id),
@@ -186,46 +177,43 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
             session.add(new_txn)
             session.commit()
 
-            # 5. Enviar Resposta Visual
+            # 5. Enviar Resposta Visual (CORRIGIDO PARA USAR TEXTO DO JSON)
             img_source = pix_data.get("qrcode_base64")
             copia_e_cola = pix_data.get("pix_copia_cola")
             
-            caption_text = (
-                f"✅ <b>Pagamento Gerado!</b>\n\n"
-                f"💰 Valor: <b>R$ {amount:.2f}</b>\n\n"
-                f"Escaneie o QR Code ou utilize o código Copia e Cola abaixo para finalizar o pagamento."
-            )
+            # --- AQUI ESTA A CORREÇÃO DA MENSAGEM 1 ---
+            # Pega o texto do nó (definido no FlowBuilder)
+            raw_text = node_data.get("text", "✅ Pagamento Gerado! Use o QR Code abaixo.")
+            
+            # Faz as substituições de variáveis
+            caption_text = raw_text.replace("{pix_copia_cola}", copia_e_cola or "") \
+                                   .replace("{amount}", f"{amount:.2f}") \
+                                   .replace("{valor}", f"{amount:.2f}")
+            
+            # Detecta se usa Markdown ou HTML
+            parse_mode = "Markdown" if "*" in caption_text else "HTML"
+            # ---------------------------------------------
 
             if img_source:
                 await processing_msg.delete()
                 
-                # Caso Link (OpenPix retorna link direto frequentemente)
                 if img_source.startswith("http"):
-                    await callback.message.answer_photo(photo=img_source, caption=caption_text, parse_mode="HTML")
-                
-                # Caso Base64
+                    await callback.message.answer_photo(photo=img_source, caption=caption_text, parse_mode=parse_mode)
                 else:
-                    if "," in img_source:
-                        img_source = img_source.split(",")[1]
+                    if "," in img_source: img_source = img_source.split(",")[1]
                     img_source = img_source.strip().replace("\n", "").replace("\r", "")
-
                     try:
                         img_bytes = base64.b64decode(img_source)
                         photo_file = BufferedInputFile(img_bytes, filename="qrcode_pix.png")
-                        await callback.message.answer_photo(photo=photo_file, caption=caption_text, parse_mode="HTML")
-                    except Exception as e_img:
-                        print(f"Erro decodificando imagem: {e_img}")
-                        await callback.message.answer(f"{caption_text}\n\n(Imagem indisponível)", parse_mode="HTML")
+                        await callback.message.answer_photo(photo=photo_file, caption=caption_text, parse_mode=parse_mode)
+                    except Exception:
+                        await callback.message.answer(caption_text, parse_mode=parse_mode)
             else:
-                await processing_msg.edit_text(caption_text, parse_mode="HTML")
+                await processing_msg.edit_text(caption_text, parse_mode=parse_mode)
 
-            if copia_e_cola:
+            # Se o texto principal não tiver o copia e cola, mandamos separado
+            if copia_e_cola and "{pix_copia_cola}" not in raw_text:
                 await callback.message.answer(f"<code>{copia_e_cola}</code>", parse_mode="HTML")
-
-            # Botões de Navegação (para simular a confirmação manual se o usuário quiser clicar)
-            if "buttons" in node_data and node_data["buttons"]:
-                dummy_node = {"text": "Aguardando confirmação automática...", "buttons": node_data["buttons"]}
-                await send_template_message(callback.message, dummy_node, context)
 
     except Exception as e:
         print(f"Erro no handler de pagamento: {e}")

@@ -2,6 +2,7 @@
 
 import requests
 import json
+from typing import Optional
 from dashboard.backend.models.models import GatewayConfig
 
 class OpenPixService:
@@ -10,60 +11,60 @@ class OpenPixService:
         self.creds = config.credentials
         self.app_id = self.creds.get("app_id")
         
-        # --- CORREÇÃO DA URL BASE ---
-        # Se for Sandbox (app.woovi-sandbox.com), usa a API da Woovi Sandbox
-        # Se for Produção (app.openpix.com.br), usa a API da OpenPix
+        # URL Base (Sandbox ou Produção)
         if config.is_sandbox:
             self.base_url = "https://api.woovi-sandbox.com/api/v1"
         else:
             self.base_url = "https://api.openpix.com.br/api/v1"
 
     def get_headers(self):
-        # O Header é apenas o AppID, sem "Bearer"
         return {
             "Authorization": self.app_id,
             "Content-Type": "application/json"
         }
 
-    def create_charge(self, txid: str, nome: str, cpf: str, valor: float):
+    def create_charge(self, txid: str, nome: str, valor: float, cpf: Optional[str] = None, email: str = "cliente@sememail.com"):
         """
-        Cria uma cobrança Pix imediata na OpenPix/Woovi.
+        Cria cobrança. CPF é opcional.
+        Se não houver CPF, usamos Nome + Email para validar o customer (regra da OpenPix).
         """
-        # OpenPix trabalha com valor em centavos (Integer)
         valor_centavos = int(valor * 100)
-        
         url = f"{self.base_url}/charge"
         
+        # Monta o objeto customer dinamicamente
+        customer_data = {"name": nome}
+        
+        # Regra OpenPix: Precisa de (Nome + CPF) OU (Nome + Email) OU (Nome + Telefone)
+        if cpf:
+            # Apenas limpa se o CPF foi fornecido
+            customer_data["taxID"] = "".join(filter(str.isdigit, cpf))
+        
+        if email:
+            customer_data["email"] = email
+
         payload = {
             "correlationID": txid,
             "value": valor_centavos,
             "comment": f"Pgto {nome}",
-            "customer": {
-                "name": nome,
-                "taxID": cpf
-            }
+            "customer": customer_data
         }
 
         try:
-            print(f"🚀 Enviando para OpenPix ({'SANDBOX' if self.config.is_sandbox else 'PROD'}): {url}")
+            print(f"🚀 Enviando para OpenPix: {json.dumps(payload)}")
             response = requests.post(url, headers=self.get_headers(), json=payload)
-            response.raise_for_status() 
+            response.raise_for_status()
             
             data = response.json()
             charge = data.get("charge", {})
             
-            # Recupera dados para exibição
-            br_code = charge.get("brCode") # Pix Copia e Cola
-            qr_code_image = charge.get("qrCodeImage") 
-            
             return {
-                "pix_copia_cola": br_code,
-                "qrcode_base64": qr_code_image,
+                "pix_copia_cola": charge.get("brCode"),
+                "qrcode_base64": charge.get("qrCodeImage"),
                 "txid": charge.get("correlationID")
             }
 
         except Exception as e:
-            print(f"❌ Erro OpenPix Create: {e}")
+            print(f"❌ Erro OpenPix: {e}")
             if 'response' in locals():
                 print(f"Detalhe: {response.text}")
-            raise Exception(f"Falha na API OpenPix ({response.status_code}): {response.text}")
+            raise Exception(f"Falha OpenPix: {str(e)}")

@@ -48,7 +48,7 @@ class FlowState(rx.State):
         # 2. Definir os dados das telas seguindo o seu padrão JSON
         payment_data = {
             "type": "payment",
-            "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ 10,00** usando o botão abaixo.",
+            "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}** usando o botão abaixo.\n\n {pix_copia_cola}",
             "amount": 10.00,
             "gateway": "openpix",
             "buttons": [[{
@@ -58,7 +58,7 @@ class FlowState(rx.State):
         }
 
         success_data = {
-            "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+            "text": "🎉 *Pagamento de **R$ {amount}** Confirmado!*\n\nO Canal Vip foi liberado com sucesso.",
             "buttons": []
         }
 

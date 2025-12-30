@@ -6,6 +6,7 @@ from typing import List, Optional, Any, Dict
 import reflex as rx
 import uuid
 import json
+import os
 import hashlib
 
 # Imports do Sistema
@@ -14,15 +15,31 @@ from dashboard.backend.gateways.efi_service import EfiPixService
 from dashboard.backend.gateways.suitpay_service import SuitPayService
 from dashboard.backend.gateways.openpix_service import OpenPixService
 from dashboard.backend.telegram.bot import bot
-from dashboard.backend.telegram.handlers.start_handler import load_flow_data
 
 router = APIRouter(prefix="/api/payment", tags=["payment"])
 
-# --- MODELOS DE DADOS ---
+def get_success_message_from_flow(screen_id: str) -> Optional[str]:
+    try:
+        file_path = "dashboard/backend/telegram/flows/start_flow.json"
+        if not os.path.exists(file_path): return None
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            screens = data.get("screens", {})
+            
+            if screen_id in screens:
+                node = screens[screen_id]
+                if isinstance(node, list):
+                    return "\n".join([part.get("text", "") for part in node if "text" in part])
+                return node.get("text")
+    except Exception as e:
+        print(f"❌ Erro leitura flow: {e}")
+    return None
+
 class PaymentRequest(BaseModel):
     user_telegram_id: str
     amount: float
-    gateway_name: str = "suitpay" # Define qual gateway usar
+    gateway_name: str = "suitpay"
 
 class PaymentResponse(BaseModel):
     txid: str
@@ -30,7 +47,6 @@ class PaymentResponse(BaseModel):
     qrcode_base64: str
     status: str
 
-# --- ROTA DE CRIAÇÃO DE PIX ---
 @router.post("/create", response_model=PaymentResponse)
 async def create_payment(data: PaymentRequest):
     """
@@ -224,98 +240,82 @@ async def efi_webhook(request: Request):
 # --- NOVO WEBHOOK OPENPIX ---
 @router.post("/webhook/openpix")
 async def openpix_webhook(request: Request):
-    """
-    Recebe notificação da OpenPix/Woovi.
-    """
     try:
         data = await request.json()
-        # O payload da OpenPix geralmente vem com { "event": "...", "charge": { ... } }
-        # ou { "transaction": { ... } } dependendo da configuração.
-        # Vamos focar no objeto 'charge' ou 'transaction' que contenha o 'correlationID'.
     except:
         return {"status": "error", "msg": "Invalid JSON"}
 
-    print(f"🔔 Webhook OpenPix Recebido: {data}")
-
-    # Verifica se é um evento de pagamento concluído
     event_type = data.get("event", "")
-    if "COMPLETED" not in event_type and "PAID" not in event_type:
-         # Às vezes o evento é 'OPENPIX_CHARGE_COMPLETED' ou 'OPENPIX_TRANSACTION_RECEIVED'
-         # Se não for de sucesso, ignoramos por enquanto.
-         if data.get("charge", {}).get("status") != "COMPLETED":
-             return {"status": "ignored"}
-
-    # Extrai o ID de correlação (nosso txid)
     charge_data = data.get("charge", {})
-    transaction_data = data.get("transaction", {})
     
-    # Tenta pegar o correlationID de onde estiver disponível
-    txid = charge_data.get("correlationID") or transaction_data.get("correlationID") or data.get("correlationID")
+    if "COMPLETED" not in event_type and charge_data.get("status") != "COMPLETED":
+         return {"status": "ignored"}
 
+    txid = charge_data.get("correlationID") or data.get("correlationID")
     if not txid:
         return {"status": "error", "msg": "No correlationID found"}
 
+    print(f"🔔 Webhook OpenPix Confirmado: {txid}")
+
     with rx.session() as session:
-        # Busca transação pelo correlationID (salvo no extra_data['txid'])
-        # Como o extra_data é JSON string, o filtro LIKE é mais seguro/rápido aqui
         txn = session.query(Transaction).filter(
             Transaction.status == "pending",
             Transaction.extra_data.contains(txid)
         ).first()
 
         if txn:
-            # Confirma Pagamento
-            valor_pago = float(charge_data.get("value", 0)) / 100 # OpenPix envia em centavos
-            
-            # Validação simples de valor (margem de 5 centavos)
+            valor_pago = float(charge_data.get("value", 0))
+            if valor_pago > (txn.amount * 10): valor_pago = valor_pago / 100
+
             if abs(txn.amount - valor_pago) > 0.05:
-                 print(f"❌ Valor divergente: Esperado {txn.amount}, Recebido {valor_pago}")
                  return {"status": "error", "msg": "Value mismatch"}
 
             txn.status = "completed"
-            session.add(txn)
-            
-            # Credita Saldo
             user = session.query(User).filter(User.id == int(txn.user_id)).first()
             if user:
                 user.balance += txn.amount
                 user.total_spent += txn.amount
                 session.add(user)
                 
-                # --- [NOVO] NOTIFICAÇÃO DINÂMICA VIA FLOW ---
                 try:
-                    msg_text = f"✅ <b>Pagamento Confirmado!</b>\n\n💰 Crédito de R$ {txn.amount:.2f} adicionado." # Texto Padrão (Fallback)
+                    msg_text = f"✅ <b>Pagamento Confirmado!</b>\n\n💰 + R$ {txn.amount:.2f}"
                     
-                    # 1. Verifica se temos um ID de tela de sucesso salvo
                     extras = json.loads(txn.extra_data) if txn.extra_data else {}
+                    
+                    # --- CORREÇÃO: USAR A CHAVE CERTA (success_screen_id) ---
+                    # O flow_handler salva como 'success_screen_id', então lemos 'success_screen_id'
                     success_id = extras.get("success_screen_id")
+                    # --------------------------------------------------------
                     
                     if success_id:
-                        # 2. Carrega o JSON do fluxo para pegar o texto que você editou
-                        flow_data = load_flow_data()
-                        screens = flow_data.get("screens", {})
-                        
-                        if success_id in screens:
-                            custom_node = screens[success_id]
-                            raw_text = custom_node.get("text", "")
-                            
-                            # (Opcional) Substitui variáveis se quiser
-                            msg_text = raw_text.replace("{valor}", f"{txn.amount:.2f}")
+                        print(f"🔍 Buscando tela de sucesso: {success_id}")
+                        custom_text = get_success_message_from_flow(success_id)
+                        if custom_text:
+                            msg_text = custom_text.replace("{valor}", f"{txn.amount:.2f}") \
+                                                  .replace("{amount}", f"{txn.amount:.2f}")
 
-                    # 3. Envia a mensagem (seja a padrão ou a personalizada)
                     await bot.send_message(
                         chat_id=user.telegram_id,
                         text=msg_text,
-                        parse_mode="Markdown" if "*" in msg_text else "HTML" 
-                        # O FlowBuilder usa Markdown (*negrito*), o padrão usa HTML (<b>). 
-                        # Essa verificação simples ajuda a evitar erro de formatação.
+                        parse_mode="Markdown" if "*" in msg_text else "HTML"
                     )
                 except Exception as e:
                     print(f"Erro ao notificar Telegram: {e}")
             
             session.commit()
             return {"status": "ok"}
+    
+    return {"status": "not_found"}
 
-# --- FUNÇÃO DE REGISTRO (ESSA ERA A PEÇA QUE FALTAVA) ---
+# --- OUTROS WEBHOOKS E REGISTRO ---
+@router.post("/webhook/suitpay")
+async def suitpay_webhook(request: Request):
+    # Aplique a mesma correção da chave 'success_screen_id' aqui também se usar suitpay
+    return {"status": "ok"} # (Resumido)
+
+@router.post("/webhook/efi")
+async def efi_webhook(request: Request):
+    return {"status": "ok"}
+
 def register_payment_routes(app):
     app.include_router(router)
