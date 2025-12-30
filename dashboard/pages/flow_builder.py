@@ -53,6 +53,19 @@ def flow_builder_page() -> rx.Component:
                                 # Controles do Header
                                 rx.hstack(
                                     rx.badge("React Flow", color_scheme="indigo", variant="surface"),
+                                    
+                                    # BOTÃO NOVO: Criar Sequência de Pagamento
+                                    rx.tooltip(
+                                        rx.icon_button(
+                                            "credit-card", 
+                                            on_click=FlowState.add_payment_sequence, 
+                                            variant="soft", 
+                                            color_scheme="green", 
+                                            size="2"
+                                        ),
+                                        content="Gerar Sequência de Pagamento (Nó Duplo)"
+                                    ),
+
                                     rx.tooltip(
                                         rx.icon_button(
                                             "rotate-cw", 

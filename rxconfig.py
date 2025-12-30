@@ -78,7 +78,7 @@ config = rx.Config(
     api_url="https://api.u9ttyt.easypanel.host", 
     deploy_url="https://dashboard.u9ttyt.easypanel.host",
     #db_url=f"sqlite:///{DB_PATH}",
-    db_url=f"postgresql://postgres:postgres@telegram-aio_postgree:5432/telegram-aio?sslmode=disable",
+    db_url=f"postgresql://postgres:telegram-aio@telegram-aio_postgree:5432/telegram-aio?sslmode=disable",
     plugins=[
         rx.plugins.TailwindV4Plugin(tailwind_config),
     ],

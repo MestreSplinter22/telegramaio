@@ -14,6 +14,7 @@ from dashboard.backend.gateways.efi_service import EfiPixService
 from dashboard.backend.gateways.suitpay_service import SuitPayService
 from dashboard.backend.gateways.openpix_service import OpenPixService
 from dashboard.backend.telegram.bot import bot
+from dashboard.backend.telegram.handlers.start_handler import load_flow_data
 
 router = APIRouter(prefix="/api/payment", tags=["payment"])
 
@@ -281,20 +282,39 @@ async def openpix_webhook(request: Request):
                 user.total_spent += txn.amount
                 session.add(user)
                 
-                # Notifica via Bot
+                # --- [NOVO] NOTIFICAÇÃO DINÂMICA VIA FLOW ---
                 try:
+                    msg_text = f"✅ <b>Pagamento Confirmado!</b>\n\n💰 Crédito de R$ {txn.amount:.2f} adicionado." # Texto Padrão (Fallback)
+                    
+                    # 1. Verifica se temos um ID de tela de sucesso salvo
+                    extras = json.loads(txn.extra_data) if txn.extra_data else {}
+                    success_id = extras.get("success_screen_id")
+                    
+                    if success_id:
+                        # 2. Carrega o JSON do fluxo para pegar o texto que você editou
+                        flow_data = load_flow_data()
+                        screens = flow_data.get("screens", {})
+                        
+                        if success_id in screens:
+                            custom_node = screens[success_id]
+                            raw_text = custom_node.get("text", "")
+                            
+                            # (Opcional) Substitui variáveis se quiser
+                            msg_text = raw_text.replace("{valor}", f"{txn.amount:.2f}")
+
+                    # 3. Envia a mensagem (seja a padrão ou a personalizada)
                     await bot.send_message(
                         chat_id=user.telegram_id,
-                        text=f"✅ <b>Pagamento OpenPix Confirmado!</b>\n\n💰 Crédito de R$ {txn.amount:.2f} adicionado.",
-                        parse_mode="HTML"
+                        text=msg_text,
+                        parse_mode="Markdown" if "*" in msg_text else "HTML" 
+                        # O FlowBuilder usa Markdown (*negrito*), o padrão usa HTML (<b>). 
+                        # Essa verificação simples ajuda a evitar erro de formatação.
                     )
                 except Exception as e:
-                    print(f"Erro notificação Telegram: {e}")
+                    print(f"Erro ao notificar Telegram: {e}")
             
             session.commit()
             return {"status": "ok"}
-    
-    return {"status": "not_found"}
 
 # --- FUNÇÃO DE REGISTRO (ESSA ERA A PEÇA QUE FALTAVA) ---
 def register_payment_routes(app):

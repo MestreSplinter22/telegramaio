@@ -1,6 +1,7 @@
 import reflex as rx
 import json
 import os
+import uuid
 from typing import Dict, List, Any
 
 FLOW_FILE_PATH = "dashboard/backend/telegram/flows/start_flow.json"
@@ -18,6 +19,9 @@ class FlowState(rx.State):
     # Input Badge
     temp_badge_url: str = ""
     
+    # Modal State
+    is_add_modal_open: bool = False
+    
     current_screen_content: str = ""
     new_screen_name: str = ""
     status_message: str = ""
@@ -29,6 +33,61 @@ class FlowState(rx.State):
 
     def set_temp_badge_url(self, value: str):
         self.temp_badge_url = value
+
+    def toggle_add_modal(self):
+        self.is_add_modal_open = not self.is_add_modal_open
+
+    def add_payment_sequence(self):
+        """
+        Cria um par de nós conectados: Pagamento -> Sucesso
+        """
+        # 1. Gerar IDs únicos curtos
+        payment_id = f"pay_{uuid.uuid4().hex[:4]}"
+        success_id = f"success_{uuid.uuid4().hex[:4]}"
+
+        # 2. Definir os dados das telas seguindo o seu padrão JSON
+        payment_data = {
+            "type": "payment",
+            "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ 10,00** usando o botão abaixo.",
+            "amount": 10.00,
+            "gateway": "openpix",
+            "buttons": [[{
+                "text": "✅ Já realizei o pagamento",
+                "callback": f"goto_{success_id}"
+            }]]
+        }
+
+        success_data = {
+            "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+            "buttons": []
+        }
+
+        # 3. Inserir no dicionário global
+        if "screens" not in self.full_flow:
+            self.full_flow["screens"] = {}
+        
+        self.full_flow["screens"][payment_id] = payment_data
+        self.full_flow["screens"][success_id] = success_data
+
+        # 4. Persistir no arquivo JSON
+        try:
+            with open(FLOW_FILE_PATH, "w", encoding="utf-8") as f:
+                json.dump(self.full_flow, f, indent=2, ensure_ascii=False)
+            
+            # 5. Atualizar interface
+            self.status_message = "✅ Sequência de pagamento criada!"
+            self.screen_keys = sorted(list(self.full_flow["screens"].keys()))
+            
+            # Força o recálculo do gráfico para mostrar os novos nós e a aresta (edge)
+            self.calculate_interactive_layout()
+            
+            # Seleciona o nó de pagamento para edição imediata
+            self.select_screen(payment_id)
+            
+        except Exception as e:
+            self.status_message = f"❌ Erro ao criar sequência: {e}"
+
+        self.is_add_modal_open = False
 
     # --- CARREGAMENTO ---
     def load_flow(self):
