@@ -26,7 +26,6 @@ class FlowState(rx.State):
     status_message: str = ""
     
     # --- REACT FLOW STATES ---
-    # Substituímos graph_nodes e svg_content por estas listas
     nodes: List[Dict[str, Any]] = []
     edges: List[Dict[str, Any]] = []
 
@@ -37,29 +36,16 @@ class FlowState(rx.State):
         self.is_add_modal_open = not self.is_add_modal_open
 
     def add_payment_sequence(self):
-        """
-        Cria um par de nós conectados: Pagamento -> Sucesso
-        """
-        # Chama o serviço para adicionar a sequência de pagamento
         self.full_flow, payment_id, success_id, status_msg = FlowService.add_payment_sequence(self.full_flow)
-        
-        # Atualizar interface
         self.status_message = status_msg
         self.screen_keys = FlowService.get_screen_keys(self.full_flow)
-        
-        # Força o recálculo do gráfico para mostrar os novos nós e a aresta (edge)
         self.calculate_interactive_layout()
-        
-        # Seleciona o nó de pagamento para edição imediata
         self.select_screen(payment_id)
-        
         self.is_add_modal_open = False
 
     # --- CARREGAMENTO ---
     def load_flow(self):
-        # Carrega o fluxo usando o serviço
         self.full_flow = FlowService.load_flow()
-        
         if "screens" in self.full_flow:
             self.screen_keys = FlowService.get_screen_keys(self.full_flow)
         
@@ -74,10 +60,7 @@ class FlowState(rx.State):
 
     def select_screen(self, key: str):
         self.selected_screen_key = key
-        
-        # Recupera dados ou cria padrão
         data = self.full_flow.get("screens", {}).get(key, {"text": "Nova Tela", "buttons": []})
-        
         self.current_screen_content = json.dumps(data, indent=2, ensure_ascii=False)
         
         if isinstance(data, list):
@@ -87,13 +70,10 @@ class FlowState(rx.State):
             self.editor_blocks = [data]
             self.original_data_type = "dict"
             
-        # Recalcula o layout para atualizar o estilo do nó selecionado
         self.calculate_interactive_layout()
 
-    # Evento de clique no Nó do ReactFlow
     def on_node_click(self, node_id: str):
-        # Removemos a lógica de extração .get("id"), pois já é a string
-        print(f"DEBUG: Clique no nó recebido: {node_id}") # Para você ver no terminal
+        print(f"DEBUG: Clique no nó recebido: {node_id}")
         if node_id:
             self.select_screen(node_id)
 
@@ -104,12 +84,9 @@ class FlowState(rx.State):
         self.save_current_screen()
         self.new_screen_name = ""
 
-    # --- EDITOR VISUAL (Mantido igual) ---
+    # --- EDITOR VISUAL ---
     def set_editor_mode(self, mode):
-        # Converte a string "visual" ou "json" para booleano
         self.visual_editor_mode = (mode == "visual")
-        
-        # Se mudou para visual, carrega os blocos a partir do JSON atual
         if self.visual_editor_mode:
             try:
                 data = json.loads(self.current_screen_content)
@@ -146,6 +123,20 @@ class FlowState(rx.State):
     def update_media_url(self, index: int, key: str, value: str):
         if 0 <= index < len(self.editor_blocks):
             self.editor_blocks[index][key] = value
+            
+    # --- NOVOS MÉTODOS PARA PAGAMENTO ---
+    def update_payment_gateway(self, index: int, value: str):
+        if 0 <= index < len(self.editor_blocks):
+            self.editor_blocks[index]["gateway"] = value
+
+    def update_payment_amount(self, index: int, value: str):
+        # O input numérico pode enviar string, convertemos para float para manter o padrão do JSON
+        if 0 <= index < len(self.editor_blocks):
+            try:
+                self.editor_blocks[index]["amount"] = float(value)
+            except ValueError:
+                pass # Mantém o valor anterior se inválido
+    # ------------------------------------
 
     def insert_badge(self, index: int):
         if not self.temp_badge_url: return
@@ -205,28 +196,20 @@ class FlowState(rx.State):
         self.new_screen_name = value
 
     def save_current_screen(self):
-        # --- CORREÇÃO: Sincronização do Modo Visual ---
-        # Se estiver no modo visual, atualizamos o texto JSON (current_screen_content)
-        # com base nos blocos editados (editor_blocks) antes de prosseguir.
         if self.visual_editor_mode:
             final_data = self.editor_blocks
-            # Se originalmente era um dicionário único e continua com 1 bloco, salva como dict
             if len(self.editor_blocks) == 1 and self.original_data_type == "dict":
                 final_data = self.editor_blocks[0]
             
             self.current_screen_content = json.dumps(final_data, indent=2, ensure_ascii=False)
-        # -----------------------------------------------
 
-        # Chama o serviço para salvar a tela
         self.full_flow, status_msg = FlowService.save_screen(self.full_flow, self.selected_screen_key, self.current_screen_content)
-        
         self.status_message = status_msg
         
-        if "✅" in status_msg:  # Se salvou com sucesso
+        if "✅" in status_msg:
             self.screen_keys = FlowService.get_screen_keys(self.full_flow)
             self.calculate_interactive_layout()
             
-            # Se salvou via modo texto, atualiza os blocos visuais para não quebrar se trocar de aba
             try:
                 new_data = json.loads(self.current_screen_content)
                 if not self.visual_editor_mode:
@@ -237,11 +220,7 @@ class FlowState(rx.State):
                         self.editor_blocks = [new_data]
                         self.original_data_type = "dict"
             except json.JSONDecodeError:
-                pass  # Não faz nada se o JSON for inválido
+                pass
 
-    # --- NOVO LAYOUT PARA REACT FLOW ---
     def calculate_interactive_layout(self):
-        """
-        Calcula nós e arestas compatíveis com a estrutura do React Flow.
-        """
         self.nodes, self.edges = calculate_interactive_layout(self.full_flow, self.selected_screen_key)

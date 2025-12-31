@@ -38,26 +38,25 @@ class FlowService:
     def add_payment_sequence(full_flow: Dict[str, Any]) -> tuple:
         """
         Cria um par de telas de pagamento conectadas: Pagamento -> Sucesso
-        Retorna (novo_full_flow, payment_id, success_id, mensagem_status)
+        Usa o padrão 'webhook' para conexão direta, sem botões de navegação.
         """
         # 1. Gerar IDs únicos curtos
         payment_id = f"pay_{uuid.uuid4().hex[:4]}"
         success_id = f"success_{uuid.uuid4().hex[:4]}"
 
-        # 2. Definir os dados das telas seguindo o seu padrão JSON
+        # 2. Definir os dados das telas com a nova estrutura limpa
         payment_data = {
             "type": "payment",
-            "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}** usando o botão abaixo.\n\n {pix_copia_cola}",
+            "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**.",
             "amount": 10.00,
             "gateway": "openpix",
-            "buttons": [[{
-                "text": "✅ Já realizei o pagamento",
-                "callback": f"goto_{success_id}"
-            }]]
+            "webhook": success_id, # Link direto para o nó de sucesso
+            "buttons": [] # Sem botões de fluxo
         }
 
         success_data = {
-            "text": "🎉 *Pagamento de **R$ {amount}** Confirmado!*\n\nO Canal Vip foi liberado com sucesso.",
+            "type": "webhook",
+            "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
             "buttons": []
         }
 
@@ -72,9 +71,9 @@ class FlowService:
         success = FlowService.save_flow(full_flow)
         
         if success:
-            return full_flow, payment_id, success_id, "✅ Sequência de pagamento criada!"
+            return full_flow, payment_id, success_id, "✅ Sequência de pagamento configurada!"
         else:
-            return full_flow, payment_id, success_id, f"❌ Erro ao criar sequência: Falha ao salvar o arquivo"
+            return full_flow, payment_id, success_id, f"❌ Erro ao salvar sequência."
     
     @staticmethod
     def save_screen(full_flow: Dict[str, Any], screen_key: str, screen_content: str) -> tuple:

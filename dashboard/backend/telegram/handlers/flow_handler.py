@@ -39,7 +39,7 @@ async def navigation_handler(callback: types.CallbackQuery):
             pass 
 
         if isinstance(screen_data, dict) and screen_data.get("type") == "payment":
-            await handle_payment_node(callback, screen_data, user_context)
+            await handle_payment_node(callback, screen_data, user_context, target_screen_key)
             return
 
         if isinstance(screen_data, list):
@@ -53,7 +53,7 @@ async def navigation_handler(callback: types.CallbackQuery):
     
     await callback.answer()
 
-async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, context: dict):
+async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, context: dict, target_screen_key: str):
     amount = float(node_data.get("amount", 10.00))
     gateway_name_preferida = node_data.get("gateway") 
     
@@ -72,6 +72,10 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
         except Exception:
             pass
     
+    # --- Obter o ID da tela de pagamento atual ---
+    # Este será usado para identificar de onde veio o pagamento
+    payment_screen_id = target_screen_key
+    
     processing_msg = await callback.message.answer("🔄 <b>Gerando QR Code PIX...</b>", parse_mode="HTML")
     
     try:
@@ -85,7 +89,8 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
                 "name": context["name"],
                 "username": callback.from_user.username
             },
-            success_screen_id=success_screen_id
+            success_screen_id=success_screen_id,
+            payment_screen_id=payment_screen_id
         )
         
         if not result["success"]:

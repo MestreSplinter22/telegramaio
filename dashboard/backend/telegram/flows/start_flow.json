@@ -100,7 +100,7 @@
         [
           {
             "text": "PAGAR",
-            "callback": "goto_pay_25c1"
+            "callback": "goto_pay_236b"
           }
         ],
         [
@@ -183,22 +183,17 @@
         ]
       ]
     },
-    "pay_25c1": {
+    "pay_236b": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente* {amount}\n\nPor favor, realize o pagamento de **R$ 10,00** usando o botão abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 *Pagamento Pendente..*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
       "amount": 10.0,
       "gateway": "openpix",
-      "buttons": [
-        [
-          {
-            "text": "✅ Já realizei o pagamento",
-            "callback": "goto_success_628c"
-          }
-        ]
-      ]
+      "webhook": "success_86ad",
+      "buttons": []
     },
-    "success_628c": {
-      "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+    "success_86ad": {
+      "type": "webhook",
+      "text": "🎉 *Pagamento Confirmado..teste!*\n\nSeu saldo foi atualizado com sucesso.",
       "buttons": []
     }
   }

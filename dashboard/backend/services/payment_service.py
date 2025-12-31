@@ -52,7 +52,12 @@ class PaymentService:
             return user
 
     def create_transaction(self, user_id: str, amount: float, gateway_name: str, 
-                          pix_data: Dict[str, Any], success_screen_id: Optional[str] = None):
+                          pix_data: Dict[str, Any], success_screen_id: Optional[str] = None, 
+                          payment_screen_id: Optional[str] = None):
+        """Cria uma transação no banco de dados."""
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"📝 Criando transação - payment_screen_id: {payment_screen_id}")
         """Cria uma transação no banco de dados."""
         with rx.session() as session:
             extra_data_payload = {
@@ -63,7 +68,15 @@ class PaymentService:
             
             if success_screen_id:
                 extra_data_payload["success_screen_id"] = success_screen_id
+            
+            if payment_screen_id:
+                extra_data_payload["screen_id"] = payment_screen_id
+                logger.info(f"💾 Salvando screen_id {payment_screen_id} nos metadados")
+            else:
+                logger.warning("⚠️ payment_screen_id não foi fornecido!")
 
+            logger.info(f"📦 Payload extra_data: {extra_data_payload}")
+            
             new_txn = Transaction(
                 user_id=str(user_id),
                 type="deposit",
@@ -78,7 +91,8 @@ class PaymentService:
             return new_txn
 
     def process_payment(self, amount: float, gateway_name: Optional[str], 
-                       user_context: Dict[str, Any], success_screen_id: Optional[str] = None) -> Dict[str, Any]:
+                       user_context: Dict[str, Any], success_screen_id: Optional[str] = None,
+                       payment_screen_id: Optional[str] = None) -> Dict[str, Any]:
         """Processa um pagamento, gerenciando gateway, usuário e transação."""
         # 1. Busca Gateway
         gateway = self.get_active_gateway(gateway_name)
@@ -109,7 +123,8 @@ class PaymentService:
                 "gateway_id": gateway.id,
                 "external_id": pix_data.get("external_id")
             },
-            success_screen_id=success_screen_id
+            success_screen_id=success_screen_id,
+            payment_screen_id=payment_screen_id
         )
 
         return {

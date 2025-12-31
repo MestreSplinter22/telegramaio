@@ -76,6 +76,44 @@ def calculate_interactive_layout(
             adjacency[screen_id].append(target)
             if target not in all_nodes_set:
                 all_nodes_set.add(target)
+        
+        # Verificar conexão por webhook (Pagamento -> Sucesso)
+        # Procurar por campo webhook no conteúdo da tela
+        stack_for_webhook = [content]
+        found_webhooks = []
+        
+        # Varredura profunda por webhooks
+        while stack_for_webhook:
+            curr = stack_for_webhook.pop()
+            if isinstance(curr, dict):
+                if "webhook" in curr and isinstance(curr["webhook"], str):
+                    found_webhooks.append(curr["webhook"])
+                for v in curr.values():
+                    if isinstance(v, (dict, list)): 
+                        stack_for_webhook.append(v)
+            elif isinstance(curr, list):
+                for item in curr: 
+                    stack_for_webhook.append(item)
+        
+        # Criar Edges para webhooks encontrados
+        for i, webhook_target in enumerate(found_webhooks):
+            if webhook_target and webhook_target in screens:
+                # Edge ID único para webhook
+                edge_id = f"e-webhook-{screen_id}-{webhook_target}-{i}"
+                
+                temp_edges.append({
+                    "id": edge_id,
+                    "source": screen_id,
+                    "target": webhook_target,
+                    "label": "webhook",
+                    "animated": True,
+                    "style": {"stroke": "#10b981", "strokeWidth": 2},
+                    "labelStyle": {"fill": "#059669", "fontWeight": 700},
+                })
+                
+                adjacency[screen_id].append(webhook_target)
+                if webhook_target not in all_nodes_set:
+                    all_nodes_set.add(webhook_target)
 
     # 2. Algoritmo BFS para Níveis (Layout Hierárquico)
     start_node = full_flow.get("initial_screen", "").strip()

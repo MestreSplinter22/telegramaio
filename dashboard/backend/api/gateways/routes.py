@@ -277,31 +277,84 @@ async def openpix_webhook(request: Request):
                 user.total_spent += txn.amount
                 session.add(user)
                 
+                # --- NOVA LÓGICA DE MENSAGEM PERSONALIZADA ---
+                custom_message_sent = False
+                
                 try:
-                    msg_text = f"✅ <b>Pagamento Confirmado!</b>\n\n💰 + R$ {txn.amount:.2f}"
+                    print(f"🔍 Iniciando processamento de mensagem personalizada para TXID: {txid}")
                     
-                    extras = json.loads(txn.extra_data) if txn.extra_data else {}
-                    
-                    # --- CORREÇÃO: USAR A CHAVE CERTA (success_screen_id) ---
-                    # O flow_handler salva como 'success_screen_id', então lemos 'success_screen_id'
-                    success_id = extras.get("success_screen_id")
-                    # --------------------------------------------------------
-                    
-                    if success_id:
-                        print(f"🔍 Buscando tela de sucesso: {success_id}")
-                        custom_text = get_success_message_from_flow(success_id)
-                        if custom_text:
-                            msg_text = custom_text.replace("{valor}", f"{txn.amount:.2f}") \
-                                                  .replace("{amount}", f"{txn.amount:.2f}")
-
-                    await bot.send_message(
-                        chat_id=user.telegram_id,
-                        text=msg_text,
-                        parse_mode="Markdown" if "*" in msg_text else "HTML"
-                    )
+                    # 1. Carregar o fluxo para consultar os nós
+                    flow_file_path = "dashboard/backend/telegram/flows/start_flow.json"
+                    if os.path.exists(flow_file_path):
+                        with open(flow_file_path, "r", encoding="utf-8") as f:
+                            flow_data = json.load(f)
+                        screens = flow_data.get("screens", {})
+                        print(f"📄 Fluxo carregado com {len(screens)} telas")
+                        
+                        # 2. Identificar qual era a tela de pagamento associada a essa transação
+                        # Procurar nos metadados da transação pelo screen_id
+                        payment_screen_id = None
+                        print(f"📦 Extra data da transação: {txn.extra_data}")
+                        
+                        try:
+                            extra_data = json.loads(txn.extra_data) if txn.extra_data else {}
+                            payment_screen_id = extra_data.get("screen_id")
+                            print(f"🎯 Screen ID encontrado nos metadados: {payment_screen_id}")
+                        except Exception as e:
+                            print(f"❌ Erro ao parsear extra_data: {e}")
+                            pass
+                        
+                        # 3. Se encontrou o nó de pagamento, verificar se tem webhook
+                        if payment_screen_id and payment_screen_id in screens:
+                            print(f"✅ Nó de pagamento {payment_screen_id} encontrado no fluxo")
+                            payment_node = screens[payment_screen_id]
+                            target_node_id = payment_node.get("webhook")
+                            print(f"🔗 Webhook aponta para: {target_node_id}")
+                            
+                            # 4. Se tem nó de sucesso, buscar a mensagem personalizada
+                            if target_node_id and target_node_id in screens:
+                                print(f"✅ Nó de sucesso {target_node_id} encontrado")
+                                success_node = screens[target_node_id]
+                                message_text = success_node.get("text", "")
+                                print(f"💬 Texto da mensagem: {message_text}")
+                                
+                                if message_text:
+                                    # Formatar a mensagem (substituir variáveis)
+                                    formatted_text = message_text.replace("{amount}", f"{txn.amount:.2f}")
+                                    formatted_text = formatted_text.replace("{txid}", txid)
+                                    print(f"✉️ Mensagem formatada: {formatted_text}")
+                                    
+                                    # 5. Enviar a mensagem personalizada
+                                    await bot.send_message(
+                                        chat_id=user.telegram_id,
+                                        text=formatted_text,
+                                        parse_mode="Markdown"
+                                    )
+                                    custom_message_sent = True
+                                    print(f"✅ Mensagem personalizada enviada para o nó {target_node_id}")
+                                else:
+                                    print(f"⚠️ Texto vazio no nó {target_node_id}")
+                            else:
+                                print(f"⚠️ Nó de sucesso {target_node_id} não encontrado no fluxo")
+                        else:
+                            print(f"⚠️ Nó de pagamento {payment_screen_id} não encontrado no fluxo")
+                            print(f"🔍 Telas disponíveis: {list(screens.keys())}")
                 except Exception as e:
-                    print(f"Erro ao notificar Telegram: {e}")
-            
+                    print(f"❌ Erro ao processar mensagem personalizada: {e}")
+                
+                # 6. Fallback: Se não encontrou mensagem customizada, envia a padrão
+                if not custom_message_sent:
+                    print("🔄 Usando mensagem padrão como fallback")
+                    try:
+                        await bot.send_message(
+                            chat_id=user.telegram_id,
+                            text=f"✅ <b>Pagamento Confirmado!</b>\n\n💰 + R$ {txn.amount:.2f}",
+                            parse_mode="HTML"
+                        )
+                        print("✅ Mensagem padrão enviada com sucesso")
+                    except Exception as e:
+                        print(f"❌ Erro ao enviar mensagem Telegram (padrão): {e}")
+                
             session.commit()
             return {"status": "ok"}
     
