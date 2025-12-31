@@ -2,7 +2,7 @@
 
 import reflex as rx
 from datetime import datetime
-from ..models.base import Transaction
+from ..models import Transaction
 
 
 class TransactionState(rx.State):

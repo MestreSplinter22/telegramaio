@@ -3,7 +3,7 @@
 import requests
 import json
 from datetime import datetime, timedelta
-from dashboard.backend.models.models import GatewayConfig
+from dashboard.backend.models import GatewayConfig
 
 class SuitPayService:
     def __init__(self, config: GatewayConfig):

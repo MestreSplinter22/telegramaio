@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 import reflex as rx
-from ...models.models import BotLog
+from ...models import BotLog
 
 app = FastAPI()
 

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 import reflex as rx
-from ...models.models import Transaction
+from ...models import Transaction
 
 app = FastAPI()
 

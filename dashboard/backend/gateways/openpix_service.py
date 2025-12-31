@@ -3,7 +3,7 @@
 import requests
 import json
 from typing import Optional
-from dashboard.backend.models.models import GatewayConfig
+from dashboard.backend.models import GatewayConfig
 
 class OpenPixService:
     def __init__(self, config: GatewayConfig):

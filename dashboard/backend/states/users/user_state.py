@@ -2,7 +2,7 @@
 
 import reflex as rx
 from datetime import datetime
-from ..models.base import User
+from ..models import User
 
 
 class UserState(rx.State):

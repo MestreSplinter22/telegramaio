@@ -7,7 +7,7 @@ from typing import Dict, Any, Optional
 import reflex as rx
 from aiogram.types import BufferedInputFile
 
-from dashboard.backend.models.models import GatewayConfig, User, Transaction
+from dashboard.backend.models import GatewayConfig, User, Transaction
 from dashboard.backend.gateways.efi_service import EfiPixService
 from dashboard.backend.gateways.suitpay_service import SuitPayService
 from dashboard.backend.gateways.openpix_service import OpenPixService

@@ -10,7 +10,7 @@ import os
 import hashlib
 
 # Imports do Sistema
-from dashboard.backend.models.models import GatewayConfig, Transaction, User
+from dashboard.backend.models import GatewayConfig, Transaction, User
 from dashboard.backend.gateways.efi_service import EfiPixService
 from dashboard.backend.gateways.suitpay_service import SuitPayService
 from dashboard.backend.gateways.openpix_service import OpenPixService

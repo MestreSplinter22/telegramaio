@@ -2,7 +2,7 @@
 
 import reflex as rx
 from datetime import datetime
-from ..models.base import GiftCard
+from ..models import GiftCard
 
 
 class GiftCardProductState(rx.State):

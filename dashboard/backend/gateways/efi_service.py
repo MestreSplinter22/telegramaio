@@ -9,7 +9,7 @@ import unicodedata
 import re
 from contextlib import contextmanager
 from cryptography.hazmat.primitives.serialization import pkcs12, Encoding, PrivateFormat, NoEncryption
-from dashboard.backend.models.models import GatewayConfig
+from dashboard.backend.models import GatewayConfig
 
 class EfiPixService:
     def __init__(self, config: GatewayConfig):

@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
 import reflex as rx
-from ...models.models import BotConfig
+from ...models import BotConfig
 
 
 class BotConfigCreate(BaseModel):

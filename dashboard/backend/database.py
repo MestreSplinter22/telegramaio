@@ -1,7 +1,7 @@
 """Database configuration and initialization for the Telegram gift card bot."""
 
 import reflex as rx
-from .models import User, Transaction, GiftCard, BotLog, BotConfig, DailyStatistics
+from .models import User, Transaction, GiftCard, BotLog, BotConfig, DailyStatistics, GatewayConfig
 
 async def init_database():
     """Initialize the database with sample data if empty."""
