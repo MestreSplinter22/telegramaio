@@ -1,8 +1,8 @@
 import logging
 import reflex as rx
 from datetime import datetime
-from .telegram.bot import bot
-from .models.models import User, Transaction
+from ..telegram.bot import bot
+from ..models.models import User, Transaction
 
 logger = logging.getLogger(__name__)
 

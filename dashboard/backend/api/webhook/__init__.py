@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 import logging
 import os
-from ...flowbuilder import start_flow
+from ...services.payment_processor_service import start_flow
 
 # Configuração de Logs
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ def register_webhook_routes(app: FastAPI):
                 return {"status": 200, "detail": "Webhook ativo"}
 
             # Se chegamos aqui, é um Pix real. Processamos:
-            from ...flowbuilder import start_flow
+            from ...services.payment_processor_service import start_flow
             for pix in payload.get("pix", []):
                 # O flow_handler cuidará de achar o user pelo txid
                 await start_flow(user_id="0", flow_name="pix_received", data=pix)
