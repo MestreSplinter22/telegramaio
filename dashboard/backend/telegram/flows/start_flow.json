@@ -194,7 +194,14 @@
     "success_86ad": {
       "type": "webhook",
       "text": "🎉 *Pagamento Confirmado..teste!*\n\nSeu saldo foi atualizado com sucesso.",
-      "buttons": []
+      "buttons": [
+        [
+          {
+            "text": "teste",
+            "url": "https://mail.google.com/mail/u/3/#inbox"
+          }
+        ]
+      ]
     }
   }
 }

@@ -16,6 +16,9 @@ from dashboard.backend.gateways.suitpay_service import SuitPayService
 from dashboard.backend.gateways.openpix_service import OpenPixService
 from dashboard.backend.telegram.bot import bot
 
+# [CORREÇÃO 1] Importação necessária para criar os botões
+from dashboard.backend.telegram.common.keyboard_builder import build_keyboard
+
 router = APIRouter(prefix="/api/payment", tags=["payment"])
 
 def get_success_message_from_flow(screen_id: str) -> Optional[str]:
@@ -255,7 +258,7 @@ async def openpix_webhook(request: Request):
     if not txid:
         return {"status": "error", "msg": "No correlationID found"}
 
-    print(f"🔔 Webhook OpenPix Confirmado: {txid}")
+    print(f"🔔 [Routes] Webhook OpenPix Confirmado: {txid}")
 
     with rx.session() as session:
         txn = session.query(Transaction).filter(
@@ -277,11 +280,11 @@ async def openpix_webhook(request: Request):
                 user.total_spent += txn.amount
                 session.add(user)
                 
-                # --- NOVA LÓGICA DE MENSAGEM PERSONALIZADA ---
+                # --- NOVA LÓGICA DE MENSAGEM PERSONALIZADA (CORRIGIDA COM BOTÕES) ---
                 custom_message_sent = False
                 
                 try:
-                    print(f"🔍 Iniciando processamento de mensagem personalizada para TXID: {txid}")
+                    print(f"🔍 [Routes] Processando mensagem personalizada para TXID: {txid}")
                     
                     # 1. Carregar o fluxo para consultar os nós
                     flow_file_path = "dashboard/backend/telegram/flows/start_flow.json"
@@ -289,60 +292,60 @@ async def openpix_webhook(request: Request):
                         with open(flow_file_path, "r", encoding="utf-8") as f:
                             flow_data = json.load(f)
                         screens = flow_data.get("screens", {})
-                        print(f"📄 Fluxo carregado com {len(screens)} telas")
                         
-                        # 2. Identificar qual era a tela de pagamento associada a essa transação
-                        # Procurar nos metadados da transação pelo screen_id
+                        # 2. Identificar qual era a tela de pagamento
                         payment_screen_id = None
-                        print(f"📦 Extra data da transação: {txn.extra_data}")
-                        
                         try:
                             extra_data = json.loads(txn.extra_data) if txn.extra_data else {}
                             payment_screen_id = extra_data.get("screen_id")
-                            print(f"🎯 Screen ID encontrado nos metadados: {payment_screen_id}")
                         except Exception as e:
                             print(f"❌ Erro ao parsear extra_data: {e}")
                             pass
                         
                         # 3. Se encontrou o nó de pagamento, verificar se tem webhook
                         if payment_screen_id and payment_screen_id in screens:
-                            print(f"✅ Nó de pagamento {payment_screen_id} encontrado no fluxo")
                             payment_node = screens[payment_screen_id]
                             target_node_id = payment_node.get("webhook")
                             print(f"🔗 Webhook aponta para: {target_node_id}")
                             
-                            # 4. Se tem nó de sucesso, buscar a mensagem personalizada
+                            # 4. Se tem nó de sucesso, buscar a mensagem
                             if target_node_id and target_node_id in screens:
-                                print(f"✅ Nó de sucesso {target_node_id} encontrado")
                                 success_node = screens[target_node_id]
                                 message_text = success_node.get("text", "")
-                                print(f"💬 Texto da mensagem: {message_text}")
                                 
                                 if message_text:
-                                    # Formatar a mensagem (substituir variáveis)
-                                    formatted_text = message_text.replace("{amount}", f"{txn.amount:.2f}")
-                                    formatted_text = formatted_text.replace("{txid}", txid)
-                                    print(f"✉️ Mensagem formatada: {formatted_text}")
+                                    # Formatar texto
+                                    formatted_text = message_text.replace("{amount}", f"{txn.amount:.2f}")\
+                                                                 .replace("{txid}", txid)
                                     
-                                    # 5. Enviar a mensagem personalizada
+                                    # [CORREÇÃO 2] Construir Teclado
+                                    markup = None
+                                    if "buttons" in success_node and success_node["buttons"]:
+                                        try:
+                                            print(f"🔘 [Routes] Criando botões: {success_node['buttons']}")
+                                            markup = build_keyboard(success_node["buttons"])
+                                        except Exception as kb_err:
+                                            print(f"❌ Erro ao criar teclado: {kb_err}")
+
+                                    # [CORREÇÃO 3] Enviar com reply_markup
                                     await bot.send_message(
                                         chat_id=user.telegram_id,
                                         text=formatted_text,
-                                        parse_mode="Markdown"
+                                        parse_mode="Markdown",
+                                        reply_markup=markup
                                     )
                                     custom_message_sent = True
-                                    print(f"✅ Mensagem personalizada enviada para o nó {target_node_id}")
+                                    print(f"✅ [Routes] Mensagem (com botões) enviada!")
                                 else:
                                     print(f"⚠️ Texto vazio no nó {target_node_id}")
                             else:
-                                print(f"⚠️ Nó de sucesso {target_node_id} não encontrado no fluxo")
+                                print(f"⚠️ Nó de sucesso não encontrado")
                         else:
-                            print(f"⚠️ Nó de pagamento {payment_screen_id} não encontrado no fluxo")
-                            print(f"🔍 Telas disponíveis: {list(screens.keys())}")
+                            print(f"⚠️ Nó de pagamento não encontrado")
                 except Exception as e:
                     print(f"❌ Erro ao processar mensagem personalizada: {e}")
                 
-                # 6. Fallback: Se não encontrou mensagem customizada, envia a padrão
+                # 6. Fallback
                 if not custom_message_sent:
                     print("🔄 Usando mensagem padrão como fallback")
                     try:
@@ -351,24 +354,13 @@ async def openpix_webhook(request: Request):
                             text=f"✅ <b>Pagamento Confirmado!</b>\n\n💰 + R$ {txn.amount:.2f}",
                             parse_mode="HTML"
                         )
-                        print("✅ Mensagem padrão enviada com sucesso")
                     except Exception as e:
-                        print(f"❌ Erro ao enviar mensagem Telegram (padrão): {e}")
+                        print(f"❌ Erro ao enviar mensagem padrão: {e}")
                 
             session.commit()
             return {"status": "ok"}
     
     return {"status": "not_found"}
-
-# --- OUTROS WEBHOOKS E REGISTRO ---
-@router.post("/webhook/suitpay")
-async def suitpay_webhook(request: Request):
-    # Aplique a mesma correção da chave 'success_screen_id' aqui também se usar suitpay
-    return {"status": "ok"} # (Resumido)
-
-@router.post("/webhook/efi")
-async def efi_webhook(request: Request):
-    return {"status": "ok"}
 
 def register_payment_routes(app):
     app.include_router(router)
