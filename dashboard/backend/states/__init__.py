@@ -1,6 +1,9 @@
 """Modular state management for the dashboard."""
 
 from .models.base import User, Transaction, GiftCard, BotMetrics
+from .dashboard.auth_state import AuthState
+from .dashboard.stats_state import StatsState
+from .dashboard.ui_state import UIState
 from .bot.bot_state import BotState
 from .users.user_state import UserState
 from .transactions.transaction_state import TransactionState
@@ -13,6 +16,9 @@ __all__ = [
     "Transaction", 
     "GiftCard",
     "BotMetrics",
+    "AuthState",
+    "StatsState",
+    "UIState",
     "BotState",
     "UserState",
     "TransactionState",
