@@ -1,10 +1,9 @@
 import reflex as rx
 import json
-import os
-import uuid
 from typing import Dict, List, Any
 
-FLOW_FILE_PATH = "dashboard/backend/telegram/flows/start_flow.json"
+from dashboard.backend.logic.flow_layout import calculate_interactive_layout
+from dashboard.backend.services.flow_service import FlowService
 
 class FlowState(rx.State):
     full_flow: Dict[str, Any] = {}
@@ -41,74 +40,37 @@ class FlowState(rx.State):
         """
         Cria um par de nós conectados: Pagamento -> Sucesso
         """
-        # 1. Gerar IDs únicos curtos
-        payment_id = f"pay_{uuid.uuid4().hex[:4]}"
-        success_id = f"success_{uuid.uuid4().hex[:4]}"
-
-        # 2. Definir os dados das telas seguindo o seu padrão JSON
-        payment_data = {
-            "type": "payment",
-            "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}** usando o botão abaixo.\n\n {pix_copia_cola}",
-            "amount": 10.00,
-            "gateway": "openpix",
-            "buttons": [[{
-                "text": "✅ Já realizei o pagamento",
-                "callback": f"goto_{success_id}"
-            }]]
-        }
-
-        success_data = {
-            "text": "🎉 *Pagamento de **R$ {amount}** Confirmado!*\n\nO Canal Vip foi liberado com sucesso.",
-            "buttons": []
-        }
-
-        # 3. Inserir no dicionário global
-        if "screens" not in self.full_flow:
-            self.full_flow["screens"] = {}
+        # Chama o serviço para adicionar a sequência de pagamento
+        self.full_flow, payment_id, success_id, status_msg = FlowService.add_payment_sequence(self.full_flow)
         
-        self.full_flow["screens"][payment_id] = payment_data
-        self.full_flow["screens"][success_id] = success_data
-
-        # 4. Persistir no arquivo JSON
-        try:
-            with open(FLOW_FILE_PATH, "w", encoding="utf-8") as f:
-                json.dump(self.full_flow, f, indent=2, ensure_ascii=False)
-            
-            # 5. Atualizar interface
-            self.status_message = "✅ Sequência de pagamento criada!"
-            self.screen_keys = sorted(list(self.full_flow["screens"].keys()))
-            
-            # Força o recálculo do gráfico para mostrar os novos nós e a aresta (edge)
-            self.calculate_interactive_layout()
-            
-            # Seleciona o nó de pagamento para edição imediata
-            self.select_screen(payment_id)
-            
-        except Exception as e:
-            self.status_message = f"❌ Erro ao criar sequência: {e}"
-
+        # Atualizar interface
+        self.status_message = status_msg
+        self.screen_keys = FlowService.get_screen_keys(self.full_flow)
+        
+        # Força o recálculo do gráfico para mostrar os novos nós e a aresta (edge)
+        self.calculate_interactive_layout()
+        
+        # Seleciona o nó de pagamento para edição imediata
+        self.select_screen(payment_id)
+        
         self.is_add_modal_open = False
 
     # --- CARREGAMENTO ---
     def load_flow(self):
-        if os.path.exists(FLOW_FILE_PATH):
-            try:
-                with open(FLOW_FILE_PATH, "r", encoding="utf-8") as f:
-                    self.full_flow = json.load(f)
-                if "screens" in self.full_flow:
-                    self.screen_keys = sorted(list(self.full_flow["screens"].keys()))
-                
-                if not self.selected_screen_key:
-                    initial = self.full_flow.get("initial_screen", "")
-                    if initial and initial in self.screen_keys:
-                        self.select_screen(initial)
-                    elif self.screen_keys:
-                        self.select_screen(self.screen_keys[0])
-                
-                self.calculate_interactive_layout()
-            except Exception as e:
-                self.status_message = f"Erro Load: {str(e)}"
-                print(e)
+        # Carrega o fluxo usando o serviço
+        self.full_flow = FlowService.load_flow()
+        
+        if "screens" in self.full_flow:
+            self.screen_keys = FlowService.get_screen_keys(self.full_flow)
+        
+        if not self.selected_screen_key:
+            initial = FlowService.get_initial_screen(self.full_flow)
+            if initial and initial in self.screen_keys:
+                self.select_screen(initial)
+            elif self.screen_keys:
+                self.select_screen(self.screen_keys[0])
+        
+        self.calculate_interactive_layout()
 
     def select_screen(self, key: str):
         self.selected_screen_key = key
@@ -255,170 +217,31 @@ class FlowState(rx.State):
             self.current_screen_content = json.dumps(final_data, indent=2, ensure_ascii=False)
         # -----------------------------------------------
 
-        try:
-            # Agora o current_screen_content está atualizado, independente do modo
-            new_data = json.loads(self.current_screen_content)
-            
-            if "screens" not in self.full_flow: self.full_flow["screens"] = {}
-            self.full_flow["screens"][self.selected_screen_key] = new_data
-            
-            with open(FLOW_FILE_PATH, "w", encoding="utf-8") as f:
-                json.dump(self.full_flow, f, indent=2, ensure_ascii=False)
-                
-            self.status_message = "✅ Salvo com sucesso!"
-            self.screen_keys = sorted(list(self.full_flow["screens"].keys()))
+        # Chama o serviço para salvar a tela
+        self.full_flow, status_msg = FlowService.save_screen(self.full_flow, self.selected_screen_key, self.current_screen_content)
+        
+        self.status_message = status_msg
+        
+        if "✅" in status_msg:  # Se salvou com sucesso
+            self.screen_keys = FlowService.get_screen_keys(self.full_flow)
             self.calculate_interactive_layout()
             
             # Se salvou via modo texto, atualiza os blocos visuais para não quebrar se trocar de aba
-            if not self.visual_editor_mode:
-                if isinstance(new_data, list):
-                    self.editor_blocks = new_data
-                    self.original_data_type = "list"
-                else:
-                    self.editor_blocks = [new_data]
-                    self.original_data_type = "dict"
-
-        except json.JSONDecodeError:
-            self.status_message = "❌ JSON Inválido. Corrija o texto antes de salvar."
-        except Exception as e:
-            self.status_message = f"❌ Erro ao salvar: {e}"
-            print(f"Erro Save: {e}")
+            try:
+                new_data = json.loads(self.current_screen_content)
+                if not self.visual_editor_mode:
+                    if isinstance(new_data, list):
+                        self.editor_blocks = new_data
+                        self.original_data_type = "list"
+                    else:
+                        self.editor_blocks = [new_data]
+                        self.original_data_type = "dict"
+            except json.JSONDecodeError:
+                pass  # Não faz nada se o JSON for inválido
 
     # --- NOVO LAYOUT PARA REACT FLOW ---
     def calculate_interactive_layout(self):
         """
         Calcula nós e arestas compatíveis com a estrutura do React Flow.
-        Mantém a lógica de BFS para distribuir as posições X e Y.
         """
-        screens_raw = self.full_flow.get("screens", {})
-        if not screens_raw: 
-            self.nodes = []
-            self.edges = []
-            return
-
-        screens = {str(k).strip(): v for k, v in screens_raw.items()}
-
-        # Dimensões para cálculo de posição (Grid)
-        NODE_WIDTH = 250
-        NODE_HEIGHT = 150 
-        GAP_X = 50
-        GAP_Y = 100
-        START_X = 100
-        START_Y = 50
-
-        # Listas temporárias
-        temp_edges = []
-        adjacency = {} 
-        all_nodes_set = set(screens.keys())
-        
-        # 1. Identificar Conexões (Edges)
-        for screen_id, content in screens.items():
-            if screen_id not in adjacency: adjacency[screen_id] = []
-            
-            found_buttons = []
-            stack = [content]
-            
-            # Varredura profunda por botões
-            while stack:
-                curr = stack.pop()
-                if isinstance(curr, dict):
-                    if "callback" in curr and isinstance(curr["callback"], str) and curr["callback"].startswith("goto_"):
-                        found_buttons.append(curr)
-                    for v in curr.values():
-                        if isinstance(v, (dict, list)): stack.append(v)
-                elif isinstance(curr, list):
-                    for item in curr: stack.append(item)
-            
-            # Criar Edges
-            for i, btn in enumerate(found_buttons):
-                raw_target = btn["callback"].replace("goto_", "").strip()
-                target = raw_target.split()[0] if raw_target else raw_target
-                label = btn.get("text", "Próximo").strip()
-                
-                # Edge ID único
-                edge_id = f"e-{screen_id}-{target}-{i}"
-                
-                # Verifica se o target existe (Link Quebrado)
-                is_broken = target not in screens
-                
-                temp_edges.append({
-                    "id": edge_id,
-                    "source": screen_id,
-                    "target": target,
-                    "label": label,
-                    "animated": True,
-                    "style": {"stroke": "#ef4444", "strokeWidth": 2} if is_broken else {"stroke": "#94a3b8"},
-                    "labelStyle": {"fill": "#ef4444", "fontWeight": 700} if is_broken else {"fill": "#64748b"},
-                })
-                
-                adjacency[screen_id].append(target)
-                if target not in all_nodes_set:
-                    all_nodes_set.add(target)
-
-        # 2. Algoritmo BFS para Níveis (Layout Hierárquico)
-        start_node = self.full_flow.get("initial_screen", "").strip()
-        if start_node not in screens and screens: start_node = next(iter(screens))
-
-        levels = {}
-        queue = [(start_node, 0)]
-        visited = set()
-
-        while queue:
-            current, level = queue.pop(0)
-            if current in visited: continue
-            visited.add(current)
-            levels[current] = level
-            for child in adjacency.get(current, []): queue.append((child, level + 1))
-
-        # Adicionar nós órfãos no nível 1
-        for node in all_nodes_set:
-            if node not in visited: levels[node] = 1
-
-        nodes_by_level = {}
-        for node, level in levels.items():
-            if level not in nodes_by_level: nodes_by_level[level] = []
-            nodes_by_level[level].append(node)
-
-        # 3. Construir Nós do ReactFlow
-        final_rf_nodes = []
-        
-        for level, level_nodes in nodes_by_level.items():
-            # Centralizar a linha horizontalmente
-            row_width = len(level_nodes) * (NODE_WIDTH + GAP_X)
-            start_x_level = START_X # Você pode centralizar dinamicamente se quiser
-            
-            for i, node_id in enumerate(level_nodes):
-                x = start_x_level + (i * (NODE_WIDTH + GAP_X))
-                y = START_Y + (level * (NODE_HEIGHT + GAP_Y))
-                
-                is_selected = node_id == self.selected_screen_key
-                is_missing = node_id not in screens
-                
-                # Estilização baseada em estado
-                bg_color = "#1e293b" if is_selected else ("#fef2f2" if is_missing else "#ffffff")
-                text_color = "white" if is_selected else ("#b91c1c" if is_missing else "black")
-                border_color = "#3b82f6" if is_selected else ("#ef4444" if is_missing else "#cbd5e1")
-                
-                # Label com indicador
-                label_text = f"🚫 {node_id}" if is_missing else node_id
-                
-                final_rf_nodes.append({
-                    "id": node_id,
-                    "data": {"label": label_text},
-                    "position": {"x": x, "y": y},
-                    "draggable": True,
-                    "style": {
-                        "background": bg_color,
-                        "color": text_color,
-                        "border": f"2px solid {border_color}",
-                        "borderRadius": "8px",
-                        "width": "200px",
-                        "padding": "10px",
-                        "fontSize": "12px",
-                        "fontWeight": "bold",
-                        "boxShadow": "0 4px 6px -1px rgb(0 0 0 / 0.1)"
-                    }
-                })
-
-        self.nodes = final_rf_nodes
-        self.edges = temp_edges
+        self.nodes, self.edges = calculate_interactive_layout(self.full_flow, self.selected_screen_key)
