@@ -66,8 +66,8 @@ class WebhookService:
                 txn.status = "completed"
                 session.add(txn)
                 
-                # Credita Salvo ao Usuário
-                user = session.query(User).filter(User.id == int(txn.user_id)).first()
+                # Credita Saldo ao Usuário
+                user = session.query(User).filter(User.telegram_id == txn.user_id).first()
                 if user:
                     user.balance += txn.amount
                     user.total_spent += txn.amount  # Opcional: ajustar lógica contábil
@@ -129,7 +129,7 @@ class WebhookService:
                     return {"status": "error", "msg": ERROR_VALUE_MISMATCH}
 
                 txn.status = "completed"
-                user = session.query(User).filter(User.id == int(txn.user_id)).first()
+                user = session.query(User).filter(User.telegram_id == txn.user_id).first()
                 if user:
                     user.balance += txn.amount
                     user.total_spent += txn.amount

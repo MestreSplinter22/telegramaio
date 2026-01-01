@@ -78,7 +78,7 @@ class PaymentService:
             logger.info(f"📦 Payload extra_data: {extra_data_payload}")
             
             new_txn = Transaction(
-                user_id=str(user_id),
+                user_id=user_id,
                 type="deposit",
                 amount=amount,
                 description=f"Recarga via {gateway_name}",
@@ -115,7 +115,7 @@ class PaymentService:
 
         # 4. Salva Transação
         transaction = self.create_transaction(
-            user_id=user.id,
+            user_id=user.telegram_id,
             amount=amount,
             gateway_name=gateway.name,
             pix_data={

@@ -83,7 +83,7 @@ class PaymentService:
                     extra_data_dict[EXTRA_DATA_SCREEN_ID] = screen_id
 
                 new_txn = Transaction(
-                    user_id=str(user.id),
+                    user_id=user.telegram_id,
                     type=TRANSACTION_TYPE_DEPOSIT,
                     amount=amount,
                     description=f"Recarga via {gateway.name}",
@@ -150,7 +150,7 @@ class TransactionService:
             txn.status = TRANSACTION_STATUS_COMPLETED
             
             # Atualizar saldo do usuário
-            user = session.query(User).filter(User.id == int(txn.user_id)).first()
+            user = session.query(User).filter(User.telegram_id == txn.user_id).first()
             if user:
                 user.balance += txn.amount
                 user.total_spent += txn.amount
