@@ -10,6 +10,7 @@ from aiogram.client.default import DefaultBotProperties
 # ------------------------------
 from dashboard.backend.telegram.handlers.start_handler import router as start_router
 from dashboard.backend.telegram.handlers.flow_handler import router as flow_router
+from dashboard.backend.telegram.handlers.join_handler import router as join_router
 
 
 # Configurar logging
@@ -68,6 +69,9 @@ async def start_telegram_bot():
             dp.include_router(start_router)
         if flow_router not in dp.sub_routers:
             dp.include_router(flow_router)
+        if join_router not in dp.sub_routers:
+            dp.include_router(join_router)
+            logger.info("Router de Join Request registrado.")
         
         # Iniciar o polling
         logger.info("Iniciando polling...")
