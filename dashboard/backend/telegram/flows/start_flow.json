@@ -77,13 +77,45 @@
         ]
       ]
     },
+    "upsell_monthly_pt": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por apenas <b>R$6.90</b> você libera \n🔞 <b>+20 GRUPOS PR0IB1DS</b> -\naqueles que nunca ficam só no básico.\n\nO ACESSO AO COFRE É  V I T A L Í C I O\n\n🚨 <b>ULTIMA VAGA DISPONÍVEL!!!</b>\n⚡️ É só marcar essa opção agora \n🚀e levar tudo na hora, \nsem pagar frete nem nada a mais.",
+      "buttons": [
+        [
+          {
+            "text": "SIIIMM ✅ (Adicionar + R$6,90)",
+            "callback": "goto_payment_monthly_plus"
+          },
+          {
+            "text": "NÃO , Obrigado ❌",
+            "callback": "goto_payment_monthly_normal"
+          }
+        ]
+      ]
+    },
+    "upsell_lifetime_pt": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por apenas <b>R$6.90</b> você libera \n🔞 <b>+20 GRUPOS PR0IB1DS</b> -\naqueles que nunca ficam só no básico.\n\nO ACESSO AO COFRE É  V I T A L Í C I O\n\n🚨 <b>ULTIMA VAGA DISPONÍVEL!!!</b>\n⚡️ É só marcar essa opção agora \n🚀e levar tudo na hora, \nsem pagar frete nem nada a mais.",
+      "buttons": [
+        [
+          {
+            "text": "SIIIMM ✅ (Adicionar + R$6,90)",
+            "callback": "goto_payment_lifetime_plus"
+          },
+          {
+            "text": "NÃO , Obrigado ❌",
+            "callback": "goto_payment_lifetime_normal"
+          }
+        ]
+      ]
+    },
     "payment_weekly_plus": {
       "text": "🌟 <b>Você selecionou o seguinte plano:</b>\n\n🎁 <b>Plano:</b> \n🔥 Pacote SEMANAL + COFRE SECRETO 🔐🔞\n💰 <b>Valor: R$21,80</b>\n\n💠 <b>Pague via Pix</b>\nCHAVE PIX email:\n<code>vip.acesso2026@gmail.com</code>\n\n(toque na chave acima para copiar)\n\n🌟 <b>Após o pagamento:</b>\n👇 Clique no botão abaixo para enviar o comprovante ao nosso suporte.\n🚀 Enviaremos o acesso ao grupo VIP no mesmo instante!",
       "buttons": [
         [
           {
-            "text": "ENVIAR COMPROVANTE 📤",
-            "url": "https://t.me/SUPINCSTCLUB2"
+            "text": "Pagar",
+            "callback": "goto_pay_a4b3"
           }
         ],
         [
@@ -106,7 +138,7 @@
         [
           {
             "text": "⬅️ Voltar",
-            "callback": "goto_tela_recarga_10"
+            "callback": "goto_sales_pitch_pt"
           }
         ]
       ]
@@ -139,6 +171,403 @@
         "buttons": []
       }
     ],
+    "sales_pitch_es": [
+      {
+        "video_url": "BAACAgEAAxkBAAIGLmlG66y91Lpxw3rc9edUiFS0fqv0AAIsBgACbGw4RvxPildUNm2tNgQ",
+        "text": "¡Vamos, hermano! 😃\n\n¡Este bot es donde te unes a nuestra comunidad VIP!\n\n🚨 <b>Hablemos claro aquí en VIP:</b>\n\n🎥 Más de 15.000 videos prohibidos, raros y 100% reales 😈\n🥷 Contenido filtrado, cámaras ocultas y cosas que han desaparecido de internet 💨"
+      },
+      {
+        "video_url": "BAACAgEAAxkBAAIGJmlG62TqYsMp3emfgkav-XmOO1t4AAIqBgACbGw4Rg9GvhoFrregNgQ",
+        "text": "👇🏻 <b>Mira lo que te espera dentro:</b>\n🔥🔥\n\n🚨 <b>SOLO Medios RAROS — nunca vistos en ningún otro lugar</b> 🚨\n¡TIENES QUE VERLO PARA CREERLO! 😵‍💫\n\n🎥 Capturas reales. Cámaras ocultas. Nada de guiones—solo acción sin censura con miembros de la familia cruzando la línea 😈\n\n<b>{name}</b>, ¡acabas de desbloquear un 50% de DESCUENTO para nuestro plan VITALICIO! 😃\n\n<b>Selecciona tu plan abajo 👇</b>",
+        "buttons": [
+          [
+            {
+              "text": "7 DÍAS VIP | $ 14.90",
+              "callback": "goto_upsell_weekly_es"
+            }
+          ],
+          [
+            {
+              "text": "1 MES VIP | $ 17.90",
+              "callback": "goto_upsell_monthly_es"
+            }
+          ],
+          [
+            {
+              "text": "VITALICIO | DE $ 38 A $ 23.90",
+              "callback": "goto_upsell_lifetime_es"
+            }
+          ]
+        ]
+      }
+    ],
+    "upsell_weekly_es": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>$6.90</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
+      "buttons": [
+        [
+          {
+            "text": "SÍ ✅ (Agregar + $6.90)",
+            "callback": "goto_payment_weekly_plus_es"
+          },
+          {
+            "text": "NO, Gracias ❌",
+            "callback": "goto_payment_weekly_normal_es"
+          }
+        ]
+      ]
+    },
+    "upsell_monthly_es": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>$6.90</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
+      "buttons": [
+        [
+          {
+            "text": "SÍ ✅ (Agregar + $6.90)",
+            "callback": "goto_payment_monthly_plus_es"
+          },
+          {
+            "text": "NO, Gracias ❌",
+            "callback": "goto_payment_monthly_normal_es"
+          }
+        ]
+      ]
+    },
+    "upsell_lifetime_es": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>$6.90</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
+      "buttons": [
+        [
+          {
+            "text": "SÍ ✅ (Agregar + $6.90)",
+            "callback": "goto_payment_lifetime_plus_es"
+          },
+          {
+            "text": "NO, Gracias ❌",
+            "callback": "goto_payment_lifetime_normal_es"
+          }
+        ]
+      ]
+    },
+    "upsell_weekly_en": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "buttons": [
+        [
+          {
+            "text": "YES ✅ (Add + $6.90)",
+            "callback": "goto_payment_weekly_plus_en"
+          },
+          {
+            "text": "NO, Thanks ❌",
+            "callback": "goto_payment_weekly_normal_en"
+          }
+        ]
+      ]
+    },
+    "upsell_monthly_en": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "buttons": [
+        [
+          {
+            "text": "YES ✅ (Add + $6.90)",
+            "callback": "goto_payment_monthly_plus_en"
+          },
+          {
+            "text": "NO, Thanks ❌",
+            "callback": "goto_payment_monthly_normal_en"
+          }
+        ]
+      ]
+    },
+    "upsell_lifetime_en": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "buttons": [
+        [
+          {
+            "text": "YES ✅ (Add + $6.90)",
+            "callback": "goto_payment_lifetime_plus_en"
+          },
+          {
+            "text": "NO, Thanks ❌",
+            "callback": "goto_payment_lifetime_normal_en"
+          }
+        ]
+      ]
+    },
+    "upsell_monthly_en": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "buttons": [
+        [
+          {
+            "text": "YES ✅ (Add + $6.90)",
+            "callback": "goto_payment_monthly_plus_en"
+          },
+          {
+            "text": "NO, Thanks ❌",
+            "callback": "goto_payment_monthly_normal_en"
+          }
+        ]
+      ]
+    },
+    "payment_weekly_plus_es": {
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE SEMANAL + COFRE SECRETO 🔐🔞\n💰 <b>Precio: $21.80</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "buttons": [
+        [
+          {
+            "text": "Contactar Soporte",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Volver",
+            "callback": "goto_sales_pitch_es"
+          }
+        ]
+      ]
+    },
+    "payment_weekly_normal_es": {
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE SEMANAL\n💰 <b>Precio: $14.90</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "buttons": [
+        [
+          {
+            "text": "Contactar Soporte",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Volver",
+            "callback": "goto_sales_pitch_es"
+          }
+        ]
+      ]
+    },
+    "payment_monthly_plus_es": {
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE MENSUAL + COFRE SECRETO 🔐🔞\n💰 <b>Precio: $24.80</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "buttons": [
+        [
+          {
+            "text": "Contactar Soporte",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Volver",
+            "callback": "goto_sales_pitch_es"
+          }
+        ]
+      ]
+    },
+    "payment_monthly_normal_es": {
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE MENSUAL\n💰 <b>Precio: $17.90</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "buttons": [
+        [
+          {
+            "text": "Contactar Soporte",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Volver",
+            "callback": "goto_sales_pitch_es"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_plus_es": {
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE VITALICIO + COFRE SECRETO 🔐🔞\n💰 <b>Precio: $30.80</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "buttons": [
+        [
+          {
+            "text": "Contactar Soporte",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Volver",
+            "callback": "goto_sales_pitch_es"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_normal_es": {
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE VITALICIO\n💰 <b>Precio: $23.90</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "buttons": [
+        [
+          {
+            "text": "Contactar Soporte",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Volver",
+            "callback": "goto_sales_pitch_es"
+          }
+        ]
+      ]
+    },
+    "payment_weekly_plus_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 WEEKLY PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $21.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Contact Support",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "payment_weekly_normal_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 WEEKLY PACKAGE\n💰 <b>Price: $14.90</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Contact Support",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "payment_monthly_plus_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 MONTHLY PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $24.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Contact Support",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "payment_monthly_normal_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 MONTHLY PACKAGE\n💰 <b>Price: $17.90</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Contact Support",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_plus_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $30.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Contact Support",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_normal_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE\n💰 <b>Price: $23.90</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Contact Support",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+
+    "payment_lifetime_plus_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $30.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Pay",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_normal_en": {
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE\n💰 <b>Price: $23.90</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "buttons": [
+        [
+          {
+            "text": "Pay",
+            "url": "https://t.me/SUPINCSTCLUB2"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Go Back",
+            "callback": "goto_sales_pitch_en"
+          }
+        ]
+      ]
+    },
+    "upsell_lifetime_en": {
+      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "buttons": [
+        [
+          {
+            "text": "YES ✅ (Add + $6.90)",
+            "callback": "goto_payment_lifetime_plus_en"
+          },
+          {
+            "text": "NO, Thanks ❌",
+            "callback": "goto_payment_lifetime_normal_en"
+          }
+        ]
+      ]
+    },
     "sales_pitch_en": [
       {
         "video_url": "BAACAgEAAxkBAAIGLmlG66y91Lpxw3rc9edUiFS0fqv0AAIsBgACbGw4RvxPildUNm2tNgQ",
@@ -169,31 +598,185 @@
         ]
       }
     ],
-    "tela_recarga_10": {
-      "type": "payment",
-      "text": "Recarga de 10 Reais",
-      "amount": 0.01,
-      "gateway": "openpix",
-      "buttons": [
-        [
-          {
-            "text": "🔙 Voltar ao Menu",
-            "callback": "goto_webhook_final"
-          }
-        ]
-      ]
-    },
     "pay_236b": {
       "type": "payment",
       "text": "💳 *Pagamento Pendente..*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
-      "amount": 10.0,
+      "amount": 14.9,
       "gateway": "openpix",
       "webhook": "success_86ad",
       "buttons": []
     },
+    "pay_b5c4": {
+      "type": "payment",
+      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "amount": 24.8,
+      "gateway": "openpix",
+      "webhook": "success_b5c4",
+      "buttons": []
+    },
+    "pay_567c": {
+      "type": "payment",
+      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "amount": 17.9,
+      "gateway": "openpix",
+      "webhook": "success_567c",
+      "buttons": []
+    },
+    "pay_c6d5": {
+      "type": "payment",
+      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "amount": 30.8,
+      "gateway": "openpix",
+      "webhook": "success_c6d5",
+      "buttons": []
+    },
+    "pay_890d": {
+      "type": "payment",
+      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "amount": 23.9,
+      "gateway": "openpix",
+      "webhook": "success_890d",
+      "buttons": []
+    },
     "success_86ad": {
       "type": "webhook",
-      "text": "🎉 *Pagamento Confirmado..teste!*\n\nSeu saldo foi atualizado com sucesso.",
+      "text": "🎉 *Pagamento Confirmado..teste!*\n\nSeu saldo foi atualizado com sucesso.  Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "buttons": [
+        [
+          {
+            "text": "teste",
+            "url": "https://t.me/+voGH9-GqXyRlNzJh"
+          }
+        ]
+      ]
+    },
+    "pay_a4b3": {
+      "type": "payment",
+      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "amount": 21.8,
+      "gateway": "openpix",
+      "webhook": "success_5585",
+      "buttons": []
+    },
+    "payment_monthly_plus": {
+      "text": "🌟 <b>Você selecionou o seguinte plano:</b>\n\n🎁 <b>Plano:</b> \n🔥 Pacote MENSAL + COFRE SECRETO 🔐🔞\n💰 <b>Valor: R$24,80</b>\n\n💠 <b>Pague via Pix</b>\nCHAVE PIX email:\n<code>vip.acesso2026@gmail.com</code>\n\n(toque na chave acima para copiar)\n\n🌟 <b>Após o pagamento:</b>\n👇 Clique no botão abaixo para enviar o comprovante ao nosso suporte.\n🚀 Enviaremos o acesso ao grupo VIP no mesmo instante!",
+      "buttons": [
+        [
+          {
+            "text": "Pagar",
+            "callback": "goto_pay_b5c4"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Voltar",
+            "callback": "goto_sales_pitch_pt"
+          }
+        ]
+      ]
+    },
+    "payment_monthly_normal": {
+      "text": "🌟 <b>Você selecionou o seguinte plano:</b>\n\n🎁 <b>Plano:</b> \n🔥 Pacote MENSAL\n💰 <b>Valor: R$17,90</b>\n\n💠 <b>Pague via Pix</b>\nCHAVE PIX email:\n<code>vip.acesso2026@gmail.com</code>\n\n(toque na chave acima para copiar)\n\n🌟 <b>Após o pagamento:</b>\n👇 Clique no botão abaixo para enviar o comprovante ao nosso suporte.",
+      "buttons": [
+        [
+          {
+            "text": "PAGAR",
+            "callback": "goto_pay_567c"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Voltar",
+            "callback": "goto_sales_pitch_pt"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_plus": {
+      "text": "🌟 <b>Você selecionou o seguinte plano:</b>\n\n🎁 <b>Plano:</b> \n🔥 Pacote VITALÍCIO + COFRE SECRETO 🔐🔞\n💰 <b>Valor: R$30,80</b>\n\n💠 <b>Pague via Pix</b>\nCHAVE PIX email:\n<code>vip.acesso2026@gmail.com</code>\n\n(toque na chave acima para copiar)\n\n🌟 <b>Após o pagamento:</b>\n👇 Clique no botão abaixo para enviar o comprovante ao nosso suporte.\n🚀 Enviaremos o acesso ao grupo VIP no mesmo instante!",
+      "buttons": [
+        [
+          {
+            "text": "Pagar",
+            "callback": "goto_pay_c6d5"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Voltar",
+            "callback": "goto_sales_pitch_pt"
+          }
+        ]
+      ]
+    },
+    "payment_lifetime_normal": {
+      "text": "🌟 <b>Você selecionou o seguinte plano:</b>\n\n🎁 <b>Plano:</b> \n🔥 Pacote VITALÍCIO\n💰 <b>Valor: R$23,90</b>\n\n💠 <b>Pague via Pix</b>\nCHAVE PIX email:\n<code>vip.acesso2026@gmail.com</code>\n\n(toque na chave acima para copiar)\n\n🌟 <b>Após o pagamento:</b>\n👇 Clique no botão abaixo para enviar o comprovante ao nosso suporte.",
+      "buttons": [
+        [
+          {
+            "text": "PAGAR",
+            "callback": "goto_pay_890d"
+          }
+        ],
+        [
+          {
+            "text": "⬅️ Voltar",
+            "callback": "goto_sales_pitch_pt"
+          }
+        ]
+      ]
+    },
+    "success_5585": {
+      "type": "webhook",
+      "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+      "buttons": [
+        [
+          {
+            "text": "teste",
+            "url": "https://t.me/+voGH9-GqXyRlNzJh"
+          }
+        ]
+      ]
+    },
+    "success_b5c4": {
+      "type": "webhook",
+      "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+      "buttons": [
+        [
+          {
+            "text": "teste",
+            "url": "https://t.me/+voGH9-GqXyRlNzJh"
+          }
+        ]
+      ]
+    },
+    "success_567c": {
+      "type": "webhook",
+      "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+      "buttons": [
+        [
+          {
+            "text": "teste",
+            "url": "https://t.me/+voGH9-GqXyRlNzJh"
+          }
+        ]
+      ]
+    },
+    "success_c6d5": {
+      "type": "webhook",
+      "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
+      "buttons": [
+        [
+          {
+            "text": "teste",
+            "url": "https://t.me/+voGH9-GqXyRlNzJh"
+          }
+        ]
+      ]
+    },
+    "success_890d": {
+      "type": "webhook",
+      "text": "🎉 *Pagamento Confirmado!*\n\nSeu saldo foi atualizado com sucesso.",
       "buttons": [
         [
           {
