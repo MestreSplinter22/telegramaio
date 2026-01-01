@@ -8,7 +8,7 @@ def calculate_interactive_layout(
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """
     Calcula nós e arestas compatíveis com a estrutura do React Flow usando Layout Hierárquico.
-    Configuração: Vertical (Top-Bottom)
+    Configuração: Z-Index Dinâmico baseado em geometria para evitar sobreposições de linhas.
     """
     screens_raw = full_flow.get("screens", {})
     if not screens_raw: 
@@ -24,7 +24,7 @@ def calculate_interactive_layout(
     for node_id in screens.keys():
         G.add_node(node_id)
     
-    # Processar botões e webhooks para criar arestas
+    # Processar botões e webhooks para criar arestas preliminares
     for screen_id, content in screens.items():
         # --- Lógica de extração de botões ---
         found_buttons = []
@@ -54,9 +54,19 @@ def calculate_interactive_layout(
                 "target": target,
                 "label": label,
                 "type": "smoothstep", 
+                "pathOptions": {"borderRadius": 20},
                 "animated": False,
+                # Categoria de base para ordenação (Botões > Linhas > Back-edges)
+                "_category": 2, 
                 "style": edge_style,
-                "labelStyle": {"fill": "#ef4444", "fontWeight": 700} if is_broken else {"fill": "#64748b"},
+                "labelStyle": {
+                    "fill": "#ef4444" if is_broken else "#64748b",
+                    "fontWeight": 700,
+                    "fontSize": "11px"
+                },
+                "labelShowBg": True,
+                "labelBgStyle": {"fill": "#ffffff", "fillOpacity": 1, "rx": 4, "ry": 4},
+                "labelBgPadding": [8, 4], # Padding extra para limpar a área
             })
             if not is_broken: G.add_edge(screen_id, target)
             if target not in all_nodes_set: 
@@ -83,24 +93,104 @@ def calculate_interactive_layout(
                     "target": wh_target, 
                     "label": "Webhook",
                     "type": "smoothstep",
+                    "pathOptions": {"borderRadius": 20},
                     "animated": True,
+                    "_category": 1, # Categoria média
+                    "zIndex": 0,
                     "style": {"stroke": "#10b981", "strokeDasharray": "5,5"},
+                    "labelShowBg": True,
+                    "labelBgStyle": {"fill": "#ffffff", "fillOpacity": 0.8},
                 })
                 G.add_edge(screen_id, wh_target)
                 if wh_target not in all_nodes_set: 
                     all_nodes_set.add(wh_target); G.add_node(wh_target)
 
-    # 2. Calcular Layout Hierárquico Vertical (TB = Top-Bottom)
+    # 2. Calcular Layout Hierárquico Vertical
     positions = calculate_hierarchical_layout(
         G, 
-        direction='TB',  # <--- MUDANÇA AQUI (Era 'LR')
+        direction='TB', 
         node_width=250, 
-        node_height=180, # Aumentei um pouco para dar respiro vertical
-        x_gap=50,       # Espaço lateral entre nós vizinhos
-        y_gap=100       # Espaço vertical entre pai e filho
+        node_height=180,
+        x_gap=50,       
+        y_gap=130       
     )
 
-    # 3. Converter para nós do React Flow
+    # 3. Pós-Processamento e Atribuição de Z-Index Dinâmico
+    for edge in temp_edges:
+        # Ignorar webhooks e links quebrados para cálculo geométrico
+        if edge.get("label") == "Webhook" or edge["style"].get("stroke") == "#ef4444":
+            continue
+
+        src = edge["source"]
+        tgt = edge["target"]
+
+        if src in positions and tgt in positions:
+            src_pos = positions[src]
+            tgt_pos = positions[tgt]
+
+            # Distância horizontal absoluta (quão "larga" é a dobradiça)
+            dist_x = abs(src_pos["x"] - tgt_pos["x"])
+
+            # --- CASO 1: RETORNO (Back-Edge) ---
+            # Se destino está acima ou na mesma linha
+            if tgt_pos["y"] <= src_pos["y"]:
+                edge["_category"] = 0 # Prioridade Mínima
+                edge["zIndex"] = -10
+                
+                back_edge_color = "rgba(59, 130, 246, 0.6)"
+                edge["style"] = {
+                    "stroke": back_edge_color,
+                    "strokeWidth": 2,
+                    "strokeDasharray": "5, 5",
+                }
+                edge["animated"] = True 
+                edge["markerEnd"] = {
+                    "type": "arrowclosed",
+                    "color": back_edge_color,
+                    "width": 20,
+                    "height": 20,
+                }
+                edge["label"] = "▲" 
+                edge["labelStyle"] = {
+                    "fill": "rgba(59, 130, 246, 1)", 
+                    "fontWeight": "900",
+                    "fontSize": "24px",
+                    "filter": "drop-shadow(0px 2px 2px rgba(0,0,0,0.1))"
+                }
+                edge["labelBgStyle"] = {"fill": "rgba(255, 255, 255, 0.85)", "rx": 5, "ry": 5}
+                edge["labelBgPadding"] = [4, 4]
+                edge["labelShowBg"] = True
+            
+            # --- CASO 2: BOTÃO NORMAL (Ida) ---
+            else:
+                # LÓGICA DE OURO: 
+                # Quanto menor a distância horizontal, MAIOR o z-index.
+                # Isso faz com que linhas retas (dist_x ~ 0) fiquem POR CIMA das linhas curvas.
+                # Base zIndex para botões = 100.
+                # Subtraímos um fator da distância.
+                
+                # Normaliza distância para não ficar negativo (ex: max width ~ 2000)
+                priority_score = 1000 - int(dist_x)
+                
+                edge["zIndex"] = priority_score
+                edge["_sort_key"] = priority_score # Usado para ordenação da lista
+                
+                # Categoria alta para garantir que ganhe de webhooks
+                edge["_category"] = 3 
+
+    # 4. ORDENAÇÃO DA LISTA DE ARESTAS (Painter's Algorithm)
+    # Ordenamos a lista para que o React desenhe na ordem correta:
+    # 1. Back-edges (Fundo)
+    # 2. Webhooks (Meio)
+    # 3. Botões Largos (Meio-Topo - as dobradiças ficam atrás)
+    # 4. Botões Retos (Topo Absoluto - os labels ficam visíveis)
+    
+    temp_edges.sort(key=lambda x: (
+        x.get("_category", 0),  # Primeiro por categoria
+        x.get("_sort_key", 0)   # Depois por prioridade geométrica (Retos > Largos)
+    ))
+
+    # 5. Converter para nós do React Flow
     final_rf_nodes = []
     for node_id, pos in positions.items():
         is_selected = node_id == selected_screen_key
@@ -114,9 +204,11 @@ def calculate_interactive_layout(
             "id": node_id,
             "data": {"label": f"🚫 {node_id}" if is_missing else node_id},
             "position": {"x": pos["x"], "y": pos["y"]},
-            "targetPosition": "top",    # <--- Entradas por cima
-            "sourcePosition": "bottom", # <--- Saídas por baixo
+            "targetPosition": "top",
+            "sourcePosition": "bottom",
             "draggable": True,
+            # Z-INDEX 2000: Garante que o CARD cubra qualquer aresta, mesmo as de alta prioridade
+            "zIndex": 2000, 
             "style": {
                 "background": bg_color,
                 "color": text_color,
@@ -143,7 +235,6 @@ def calculate_hierarchical_layout(
 ) -> Dict[str, Dict[str, float]]:
     """
     Algoritmo de layout de árvore compacto (Vertical).
-    Protegido contra RecursionError em fluxos cíclicos.
     """
     positions = {}
     
@@ -163,7 +254,6 @@ def calculate_hierarchical_layout(
 
         children = list(G.successors(node))
         
-        # --- Caso Base: Sem filhos ---
         if not children:
             if direction == 'LR':
                 positions[node] = {"x": depth * (node_width + x_gap), "y": current_pos_start}
@@ -171,10 +261,8 @@ def calculate_hierarchical_layout(
                 positions[node] = {"x": current_pos_start, "y": depth * (node_height + y_gap)}
             
             visiting.remove(node)
-            # Retorna a largura ocupada (se TB) ou altura (se LR)
             return (node_width + x_gap) if direction == 'TB' else (node_height + y_gap)
 
-        # --- Passo Recursivo ---
         total_children_span = 0
         child_cursor = current_pos_start
         
@@ -185,7 +273,6 @@ def calculate_hierarchical_layout(
             span = layout_subtree(child, depth + 1, child_cursor)
             
             if child in positions:
-                # Se TB, olhamos o X. Se LR, olhamos o Y.
                 c_pos = positions[child]["x"] if direction == 'TB' else positions[child]["y"]
                 if first_child_pos is None: first_child_pos = c_pos
                 last_child_pos = c_pos
@@ -193,7 +280,6 @@ def calculate_hierarchical_layout(
             child_cursor += span
             total_children_span += span
         
-        # Centralizar
         if first_child_pos is not None and last_child_pos is not None:
             center_pos = (first_child_pos + last_child_pos) / 2
         else:
@@ -206,19 +292,16 @@ def calculate_hierarchical_layout(
             
         visiting.remove(node)
         
-        # Retorna o espaço total ocupado pelos filhos para o pai saber onde colocar o próximo irmão
         dimension_span = (node_width + x_gap) if direction == 'TB' else (node_height + y_gap)
         return max(dimension_span, total_children_span)
 
-    # Processar Árvores
     current_tree_pos = 0
     roots.sort(key=lambda x: str(x))
     
     for root in roots:
         tree_span = layout_subtree(root, 0, current_tree_pos)
-        current_tree_pos += tree_span + 50 # Gap extra entre árvores desconexas
+        current_tree_pos += tree_span + 50 
 
-    # Fallback para nós isolados
     remaining = set(G.nodes()) - set(positions.keys())
     if remaining:
         for node in remaining:
