@@ -13,7 +13,7 @@ class OpenPixService:
         
         # URL Base (Sandbox ou Produção)
         if config.is_sandbox:
-            self.base_url = "https://api.woovi-sandbox.com/api/v1"
+            self.base_url = "https://api.openpix.com.br/api/v1"
         else:
             self.base_url = "https://api.openpix.com.br/api/v1"
 

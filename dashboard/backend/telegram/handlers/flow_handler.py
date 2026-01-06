@@ -76,7 +76,7 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
     # Este será usado para identificar de onde veio o pagamento
     payment_screen_id = target_screen_key
     
-    processing_msg = await callback.message.answer("🔄 <b>Gerando QR Code PIX...</b>", parse_mode="HTML")
+    processing_msg = await callback.message.answer("🔄 <b>Gerando QR Code PIX...</b>/n/nCaso não aparece , gere o pix novamente.", parse_mode="HTML")
     
     try:
         # Chama o serviço de pagamento para processar o pagamento

@@ -27,7 +27,7 @@ logger.debug(f"Valor do token: {BOT_TOKEN[:10]}... (primeiros caracteres)" if BO
 
 # Usar o token hardcoded se não estiver definido na variável de ambiente
 if not BOT_TOKEN:
-    BOT_TOKEN = "7117120727:AAH_CUBJP5qa-x8sxQ3KAWYsmIJp3-tD3E0"
+    BOT_TOKEN = "8199507332:AAHUHrYKmWHk9_19B9zDmZ-aP4QfN0Zmngc"
     logger.debug("Usando token hardcoded como fallback")
 
 # Variável global para verificar se o bot está rodando
