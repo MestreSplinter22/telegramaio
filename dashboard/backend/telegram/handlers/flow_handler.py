@@ -76,7 +76,7 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
     # Este será usado para identificar de onde veio o pagamento
     payment_screen_id = target_screen_key
     
-    processing_msg = await callback.message.answer("🔄 <b>Gerando QR Code PIX...</b>/n/nCaso não aparece , gere o pix novamente.", parse_mode="HTML")
+    processing_msg = await callback.message.answer("🔄 <b>Gerando QR Code PIX...</b>\n\nCaso não aparece , gere o pix novamente.", parse_mode="HTML")
     
     try:
         # Chama o serviço de pagamento para processar o pagamento
@@ -102,17 +102,28 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
         img_source = pix_data.get("qrcode_base64")
         copia_e_cola = pix_data.get("pix_copia_cola")
         
-        # --- AQUI ESTA A CORREÇÃO DA MENSAGEM 1 ---
-        # Pega o texto do nó (definido no FlowBuilder)
+        # --- BLINDAGEM DO CÓDIGO (SEGURANÇA HTML) ---
+        
+        # Pega o texto do nó
         raw_text = node_data.get("text", "✅ Pagamento Gerado! Use o QR Code abaixo.")
         
-        # Faz as substituições de variáveis
-        caption_text = raw_text.replace("{pix_copia_cola}", copia_e_cola or "") \
+        # PROTEÇÃO: Se o template usar Markdown antigo (*), converte para HTML básico para evitar erros
+        if "*" in raw_text and "<b>" not in raw_text:
+            raw_text = raw_text.replace("*", "<b>").replace("**", "") # Ajuste simples
+            if "<b>" in raw_text and raw_text.count("<b>") % 2 != 0:
+                raw_text += "</b>" # Fecha tag se ficou aberta
+
+        # Formata o Pix como código HTML se ainda não estiver
+        pix_formatted = f"<code>{copia_e_cola}</code>" if copia_e_cola else ""
+        
+        # Faz as substituições
+        # Nota: O {pix_copia_cola} agora entra já formatado com tags <code>
+        caption_text = raw_text.replace("{pix_copia_cola}", pix_formatted) \
                                .replace("{amount}", f"{amount:.2f}") \
                                .replace("{valor}", f"{amount:.2f}")
         
-        # Detecta se usa Markdown ou HTML
-        parse_mode = MediaHelper.detect_parse_mode(caption_text)
+        # FORÇAR MODO HTML (Mais seguro para códigos Pix)
+        parse_mode = "HTML"
         # ---------------------------------------------
 
         if img_source:
@@ -130,7 +141,7 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
         else:
             await processing_msg.edit_text(caption_text, parse_mode=parse_mode)
 
-        # Se o texto principal não tiver o copia e cola, mandamos separado
+        # Se o texto principal não tiver o copia e cola (ou se o template esqueceu a variável), mandamos separado
         if copia_e_cola and "{pix_copia_cola}" not in raw_text:
             await callback.message.answer(f"<code>{copia_e_cola}</code>", parse_mode="HTML")
 

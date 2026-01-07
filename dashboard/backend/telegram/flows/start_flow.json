@@ -182,19 +182,19 @@
         "buttons": [
           [
             {
-              "text": "7 DÍAS VIP | $ 14.90",
+              "text": "7 DÍAS VIP | €8.00",
               "callback": "goto_upsell_weekly_es"
             }
           ],
           [
             {
-              "text": "1 MES VIP | $ 17.90",
+              "text": "1 MES VIP | €12.00",
               "callback": "goto_upsell_monthly_es"
             }
           ],
           [
             {
-              "text": "VITALICIO | DE $ 38 A $ 23.90",
+              "text": "VITALICIO | DE €30 POR €15.00",
               "callback": "goto_upsell_lifetime_es"
             }
           ]
@@ -219,7 +219,7 @@
     },
     "upsell_monthly_es": {
       "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
-      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>$6.90</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>€5.00</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
       "buttons": [
         [
           {
@@ -235,11 +235,11 @@
     },
     "upsell_lifetime_es": {
       "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
-      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>$6.90</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
+      "text": "🔥<b>Oferta Exclusiva</b>🔥\n\n✅ Por solo <b>€5.00</b> desbloqueas \n🔞 <b>+20 GRUPOS PROHIBIDOS</b> -\naquellos que nunca se quedan básicos.\n\nEL ACCESO AL COFRE ES V I T A L I C I O\n\n🚨 <b>¡ÚLTIMO LUGAR DISPONIBLE!</b>\n⚡️ Solo selecciona esta opción ahora \n🚀y llévate todo inmediatamente, \nsin costo de envío ni nada extra.",
       "buttons": [
         [
           {
-            "text": "SÍ ✅ (Agregar + $6.90)",
+            "text": "SÍ ✅ (Agregar + €5.00)",
             "callback": "goto_payment_lifetime_plus_es"
           },
           {
@@ -250,12 +250,12 @@
       ]
     },
     "upsell_weekly_en": {
-      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
-      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "video_url": "BAACAgEAAxkBAAJuyGldn_0AAe6mASv-nVsiggF-y_tScQAChwYAAmY18UYz5OHRi_r4pDgE",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$5.00</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
       "buttons": [
         [
           {
-            "text": "YES ✅ (Add + $6.90)",
+            "text": "YES ✅ (Add + $5.00)",
             "callback": "goto_payment_weekly_plus_en"
           },
           {
@@ -266,12 +266,12 @@
       ]
     },
     "upsell_monthly_en": {
-      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
-      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "video_url": "BAACAgEAAxkBAAJuyGldn_0AAe6mASv-nVsiggF-y_tScQAChwYAAmY18UYz5OHRi_r4pDgE",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$5.00</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
       "buttons": [
         [
           {
-            "text": "YES ✅ (Add + $6.90)",
+            "text": "YES ✅ (Add + $5.00)",
             "callback": "goto_payment_monthly_plus_en"
           },
           {
@@ -282,12 +282,12 @@
       ]
     },
     "upsell_lifetime_en": {
-      "video_url": "BAACAgEAAxkBAAIGLGlG66eQWYAw8I_c7L9ueYcuJJTTAAIrBgACbGw4Rjsl3lq8D-BFNgQ",
-      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$6.90</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
+      "video_url": "BAACAgEAAxkBAAJuyGldn_0AAe6mASv-nVsiggF-y_tScQAChwYAAmY18UYz5OHRi_r4pDgE",
+      "text": "🔥<b>Exclusive Offer</b>🔥\n\n✅ For just <b>$5.00</b> you unlock \n🔞 <b>+20 PROHIBITED GROUPS</b> -\nthose that never stay basic.\n\nACCESS TO THE VAULT IS L I F E T I M E\n\n🚨 <b>LAST SPOT AVAILABLE!!!</b>\n⚡️ Just select this option now \n🚀and take everything immediately, \nno shipping fee or anything extra.",
       "buttons": [
         [
           {
-            "text": "YES ✅ (Add + $6.90)",
+            "text": "YES ✅ (Add + $5.00)",
             "callback": "goto_payment_lifetime_plus_en"
           },
           {
@@ -298,7 +298,7 @@
       ]
     },
     "payment_weekly_plus_es": {
-      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE SEMANAL + COFRE SECRETO 🔐🔞\n💰 <b>Precio: $21.80</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE SEMANAL + BOVEDA SECRETA 🔐🔞\n💰 <b>Precio: €13.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para ENVIAR COMPROBANTE DE PAGO\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
       "buttons": [
         [
           {
@@ -315,7 +315,7 @@
       ]
     },
     "payment_weekly_normal_es": {
-      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE SEMANAL\n💰 <b>Precio: $14.90</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE SEMANAL\n💰 <b>Precio: €8.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para ENVIAR COMPROBANTE DE PAGO\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
       "buttons": [
         [
           {
@@ -332,7 +332,7 @@
       ]
     },
     "payment_monthly_plus_es": {
-      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE MENSUAL + COFRE SECRETO 🔐🔞\n💰 <b>Precio: $24.80</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE MENSUAL + BOVEDA SECRETA 🔐🔞\n💰 <b>Precio: €17.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para ENVIAR COMPROBANTE DE PAGO\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
       "buttons": [
         [
           {
@@ -349,7 +349,7 @@
       ]
     },
     "payment_monthly_normal_es": {
-      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE MENSUAL\n💰 <b>Precio: $17.90</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE MENSUAL\n💰 <b>Precio: $17.90</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para ENVIAR COMPROBANTE DE PAGO\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
       "buttons": [
         [
           {
@@ -366,7 +366,7 @@
       ]
     },
     "payment_lifetime_plus_es": {
-      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE VITALICIO + COFRE SECRETO 🔐🔞\n💰 <b>Precio: $30.80</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE VITALICIO + BOVEDA SECRETA 🔐🔞\n💰 <b>Precio: €20.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para ENVIAR COMPROBANTE DE PAGO\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
       "buttons": [
         [
           {
@@ -383,7 +383,7 @@
       ]
     },
     "payment_lifetime_normal_es": {
-      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE VITALICIO\n💰 <b>Precio: $23.90</b>\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para contactar a nuestro equipo de soporte.\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
+      "text": "🌟 <b>Has seleccionado el siguiente plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 PAQUETE VITALICIO\n💰 <b>Precio: €15.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>Después del pago:</b>\n👇 Haz clic en el botón de abajo para ENVIAR COMPROBANTE DE PAGO\n🚀 ¡Te enviaremos acceso al grupo VIP instantáneamente!",
       "buttons": [
         [
           {
@@ -400,7 +400,7 @@
       ]
     },
     "payment_weekly_plus_en": {
-      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 WEEKLY PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $21.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 WEEKLY PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>$13.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
       "buttons": [
         [
           {
@@ -434,7 +434,7 @@
       ]
     },
     "payment_monthly_plus_en": {
-      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 MONTHLY PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $24.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 MONTHLY PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $17.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
       "buttons": [
         [
           {
@@ -451,7 +451,7 @@
       ]
     },
     "payment_monthly_normal_en": {
-      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 MONTHLY PACKAGE\n💰 <b>Price: $17.90</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 MONTHLY PACKAGE\n💰 <b>Price: $12.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
       "buttons": [
         [
           {
@@ -468,7 +468,7 @@
       ]
     },
     "payment_lifetime_plus_en": {
-      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $30.80</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE + SECRET VAULT 🔐🔞\n💰 <b>Price: $20.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
       "buttons": [
         [
           {
@@ -485,7 +485,7 @@
       ]
     },
     "payment_lifetime_normal_en": {
-      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE\n💰 <b>Price: $23.90</b>\n\n🌟 <b>After payment:</b>\n👇 Click the button below to contact our support team.\n🚀 We'll send you VIP group access instantly!",
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE\n💰 <b>Price: $15.00/b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
       "buttons": [
         [
           {
@@ -512,19 +512,19 @@
         "buttons": [
           [
             {
-              "text": "7 DAYS VIP | $ 14.90",
+              "text": "7 DAYS VIP | $ 8.00",
               "callback": "goto_upsell_weekly_en"
             }
           ],
           [
             {
-              "text": "1 MONTH VIP | $ 17.90",
+              "text": "1 MONTH VIP | $ 12.00",
               "callback": "goto_upsell_monthly_en"
             }
           ],
           [
             {
-              "text": "LIFETIME | FROM $ 38 TO $ 23.90",
+              "text": "LIFETIME | FROM $30 TO $15.00",
               "callback": "goto_upsell_lifetime_en"
             }
           ]
@@ -533,7 +533,7 @@
     ],
     "pay_236b": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente..*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code> abaixo.\n\n{pix_copia_cola}",
       "amount": 14.9,
       "gateway": "openpix",
       "webhook": "success_86ad",
@@ -541,7 +541,7 @@
     },
     "pay_b5c4": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
       "amount": 24.8,
       "gateway": "openpix",
       "webhook": "success_b5c4",
@@ -549,7 +549,7 @@
     },
     "pay_567c": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
       "amount": 17.9,
       "gateway": "openpix",
       "webhook": "success_567c",
@@ -557,7 +557,7 @@
     },
     "pay_c6d5": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
       "amount": 30.8,
       "gateway": "openpix",
       "webhook": "success_c6d5",
@@ -565,7 +565,7 @@
     },
     "pay_890d": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
       "amount": 23.9,
       "gateway": "openpix",
       "webhook": "success_890d",
@@ -585,8 +585,8 @@
     },
     "pay_a4b3": {
       "type": "payment",
-      "text": "💳 *Pagamento Pendente*\n\nPor favor, realize o pagamento de **R$ {amount}**. Copia e Cola abaixo.\n\n{pix_copia_cola}",
-      "amount": 21.8,
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
+      "amount": 0.8,
       "gateway": "openpix",
       "webhook": "success_5585",
       "buttons": []
@@ -661,19 +661,19 @@
     },
     "success_5585": {
       "type": "webhook",
-      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇\n\nhttps://t.me/+D6_NwSvlSdI1M2Vh",
+      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇",
       "buttons": [
         [
           {
-            "text": "teste",
-            "url": "https://t.me/+voGH9-GqXyRlNzJh"
+            "text": "ENTRAR NO VIP",
+            "url": "https://t.me/+D6_NwSvlSdI1M2Vh"
           }
         ]
       ]
     },
     "success_b5c4": {
       "type": "webhook",
-      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇\n\nhttps://t.me/+D6_NwSvlSdI1M2Vh",
+      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇",
       "buttons": [
         [
           {
@@ -685,7 +685,7 @@
     },
     "success_567c": {
       "type": "webhook",
-      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇\n\nhttps://t.me/+D6_NwSvlSdI1M2Vh",
+      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇",
       "buttons": [
         [
           {
@@ -697,11 +697,11 @@
     },
     "success_c6d5": {
       "type": "webhook",
-      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇\n\nhttps://t.me/+D6_NwSvlSdI1M2Vh",
+      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇",
       "buttons": [
         [
           {
-            "text": "teste",
+            "text": "ENTRAR NO VIP",
             "url": "https://t.me/+D6_NwSvlSdI1M2Vh"
           }
         ]
@@ -709,7 +709,7 @@
     },
     "success_890d": {
       "type": "webhook",
-      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇\n\nhttps://t.me/+D6_NwSvlSdI1M2Vh",
+      "text": "Parabéns! Tudo confirmado por aqui. ✅\nO seu acesso oficial ao VIP já está liberado! 🚀\n\nToque no link abaixo para entrar agora mesmo e não perder nada. 👇",
       "buttons": [
         [
           {

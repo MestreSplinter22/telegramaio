@@ -181,12 +181,13 @@ class WebhookService:
                                             except Exception as kb_err:
                                                 print(f"❌ Erro ao criar teclado: {kb_err}")
 
-                                        # Enviar com reply_markup
+                                        # Enviar com reply_markup usando HTML para evitar conflitos com underline
                                         await bot.send_message(
                                             chat_id=user.telegram_id,
                                             text=formatted_text,
-                                            parse_mode="Markdown",
-                                            reply_markup=markup
+                                            parse_mode="HTML",
+                                            reply_markup=markup,
+                                            disable_web_page_preview=True
                                         )
                                         custom_message_sent = True
                                         print(f"✅ [Webhooks] Mensagem (com botões) enviada!")
