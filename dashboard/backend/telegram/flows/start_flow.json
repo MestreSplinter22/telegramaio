@@ -485,7 +485,7 @@
       ]
     },
     "payment_lifetime_normal_en": {
-      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE\n💰 <b>Price: $15.00/b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
+      "text": "🌟 <b>You selected the following plan:</b>\n\n🎁 <b>Plan:</b> \n🔥 LIFETIME PACKAGE\n💰 <b>Price: $15.00</b>\n\nPAYPAL:\nisaacdugim@gmail.com\n\n🌟 <b>After payment:</b>\n👇 Click the button below to SEND PROOF OF PAYMENT\n🚀 We'll send you VIP group access instantly!",
       "buttons": [
         [
           {
@@ -533,7 +533,7 @@
     ],
     "pay_236b": {
       "type": "payment",
-      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code> abaixo.\n\n{pix_copia_cola}",
+      "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
       "amount": 14.9,
       "gateway": "openpix",
       "webhook": "success_86ad",
@@ -586,7 +586,7 @@
     "pay_a4b3": {
       "type": "payment",
       "text": "💳 <b>Pagamento Pendente</b>\n\nPor favor, realize o pagamento de <b>R$ {amount}</b>. Copia e Cola abaixo.\n\n<code>{pix_copia_cola}</code>",
-      "amount": 0.8,
+      "amount": 21.8,
       "gateway": "openpix",
       "webhook": "success_5585",
       "buttons": []
