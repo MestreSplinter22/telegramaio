@@ -10,7 +10,7 @@ def revenue_chart() -> rx.Component:
         # Header
         rx.hstack(
             rx.icon("trending-up", size=22, style={"color": "var(--icon-tertiary)"}),
-            rx.text("Performance Financeira", class_name="text-xl font-semibold text-foreground"),
+            rx.text("Receita (Últimos 7 dias)", class_name="text-xl font-semibold text-foreground"),
             class_name="justify-center items-center gap-2",
         ),
         rx.box(class_name="border-b border-border w-full my-2"),
@@ -20,9 +20,10 @@ def revenue_chart() -> rx.Component:
             rx.recharts.line_chart(
                 rx.recharts.line(
                     data_key="revenue",
-                    stroke=rx.color("yellow", 9),
+                    stroke=rx.color("green", 9),
                     stroke_width=2,
-                    dot=False,
+                    dot=True,
+                    name="Receita",
                 ),
                 rx.recharts.x_axis(
                     data_key="day",
@@ -32,7 +33,7 @@ def revenue_chart() -> rx.Component:
                 rx.recharts.y_axis(
                     stroke=rx.color("gray", 8),
                     font_size=12,
-                    tick_formatter="R${value}"
+                    # Formatador simples, já que o Recharts no Reflex tem limitações com funções lambda aqui
                 ),
                 rx.recharts.cartesian_grid(
                     stroke_dasharray="3 3",
@@ -40,21 +41,15 @@ def revenue_chart() -> rx.Component:
                 ),
                 rx.recharts.tooltip(
                     content_style={
-                        "backgroundColor": rx.color("gray", 1),
-                        "borderRadius": "var(--radius-2)",
-                        "border": f"1px solid {rx.color('gray', 5)}",
+                        "backgroundColor": "#1a1a1a",
+                        "borderRadius": "8px",
+                        "border": "1px solid #333",
+                        "color": "#fff"
                     },
-                    formatter="R${value}"
+                    item_style={"color": "#fff"}
                 ),
-                data=[
-                    {"day": "Seg", "revenue": 1250},
-                    {"day": "Ter", "revenue": 1890},
-                    {"day": "Qua", "revenue": 2340},
-                    {"day": "Qui", "revenue": 1980},
-                    {"day": "Sex", "revenue": 2890},
-                    {"day": "Sáb", "revenue": 3200},
-                    {"day": "Dom", "revenue": 2780},
-                ],
+                # VINCULANDO AOS DADOS DINÂMICOS
+                data=DashboardState.revenue_chart_data,
                 width="100%",
                 height=300,
             ),

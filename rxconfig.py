@@ -75,8 +75,8 @@ DB_PATH = os.path.join(BASE_DIR, "..", "telegramaio.db")
 config = rx.Config(
     app_name="dashboard",
     cors_allowed_origins=["*"], 
-    api_url="https://api-telegram-aio-boxtele.u9ttyt.easypanel.host/", 
-    deploy_url="https://dash-telegram-aio-boxtele.u9ttyt.easypanel.host/",
+    api_url="https://apidev-telegram-aio-boxtele.u9ttyt.easypanel.host", 
+    deploy_url="https://dashdev-telegram-aio-boxtele.u9ttyt.easypanel.host",
     #db_url=f"sqlite:///{DB_PATH}",
     db_url=f"postgresql://postgres:telegram-aio@telegram-aio_postgree:5432/telegram-aio?sslmode=disable",
     plugins=[

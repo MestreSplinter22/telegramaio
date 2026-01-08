@@ -4,9 +4,8 @@ import reflex as rx
 from ...backend.states.transactions import TransactionState
 from ...components.ui.card import card
 
-
-def transaction_status_badge(status: str) -> rx.Component:
-    """Transaction status badge."""
+def transaction_status_badge(status: rx.Var) -> rx.Component:
+    """Transaction status badge com lógica condicional do Reflex."""
     return rx.badge(
         rx.cond(
             status == "completed",
@@ -45,15 +44,18 @@ def transaction_status_badge(status: str) -> rx.Component:
         variant="surface",
     )
 
-
 def transactions_table() -> rx.Component:
-    """Transactions table component."""
+    """Componente de tabela de transações corrigido."""
     return card(
         rx.vstack(
             rx.hstack(
                 rx.text("Transações", class_name="text-lg font-medium text-foreground"),
                 rx.spacer(),
-                rx.text(f"Total: {TransactionState.filtered_transactions.length()} transações", class_name="text-sm text-muted-foreground"),
+                # Exibe a contagem total baseada no estado filtrado
+                rx.text(
+                    f"Exibindo: {TransactionState.filtered_transactions.length()} registros", 
+                    class_name="text-sm text-muted-foreground"
+                ),
                 class_name="w-full",
             ),
             rx.table.root(
@@ -71,17 +73,20 @@ def transactions_table() -> rx.Component:
                     rx.foreach(
                         TransactionState.filtered_transactions,
                         lambda transaction: rx.table.row(
-                            rx.table.cell(transaction.id[:8] + "...", class_name="text-sm text-foreground"),
+                            # Correção 1: ID int para string para evitar erros de renderização
+                            rx.table.cell(transaction.id.to_string(), class_name="text-sm text-foreground"),
                             rx.table.cell(transaction.type, class_name="text-sm text-foreground"),
-                            rx.table.cell(f"R$ {transaction.amount:.2f}", class_name="text-sm text-foreground"),
+                            # Nota: Formatação de float (.2f) funciona melhor via f-string ou ComputedVar no State
+                            rx.table.cell(f"R$ {transaction.amount.to_string()}", class_name="text-sm text-foreground"),
                             rx.table.cell(transaction_status_badge(transaction.status)),
-                            rx.table.cell(transaction.created_at, class_name="text-sm text-foreground"),
+                            # Correção 2: Uso do campo 'timestamp' e conversão para string
+                            rx.table.cell(transaction.timestamp.to_string(), class_name="text-sm text-foreground"),
                             rx.table.cell(
                                 rx.button(
                                     "Detalhes",
                                     size="1",
                                     on_click=lambda: TransactionState.set_selected_transaction(transaction),
-                                    class_name="text-xs",
+                                    class_name="text-xs cursor-pointer",
                                 )
                             ),
                         )

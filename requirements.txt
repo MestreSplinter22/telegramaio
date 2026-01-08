@@ -55,3 +55,4 @@ cryptography==46.0.3
 efipay
 psycopg2-binary
 networkx==3.4.2
+fastapi

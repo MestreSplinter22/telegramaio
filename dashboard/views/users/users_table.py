@@ -2,22 +2,34 @@
 
 import reflex as rx
 from ...backend.states.users import UserState
-from ...backend.states.models.base import User
 from ...components.ui.card import card
 
 
 def user_status_badge(status: str) -> rx.Component:
     """User status badge component."""
-    color_map = {
-        "active": ("green", "Ativo"),
-        "suspended": ("yellow", "Suspenso"),
-        "banned": ("red", "Banido")
-    }
-    color, text = color_map.get(status, ("gray", status))
-    
     return rx.badge(
-        text,
-        color_scheme=color,
+        rx.cond(
+            status == "active",
+            "Ativo",
+            rx.cond(
+                status == "suspended",
+                "Suspenso",
+                rx.cond(
+                    status == "banned",
+                    "Banido",
+                    status
+                )
+            )
+        ),
+        color_scheme=rx.cond(
+            status == "active",
+            "green",
+            rx.cond(
+                status == "suspended",
+                "yellow",
+                "red"
+            )
+        ),
         variant="surface",
         class_name="text-xs px-2 py-1",
     )
@@ -48,14 +60,14 @@ def users_table() -> rx.Component:
             rx.hstack(
                 rx.text("Usuários", class_name="text-lg font-medium text-foreground"),
                 rx.spacer(),
-                rx.text(f"Total: {UserState.users.length()} usuários", class_name="text-sm text-muted-foreground"),
+                rx.text(f"Exibindo: {UserState.filtered_users.length()} usuários", class_name="text-sm text-muted-foreground"),
                 class_name="w-full",
             ),
             rx.table.root(
                 rx.table.header(
                     rx.table.row(
-                        rx.table.column_header_cell("Usuário", class_name="text-sm font-medium text-foreground"),
-                        rx.table.column_header_cell("Telegram", class_name="text-sm font-medium text-foreground"),
+                        rx.table.column_header_cell("Nome", class_name="text-sm font-medium text-foreground"),
+                        rx.table.column_header_cell("Identificação", class_name="text-sm font-medium text-foreground"),
                         rx.table.column_header_cell("Saldo", class_name="text-sm font-medium text-foreground"),
                         rx.table.column_header_cell("Gasto Total", class_name="text-sm font-medium text-foreground"),
                         rx.table.column_header_cell("Status", class_name="text-sm font-medium text-foreground"),
@@ -65,19 +77,21 @@ def users_table() -> rx.Component:
                 ),
                 rx.table.body(
                     rx.foreach(
-                        UserState.users,
+                        UserState.filtered_users,
                         lambda user: rx.table.row(
+                            # Coluna Nome (Unindo First Name e Last Name)
                             rx.table.cell(
                                 rx.vstack(
-                                    rx.text(user.name, class_name="text-sm font-medium text-foreground"),
-                                    rx.text(user.email, class_name="text-xs text-muted-foreground"),
+                                    rx.text(f"{user.first_name} {user.last_name}", class_name="text-sm font-medium text-foreground"),
+                                    # Removido email pois não existe no model atual
                                     class_name="space-y-1 items-start",
                                 )
                             ),
+                            # Coluna Identificação (Username e Telegram ID)
                             rx.table.cell(
                                 rx.vstack(
                                     rx.text(f"@{user.username}", class_name="text-sm text-foreground"),
-                                    rx.text(user.telegram_id, class_name="text-xs text-muted-foreground"),
+                                    rx.text(f"ID: {user.telegram_id}", class_name="text-xs text-muted-foreground"),
                                     class_name="space-y-1 items-start",
                                 )
                             ),
@@ -99,14 +113,7 @@ def users_table() -> rx.Component:
                                         "Ver Detalhes",
                                         size="2",
                                         variant="ghost",
-                                        on_click=UserState.set_selected_user(user),
-                                        class_name="text-xs",
-                                    ),
-                                    rx.button(
-                                        "Carteira",
-                                        size="2",
-                                        variant="ghost",
-                                        color_scheme="blue",
+                                        on_click=lambda: UserState.set_selected_user(user),
                                         class_name="text-xs",
                                     ),
                                     class_name="space-x-2",

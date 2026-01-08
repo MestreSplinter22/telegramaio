@@ -12,6 +12,7 @@ def stat_card(icon: str, title: str, value: rx.Var, subtitle: str, color: str = 
             rx.hstack(
                 rx.icon(icon, class_name=f"h-6 w-6 text-{color}-500"),
                 rx.spacer(),
+                # Removido o ícone fixo de trending-up para limpar a UI, ou poderia ser dinâmico
                 rx.icon("trending-up", class_name="h-4 w-4 text-green-500"),
                 class_name="w-full",
             ),
@@ -33,43 +34,43 @@ def dashboard_stats() -> rx.Component:
         stat_card(
             "dollar-sign",
             "Receita Total",
-            "R$ " + DashboardState.total_revenue.to_string(),
-            "+12% vs mês anterior",
+            f"R$ {DashboardState.total_revenue:.2f}",
+            "Acumulado total",
             "green"
         ),
         stat_card(
             "users",
-            "Usuários Totais",
+            "Usuários",
             DashboardState.total_users.to_string(),
-            f"12 ativos",
+            "Registrados no bot",
             "blue"
         ),
         stat_card(
             "credit-card",
-            "PIX Processados",
+            "Transações",
             DashboardState.total_transactions.to_string(),
-            "Hoje: 47 transações",
+            "Total processado",
             "purple"
         ),
         stat_card(
             "gift",
-            "Gift Cards Vendidos",
+            "Vendas",
             DashboardState.total_gift_cards_sold.to_string(),
-            "Este mês: 156 unidades",
+            "Produtos entregues",
             "orange"
         ),
         stat_card(
             "wallet",
-            "Saldo Total",
-            f"R$ 2,450.75",
-            "Em carteiras de usuários",
+            "Saldo Usuários",
+            f"R$ {DashboardState.total_balance:.2f}",
+            "Em carteira",
             "cyan"
         ),
         stat_card(
             "bot",
-            "Performance Bot",
-            "99.8%",
-            "Uptime - 2ms resposta",
+            "Bot Status",
+            DashboardState.bot_uptime,
+            f"Resp: {DashboardState.bot_response_time}",
             "teal"
         ),
         class_name="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 w-full",

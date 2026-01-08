@@ -1,69 +1,65 @@
 """User management state."""
 
 import reflex as rx
-from datetime import datetime
-from ..models import User
+from sqlmodel import select, or_
+from typing import List, Optional
+# Importando o modelo ORM correto (subindo 3 níveis: states/users -> states -> backend -> models)
+from ...models import User
 
 
 class UserState(rx.State):
     """User management state."""
     
     # User data
-    users: list[User] = []
+    users: List[User] = []
     users_loading: bool = False
     
     # Selected user for details
-    selected_user: User | None = None
-    user_transactions: list = []
+    selected_user: Optional[User] = None
     
     # Filters
     user_search: str = ""
     user_status_filter: str = "all"
     
-    async def load_users(self):
-        """Load users from sample data."""
+    def load_users(self):
+        """Load users from database."""
         self.users_loading = True
-        yield
-        
-        # Sample data - replace with actual API calls
-        self.users = [
-            User(
-                id="user_1",
-                telegram_id="123456789",
-                username="@user1",
-                name="João Silva",
-                email="joao@example.com",
-                balance=150.50,
-                total_spent=500.00,
-                total_orders=15,
-                created_at=datetime.now(),
-                last_activity=datetime.now(),
-                status="active",
-                risk_score=5.0
-            ),
-            User(
-                id="user_2",
-                telegram_id="987654321",
-                username="@user2",
-                name="Maria Santos",
-                email="maria@example.com",
-                balance=75.25,
-                total_spent=200.00,
-                total_orders=8,
-                created_at=datetime.now(),
-                last_activity=datetime.now(),
-                status="active",
-                risk_score=2.5
-            )
-        ]
-        self.users_loading = False
+        try:
+            with rx.session() as session:
+                # Busca usuários ordenados por criação (mais recentes primeiro)
+                query = select(User).order_by(User.created_at.desc())
+                self.users = session.exec(query).all()
+        except Exception as e:
+            print(f"Erro ao carregar usuários: {e}")
+        finally:
+            self.users_loading = False
     
-    def get_user_by_id(self, user_id: str) -> User | None:
-        """Get user by ID."""
-        for user in self.users:
-            if user.id == user_id:
-                return user
-        return None
+    @rx.var
+    def filtered_users(self) -> List[User]:
+        """Get filtered users based on search and status."""
+        filtered = self.users
+        
+        # Filtro de Busca (Nome ou Username ou ID Telegram)
+        if self.user_search:
+            search_lower = self.user_search.lower()
+            filtered = [
+                user for user in filtered
+                if (
+                    search_lower in (user.first_name or "").lower() or
+                    search_lower in (user.last_name or "").lower() or
+                    search_lower in (user.username or "").lower() or
+                    search_lower in user.telegram_id
+                )
+            ]
+        
+        # Filtro de Status
+        if self.user_status_filter != "all":
+            filtered = [
+                user for user in filtered
+                if user.status == self.user_status_filter
+            ]
+        
+        return filtered
     
     def set_selected_user(self, user: User):
         """Set selected user for details view."""
@@ -73,28 +69,6 @@ class UserState(rx.State):
         """Clear selected user."""
         self.selected_user = None
     
-    @rx.var
-    def filtered_users(self) -> list[User]:
-        """Get filtered users based on search and status."""
-        filtered = self.users
-        
-        if self.user_search:
-            search_lower = self.user_search.lower()
-            filtered = [
-                user for user in filtered
-                if (search_lower in user.name.lower() or
-                    search_lower in user.username.lower() or
-                    search_lower in user.email.lower())
-            ]
-        
-        if self.user_status_filter != "all":
-            filtered = [
-                user for user in filtered
-                if user.status == self.user_status_filter
-            ]
-        
-        return filtered
-    
     def set_user_search(self, value: str):
         """Set user search query."""
         self.user_search = value
@@ -103,10 +77,18 @@ class UserState(rx.State):
         """Set user status filter."""
         self.user_status_filter = value
 
-    def update_user_status(self, user_id: str, new_status: str):
-        """Update user status."""
-        for user in self.users:
-            if user.id == user_id:
+    def update_user_status(self, user_id: int, new_status: str):
+        """Update user status in database."""
+        with rx.session() as session:
+            user = session.get(User, user_id)
+            if user:
                 user.status = new_status
-                yield rx.toast.success(f"Status do usuário atualizado para {new_status}")
-                break
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+                
+                # Recarrega a lista para atualizar a UI
+                self.load_users()
+                return rx.toast.success(f"Status do usuário atualizado para {new_status}")
+            else:
+                return rx.toast.error("Usuário não encontrado")
