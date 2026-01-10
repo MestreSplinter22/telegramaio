@@ -2,8 +2,7 @@
 
 import reflex as rx
 from ...components.ui.card import card
-from ...backend.states.bot import BotState
-
+from ...backend.states.bot.bot_state import BotState
 
 def bot_status_card(title: str, value: str, status: str = "default") -> rx.Component:
     """Create a single bot status card.
@@ -57,7 +56,7 @@ def bot_status_cards() -> rx.Component:
             rx.vstack(
                 rx.text("Usuários Ativos", class_name="text-sm text-muted-foreground"),
                 rx.text(
-                    BotState.bot_active_users,
+                    BotState.active_users_count,  # CORRIGIDO: nome da variável atualizado
                     class_name="text-lg font-bold text-foreground"
                 ),
                 class_name="space-y-1",
@@ -68,7 +67,7 @@ def bot_status_cards() -> rx.Component:
             rx.vstack(
                 rx.text("Mensagens/Hoje", class_name="text-sm text-muted-foreground"),
                 rx.text(
-                    BotState.bot_messages_today,
+                    BotState.messages_today_count,  # CORRIGIDO: nome da variável atualizado
                     class_name="text-lg font-bold text-foreground"
                 ),
                 class_name="space-y-1",

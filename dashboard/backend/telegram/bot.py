@@ -5,13 +5,21 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
-# --- NOVA IMPORTAÇÃO ABAIXO ---
 from aiogram.client.default import DefaultBotProperties 
-# ------------------------------
+
+# --- IMPORTAÇÕES DE HANDLERS ---
 from dashboard.backend.telegram.handlers.start_handler import router as start_router
 from dashboard.backend.telegram.handlers.flow_handler import router as flow_router
 from dashboard.backend.telegram.handlers.join_handler import router as join_router
 
+# --- NOVA IMPORTAÇÃO DO MIDDLEWARE ---
+# Assumindo que logger.py está na mesma pasta que bot.py
+try:
+    from .logger import InteractionLoggerMiddleware
+except ImportError:
+    # Caso o Python não reconheça o import relativo, tentamos o absoluto
+    from dashboard.backend.telegram.utils.logger import InteractionLoggerMiddleware
+# -------------------------------------
 
 # Configurar logging
 logging.basicConfig(
@@ -20,29 +28,32 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Token do bot - usar variável de ambiente ou fallback
+# Token do bot
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 logger.debug(f"Variáveis de ambiente carregadas: TELEGRAM_BOT_TOKEN={'definido' if BOT_TOKEN else 'não definido'}")
 logger.debug(f"Valor do token: {BOT_TOKEN[:10]}... (primeiros caracteres)" if BOT_TOKEN else "Token não definido")
 
-# Usar o token hardcoded se não estiver definido na variável de ambiente
 if not BOT_TOKEN:
     BOT_TOKEN = "7117120727:AAH_CUBJP5qa-x8sxQ3KAWYsmIJp3-tD3E0"
     logger.debug("Usando token hardcoded como fallback")
 
-# Variável global para verificar se o bot está rodando
+# Variáveis de controle
 bot_running = False
 application_instance = None
 dispatcher_instance = None
 
-# --- LINHA CORRIGIDA ABAIXO ---
-# Criar instância do bot usando DefaultBotProperties (obrigatório no aiogram 3.23.0)
+# Instância do bot
 bot = Bot(
     token=BOT_TOKEN, 
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
-# ------------------------------
+
 dp = Dispatcher()
+
+# --- REGISTRO DO MIDDLEWARE ---
+# O outer_middleware captura o evento antes de chegar aos handlers (ideal para logs)
+dp.update.outer_middleware(InteractionLoggerMiddleware())
+# ------------------------------
 
 @dp.message(Command("help"))
 async def help_command(message: Message) -> None:
@@ -82,7 +93,7 @@ async def start_telegram_bot():
         bot_running = True
         application_instance = task
         dispatcher_instance = dp
-        logger.info("✅ Bot do Telegram iniciado com sucesso!")
+        logger.info("✅ Bot do Telegram iniciado com sucesso (Middleware Ativo)!")
         
         return task
         

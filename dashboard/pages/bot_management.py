@@ -12,7 +12,7 @@ from ..views.management.bot_commands import bot_commands
 from ..views.management.bot_logs import bot_logs
 
 
-@template(route="/bot-management", title="Gerenciamento do Bot")
+@template(route="/bot-management", title="Gerenciamento do Bot", on_load=BotState.get_bot_status)
 def bot_management() -> rx.Component:
     """Bot management and monitoring page.
 

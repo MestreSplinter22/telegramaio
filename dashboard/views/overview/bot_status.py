@@ -1,10 +1,11 @@
 """Bot status card component."""
 
 import reflex as rx
-
+from ...backend.states.bot.bot_state import BotState
 
 def bot_status_card() -> rx.Component:
     """Bot status monitoring card."""
+    # Chama o load data quando o componente monta (opcional, ou usar on_load na página)
     return rx.vstack(
         # Header
         rx.hstack(
@@ -21,14 +22,22 @@ def bot_status_card() -> rx.Component:
                 rx.hstack(
                     rx.vstack(
                         rx.text("Status do Sistema", class_name="text-sm font-medium text-foreground"),
-                        rx.text("Bot Online", class_name="text-xs text-muted-foreground"),
+                        rx.cond(
+                            BotState.bot_running,
+                            rx.text("Ativo Recentemente", class_name="text-xs text-green-500"),
+                            rx.text("Inativo / Ocioso", class_name="text-xs text-muted-foreground"),
+                        ),
                         spacing="1",
                         align_items="start",
                     ),
                     rx.spacer(),
                     rx.hstack(
-                        rx.icon("circle", size=12, class_name="text-green-500"),
-                        rx.text("2ms", class_name="text-xs text-muted-foreground"),
+                        rx.cond(
+                            BotState.bot_running,
+                            rx.icon("circle", size=12, class_name="text-green-500"),
+                            rx.icon("circle", size=12, class_name="text-gray-500"),
+                        ),
+                        rx.text(BotState.bot_response_time, class_name="text-xs text-muted-foreground"),
                         spacing="1",
                         align_items="center",
                     ),
@@ -38,39 +47,39 @@ def bot_status_card() -> rx.Component:
                 # Active Users
                 rx.hstack(
                     rx.vstack(
-                        rx.text("Usuários Ativos", class_name="text-sm font-medium text-foreground"),
-                        rx.text("Total de usuários conectados", class_name="text-xs text-muted-foreground"),
+                        rx.text("Usuários Ativos (24h)", class_name="text-sm font-medium text-foreground"),
+                        rx.text("Total de interações únicas", class_name="text-xs text-muted-foreground"),
                         spacing="1",
                         align_items="start",
                     ),
                     rx.spacer(),
-                    rx.text("342", class_name="text-base font-medium text-foreground"),
+                    rx.text(BotState.active_users_count, class_name="text-base font-medium text-foreground"),
                     class_name="w-full items-center py-2",
                 ),
                 
                 # Messages Today
                 rx.hstack(
                     rx.vstack(
-                        rx.text("Mensagens Hoje", class_name="text-sm font-medium text-foreground"),
-                        rx.text("Total de mensagens processadas", class_name="text-xs text-muted-foreground"),
+                        rx.text("Interações Hoje", class_name="text-sm font-medium text-foreground"),
+                        rx.text("Mensagens e cliques", class_name="text-xs text-muted-foreground"),
                         spacing="1",
                         align_items="start",
                     ),
                     rx.spacer(),
-                    rx.text("1.2K", class_name="text-base font-medium text-foreground"),
+                    rx.text(BotState.messages_today_count, class_name="text-base font-medium text-foreground"),
                     class_name="w-full items-center py-2",
                 ),
                 
                 # Commands Executed
                 rx.hstack(
                     rx.vstack(
-                        rx.text("Comandos Executados", class_name="text-sm font-medium text-foreground"),
-                        rx.text("Total de comandos processados", class_name="text-xs text-muted-foreground"),
+                        rx.text("Comandos Hoje", class_name="text-sm font-medium text-foreground"),
+                        rx.text("Ex: /start, /comprar", class_name="text-xs text-muted-foreground"),
                         spacing="1",
                         align_items="start",
                     ),
                     rx.spacer(),
-                    rx.text("847", class_name="text-base font-medium text-foreground"),
+                    rx.text(BotState.commands_executed_count, class_name="text-base font-medium text-foreground"),
                     class_name="w-full items-center py-2",
                 ),
                 
