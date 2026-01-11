@@ -1,6 +1,6 @@
 # dashboard/backend/gateways/suitpay_service.py
 
-import requests
+import httpx
 import json
 from datetime import datetime, timedelta
 from dashboard.backend.models import GatewayConfig
@@ -15,9 +15,9 @@ class SuitPayService:
         self.ci = self.creds.get("client_id", "").strip()
         self.cs = self.creds.get("client_secret", "").strip()
 
-    def create_pix_payment(self, txid: str, cpf: str, nome: str, email: str, valor: float):
+    async def create_pix_payment_async(self, txid: str, cpf: str, nome: str, email: str, valor: float):
         """
-        Gera um PIX na SuitPay.
+        Gera um PIX na SuitPay de forma ASSÍNCRONA.
         Endpoint: /api/v1/gateway/request-qrcode
         """
         url = f"{self.base_url}/api/v1/gateway/request-qrcode"
@@ -50,10 +50,10 @@ class SuitPayService:
         }
 
         try:
-            print(f"📤 Enviando Request SuitPay para: {url}")
-            # print(f"Headers: {headers}") # Descomente para debug (Cuidado com logs de produção)
+            print(f"📤 Enviando Request SuitPay (Async) para: {url}")
             
-            response = requests.post(url, headers=headers, json=payload)
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, headers=headers, json=payload, timeout=30.0)
             
             # Se der erro 403/400, tenta mostrar o corpo da resposta para entender o motivo
             if response.status_code != 200:
@@ -74,5 +74,5 @@ class SuitPayService:
                 raise Exception(f"Erro na resposta da API: {data}")
 
         except Exception as e:
-            print(f"⚠️ Exceção SuitPay: {str(e)}")
+            print(f"⚠️ Exceção SuitPay Async: {str(e)}")
             raise e

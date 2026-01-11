@@ -1,4 +1,4 @@
-import requests
+import httpx
 import json
 import uuid
 from datetime import datetime, timedelta
@@ -50,7 +50,8 @@ def teste_diagnostico_pix():
     print("----------------------")
 
     try:
-        response = requests.post(BASE_URL, headers=headers, data=json.dumps(payload))
+        # httpx.post é a versão síncrona
+        response = httpx.post(BASE_URL, headers=headers, json=payload, timeout=30.0)
         print(f"Status Code: {response.status_code}")
         print(f"Response Body: {response.text}")
     except Exception as e:

@@ -1,6 +1,6 @@
 # dashboard/backend/gateways/openpix_service.py
 
-import requests
+import httpx
 import json
 from typing import Optional
 from dashboard.backend.models import GatewayConfig
@@ -23,22 +23,16 @@ class OpenPixService:
             "Content-Type": "application/json"
         }
 
-    def create_charge(self, txid: str, nome: str, valor: float, cpf: Optional[str] = None, email: str = "cliente@sememail.com"):
+    async def create_charge_async(self, txid: str, nome: str, valor: float, cpf: Optional[str] = None, email: str = "cliente@sememail.com"):
         """
-        Cria cobrança. CPF é opcional.
-        Se não houver CPF, usamos Nome + Email para validar o customer (regra da OpenPix).
+        Cria cobrança de forma ASSÍNCRONA usando httpx.
         """
         valor_centavos = int(valor * 100)
         url = f"{self.base_url}/charge"
         
-        # Monta o objeto customer dinamicamente
         customer_data = {"name": nome}
-        
-        # Regra OpenPix: Precisa de (Nome + CPF) OU (Nome + Email) OU (Nome + Telefone)
         if cpf:
-            # Apenas limpa se o CPF foi fornecido
             customer_data["taxID"] = "".join(filter(str.isdigit, cpf))
-        
         if email:
             customer_data["email"] = email
 
@@ -50,13 +44,13 @@ class OpenPixService:
         }
 
         try:
-            print(f"🚀 Enviando para OpenPix: {json.dumps(payload)}")
-            response = requests.post(url, headers=self.get_headers(), json=payload)
-            response.raise_for_status()
+            print(f"🚀 Enviando para OpenPix (Async): {json.dumps(payload)}")
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, headers=self.get_headers(), json=payload, timeout=30.0)
+                response.raise_for_status()
+                data = response.json()
             
-            data = response.json()
             charge = data.get("charge", {})
-            
             return {
                 "pix_copia_cola": charge.get("brCode"),
                 "qrcode_base64": charge.get("qrCodeImage"),
@@ -64,7 +58,5 @@ class OpenPixService:
             }
 
         except Exception as e:
-            print(f"❌ Erro OpenPix: {e}")
-            if 'response' in locals():
-                print(f"Detalhe: {response.text}")
-            raise Exception(f"Falha OpenPix: {str(e)}")
+            print(f"❌ Erro OpenPix Async: {e}")
+            raise Exception(f"Falha OpenPix Async: {str(e)}")

@@ -81,7 +81,7 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
     try:
         # Chama o serviço de pagamento para processar o pagamento
         payment_service = PaymentService()
-        result = payment_service.process_payment(
+        result = await payment_service.process_payment_async(
             amount=amount,
             gateway_name=gateway_name_preferida,
             user_context={
@@ -134,7 +134,7 @@ async def handle_payment_node(callback: types.CallbackQuery, node_data: dict, co
             else:
                 # Usa o MediaHelper para converter base64 para BufferedInputFile
                 try:
-                    photo_file = MediaHelper.base64_to_buffered_input_file(img_source, "qrcode_pix.png")
+                    photo_file = await asyncio.to_thread(MediaHelper.base64_to_buffered_input_file, img_source, "qrcode_pix.png")
                     await callback.message.answer_photo(photo=photo_file, caption=caption_text, parse_mode=parse_mode)
                 except Exception:
                     await callback.message.answer(caption_text, parse_mode=parse_mode)

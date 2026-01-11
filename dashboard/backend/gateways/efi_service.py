@@ -2,7 +2,7 @@
 
 import os
 import base64
-import requests
+import httpx
 import json
 import tempfile
 import unicodedata
@@ -26,17 +26,13 @@ class EfiPixService:
         if not text:
             return ""
             
-        # 1. Normalização NFKC: Converte caracteres de compatibilidade (como fontes matemáticas)
-        # para seus equivalentes canónicos (letras normais).
+        # 1. Normalização NFKC
         normalized = unicodedata.normalize('NFKC', text)
         
-        # 2. Remove caracteres que não sejam letras, números ou espaços (opcional, mas seguro)
-        # Removemos emojis para evitar rejeição
-        # Mantemos acentos comuns do português
-        # Regex: Permite letras (com acentos), números, espaços e traços.
+        # 2. Remove caracteres que não sejam letras, números ou espaços
         cleaned = re.sub(r'[^\w\s\-\.]', '', normalized, flags=re.UNICODE)
         
-        # 3. Limita tamanho (Bancos geralmente aceitam até 50-70 chars no nome)
+        # 3. Limita tamanho
         return cleaned.strip()[:70]
 
     @contextmanager
@@ -73,7 +69,7 @@ class EfiPixService:
                 if os.path.exists(t_cert.name): os.unlink(t_cert.name)
                 if os.path.exists(t_key.name): os.unlink(t_key.name)
 
-    def authenticate(self):
+    async def authenticate_async(self):
         auth = base64.b64encode(
             f"{self.creds['client_id']}:{self.creds['client_secret']}".encode()
         ).decode()
@@ -84,23 +80,22 @@ class EfiPixService:
         }
 
         with self._get_cert_context() as cert:
-            response = requests.post(
-                f"{self.env_url}/oauth/token",
-                json={"grant_type": "client_credentials"},
-                headers=headers,
-                cert=cert
-            )
+            # httpx suporta cert=(cert_file, key_file)
+            async with httpx.AsyncClient(cert=cert) as client:
+                response = await client.post(
+                    f"{self.env_url}/oauth/token",
+                    json={"grant_type": "client_credentials"},
+                    headers=headers
+                )
         
         if response.status_code == 200:
             return response.json()["access_token"]
         raise Exception(f"Erro Auth Efí ({response.status_code}): {response.text}")
 
-    def create_immediate_charge(self, txid: str, cpf: str, nome: str, valor: str):
-        token = self.authenticate()
+    async def create_immediate_charge_async(self, txid: str, cpf: str, nome: str, valor: str):
+        token = await self.authenticate_async()
         
-        # --- APLICAÇÃO DA CORREÇÃO ---
         nome_limpo = self.sanitize_string(nome)
-        # Se por acaso o nome ficar vazio após limpeza, usa um fallback
         if not nome_limpo:
             nome_limpo = "Cliente Telegram"
             
@@ -111,7 +106,6 @@ class EfiPixService:
             "Content-Type": "application/json"
         }
         
-        # Garante que o CPF tenha apenas números
         cpf_limpo = "".join(filter(str.isdigit, cpf))
         
         body = {
@@ -126,28 +120,27 @@ class EfiPixService:
         }
 
         with self._get_cert_context() as cert:
-            response = requests.put(
-                f"{self.env_url}/v2/cob/{txid}",
-                json=body,
-                headers=headers,
-                cert=cert
-            )
+            async with httpx.AsyncClient(cert=cert) as client:
+                response = await client.put(
+                    f"{self.env_url}/v2/cob/{txid}",
+                    json=body,
+                    headers=headers
+                )
 
         if response.status_code == 201:
             data = response.json()
             loc_id = data["loc"]["id"]
-            return self._get_qrcode(loc_id, token, headers)
+            return await self._get_qrcode_async(loc_id, token, headers)
         
         raise Exception(f"Erro Criar Cobrança ({response.status_code}): {response.text}")
 
-    def _get_qrcode(self, loc_id, token, headers):
-        # Requer novo contexto ou chamada simples se não exigir mTLS (Efí exige mTLS em tudo)
+    async def _get_qrcode_async(self, loc_id, token, headers):
         with self._get_cert_context() as cert:
-            response = requests.get(
-                f"{self.env_url}/v2/loc/{loc_id}/qrcode",
-                headers=headers,
-                cert=cert
-            )
+            async with httpx.AsyncClient(cert=cert) as client:
+                response = await client.get(
+                    f"{self.env_url}/v2/loc/{loc_id}/qrcode",
+                    headers=headers
+                )
             
         if response.status_code == 200:
             return response.json()

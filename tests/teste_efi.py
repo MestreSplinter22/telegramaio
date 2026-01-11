@@ -1,6 +1,7 @@
 from dashboard.backend.models.models import GatewayConfig
 from dashboard.backend.gateways.efi_service import EfiPixService
-import requests
+import httpx
+import asyncio
 
 # Simula sua config (Preencha com os dados reais se não quiser ler do DB)
 config_mock = GatewayConfig()
@@ -13,20 +14,25 @@ config_mock.credentials = {
     "pix_key": "5726ec81-0287-4657-b68d-90f6d9629b2e" # Sua chave atual
 }
 
-service = EfiPixService(config_mock)
+async def main():
+    service = EfiPixService(config_mock)
 
-try:
-    print("1. Tentando Autenticar...")
-    token = service.authenticate()
-    print(f"✅ Autenticado! Token: {token[:10]}...")
+    try:
+        print("1. Tentando Autenticar...")
+        token = await service.authenticate_async()
+        print(f"✅ Autenticado! Token: {token[:10]}...")
 
-    print("\n2. Listando Chaves da Conta...")
-    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-    
-    with service._get_cert_context() as cert:
-        response = requests.get(f"{service.env_url}/v2/gn/evp", headers=headers, cert=cert)
-        print(f"Status Chaves: {response.status_code}")
-        print(f"Resposta Chaves: {response.text}")
+        print("\n2. Listando Chaves da Conta...")
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         
-except Exception as e:
-    print(f"❌ Erro: {e}")
+        with service._get_cert_context() as cert:
+            async with httpx.AsyncClient(cert=cert) as client:
+                response = await client.get(f"{service.env_url}/v2/gn/evp", headers=headers)
+            print(f"Status Chaves: {response.status_code}")
+            print(f"Resposta Chaves: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Erro: {e}")
+
+if __name__ == "__main__":
+    asyncio.run(main())

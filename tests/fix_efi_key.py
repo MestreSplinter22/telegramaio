@@ -1,11 +1,12 @@
 # fix_efi_key.py
 import reflex as rx
-import requests
+import httpx
 import json
+import asyncio
 from dashboard.backend.models.models import GatewayConfig
 from dashboard.backend.gateways.efi_service import EfiPixService
 
-def fix_key():
+async def fix_key_async():
     print("🔧 Iniciando correção da Chave PIX de Homologação...")
     
     with rx.session() as session:
@@ -23,7 +24,7 @@ def fix_key():
         # 2. Instanciar o serviço para usar a autenticação que já criamos
         try:
             efi = EfiPixService(gateway)
-            token = efi.authenticate()
+            token = await efi.authenticate_async()
             print("✅ Autenticação OK!")
         except Exception as e:
             print(f"❌ Erro na autenticação: {e}")
@@ -39,12 +40,12 @@ def fix_key():
         
         # Usamos o contexto do certificado do serviço
         with efi._get_cert_context() as cert:
-            response = requests.post(
-                f"{efi.env_url}/v2/gn/evp",
-                headers=headers,
-                cert=cert,
-                json={} # Payload vazio para gerar nova chave
-            )
+            async with httpx.AsyncClient(cert=cert) as client:
+                response = await client.post(
+                    f"{efi.env_url}/v2/gn/evp",
+                    headers=headers,
+                    json={} # Payload vazio para gerar nova chave
+                )
             
         if response.status_code == 201:
             data = response.json()
@@ -64,6 +65,9 @@ def fix_key():
             
         else:
             print(f"❌ Erro ao criar chave: {response.status_code} - {response.text}")
+
+def fix_key():
+    asyncio.run(fix_key_async())
 
 if __name__ == "__main__":
     fix_key()
