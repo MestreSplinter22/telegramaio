@@ -327,5 +327,362 @@
             }
         },
         "timestamp": "2026-01-10 20:14:09"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038560,
+            "callback_query": {
+                "id": "3225387173691176028",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2537,
+                    "date": 1768096133,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-10 22:49:39"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038561,
+            "message": {
+                "message_id": 2539,
+                "date": 1768097827,
+                "chat": {
+                    "id": 5045936267,
+                    "type": "private",
+                    "username": "MestreSplinterOFC",
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                },
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "text": "/start",
+                "entities": [
+                    {
+                        "type": "bot_command",
+                        "offset": 0,
+                        "length": 6
+                    }
+                ]
+            }
+        },
+        "timestamp": "2026-01-10 23:17:07"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038562,
+            "callback_query": {
+                "id": "3225387173222932017",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2540,
+                    "date": 1768097828,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "🗣 Choose your language / Escolha seu idioma / Elige tu idioma:\n🌍👇",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "🇺🇸 English",
+                                    "callback_data": "goto_age_check_en"
+                                },
+                                {
+                                    "text": "🇧🇷 Português",
+                                    "callback_data": "goto_age_check_pt"
+                                },
+                                {
+                                    "text": "🇪🇸 Español",
+                                    "callback_data": "goto_age_check_es"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "goto_age_check_pt"
+            }
+        },
+        "timestamp": "2026-01-10 23:17:09"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038563,
+            "callback_query": {
+                "id": "3225387172659911594",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2541,
+                    "date": 1768097830,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Falaaa 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! Seja bem vindo ao BOT do VIP INC&ST CLUB! 🔥\n\n🚨 Atenção!\nVocê está a UM passo de entrar no grupo mais insano e exclusivo do Telegram — onde rolam os segredos que ninguém tem coragem de postar em público.\n\nMas antes... preciso saber uma coisinha 👇\n\n📌 Você tem mais de 18 anos?\n(Tudo aqui é underground e só pra maiores 👀)",
+                    "entities": [
+                        {
+                            "type": "bold",
+                            "offset": 7,
+                            "length": 29
+                        },
+                        {
+                            "type": "bold",
+                            "offset": 87,
+                            "length": 8
+                        },
+                        {
+                            "type": "bold",
+                            "offset": 291,
+                            "length": 25
+                        }
+                    ],
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "Sim, eu sou 😎",
+                                    "callback_data": "goto_sales_pitch_pt"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "goto_sales_pitch_pt"
+            }
+        },
+        "timestamp": "2026-01-10 23:17:11"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038564,
+            "callback_query": {
+                "id": "3225387170778102118",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2543,
+                    "date": 1768097832,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "video": {
+                        "file_id": "BAACAgEAAxkDAAIIbWlVClk_qNgAARdhmPqBjZIhqsssWAACKgYAAmxsOEYPRr4aBa63oDgE",
+                        "file_unique_id": "AgADKgYAAmxsOEY",
+                        "width": 640,
+                        "height": 480,
+                        "duration": 20,
+                        "thumbnail": {
+                            "file_id": "AAMCAQADGQMAAghtaVUKWT-o2AABF2GY-oGNkiGqyyxYAAIqBgACbGw4Rg9GvhoFrregAQAHbQADOAQ",
+                            "file_unique_id": "AQADKgYAAmxsOEZy",
+                            "width": 320,
+                            "height": 240,
+                            "file_size": 25414
+                        },
+                        "file_name": "1019(6).mp4",
+                        "mime_type": "video/mp4",
+                        "file_size": 3149257,
+                        "thumb": {
+                            "file_id": "AAMCAQADGQMAAghtaVUKWT-o2AABF2GY-oGNkiGqyyxYAAIqBgACbGw4Rg9GvhoFrregAQAHbQADOAQ",
+                            "file_unique_id": "AQADKgYAAmxsOEZy",
+                            "file_size": 25414,
+                            "width": 320,
+                            "height": 240
+                        }
+                    },
+                    "caption": "👇🏻 Olha o que te espera no VIP:\n🔥🔥🔥\n\n🚨 APENAS Mídias RARAS — nunca vistas na internet 🚨\nSÓ VENDO PRA CRER! 😵‍💫\n\n🎥 Flagras reais. Gravado escondido. Nada encenado, só transa sem censura com familiares passando dos limites 😈\n\n𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧, Você ganhou 50% de desconto para assinar o nosso plano VITÁLICIO😃\n\nSelecione o plano que você deseja assinar 👇",
+                    "caption_entities": [
+                        {
+                            "type": "bold",
+                            "offset": 5,
+                            "length": 28
+                        },
+                        {
+                            "type": "bold",
+                            "offset": 45,
+                            "length": 46
+                        },
+                        {
+                            "type": "bold",
+                            "offset": 235,
+                            "length": 29
+                        },
+                        {
+                            "type": "bold",
+                            "offset": 334,
+                            "length": 44
+                        }
+                    ],
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "7 DIAS VIP | R$ 14,90",
+                                    "callback_data": "goto_upsell_weekly_pt"
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "1 MÊS VIP | R$ 17,90",
+                                    "callback_data": "goto_upsell_monthly_pt"
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "VITALÍCIO | DE R$ 38 POR R$ 23,90",
+                                    "callback_data": "goto_upsell_lifetime_pt"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "goto_upsell_weekly_pt"
+            }
+        },
+        "timestamp": "2026-01-10 23:17:15"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038565,
+            "callback_query": {
+                "id": "3225387172802723747",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2554,
+                    "date": 1768100659,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nFinalize seu pedido agora com condições especiais.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Ver QR Code",
+                                    "callback_data": "show_pix:104"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "show_pix:104"
+            }
+        },
+        "timestamp": "2026-01-11 00:05:45"
     }
 ]
