@@ -1,8 +1,10 @@
+# dashboard/components/flow_editor_components/theme.py
 """Theme constants for Flow Editor"""
 import reflex as rx
 
 # --- DESIGN SYSTEM (Clean & Professional) ---
 THEME = {
+    "app_bg": rx.color("gray", 1),          # <--- ADICIONADO: Fundo global
     "panel_bg": rx.color("gray", 1),        # Fundo do editor (mais escuro/neutro)
     "card_bg": rx.color("gray", 2),         # Fundo do bloco de mensagem
     "section_bg": rx.color("gray", 3),      # Fundo para áreas agrupadas (linhas de botões)
