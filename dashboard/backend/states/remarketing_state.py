@@ -47,7 +47,7 @@ class RemarketingState(rx.State):
             type="message",
             title="1. Mensagem de Oferta (CTA)",
             text="Olá {first_name}! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
-            buttons=[[RemarketingButton(text="💳 Quero Pagar Agora", type="callback", callback="next_step")]]
+            buttons=[[RemarketingButton(text="💳 Quero Pagar Agora", type="callback", callback="remarketing_payment")]]
         ),
         # NÓ 2: PAGAMENTO
         RemarketingBlock(
@@ -124,84 +124,31 @@ class RemarketingState(rx.State):
             yield
 
     async def send_remarketing_campaign(self):
-        """Envia campanha, salvando o payload de sucesso na transação."""
+        """
+        CORRIGIDO: Envia apenas o CTA inicial.
+        O PIX será gerado quando o usuário clicar no botão via handler do bot.
+        """
         if not self.selected_users:
             return rx.window_alert("Selecione pelo menos um usuário.")
         
         targets = [u for u in self.pending_users if u["telegram_id"] in self.selected_users]
         
-        msg_node = self.editor_blocks[0]
-        pay_node = self.editor_blocks[1]
-        success_node = self.editor_blocks[2]
-        
-        # --- SERIALIZAÇÃO DO NÓ DE SUCESSO ---
-        # Convertemos os objetos para dicts puros para salvar no JSON da transação
-        success_buttons_raw = []
-        if success_node.buttons:
-            for row in success_node.buttons:
-                raw_row = []
-                for b in row:
-                    btn_d = {"text": b.text}
-                    if b.type == "url": btn_d["url"] = b.url
-                    elif b.type == "callback": btn_d["callback_data"] = b.callback
-                    else: btn_d["callback_data"] = "noop"
-                    raw_row.append(btn_d)
-                success_buttons_raw.append(raw_row)
-
-        success_payload = {
-            "text": success_node.text,
-            "image_url": success_node.image_url,
-            "video_url": success_node.video_url,
-            "buttons": success_buttons_raw
-        }
+        msg_node = self.editor_blocks[0]  # Apenas o nó de CTA
         
         count_success = 0
         count_fail = 0
-        service = PaymentService()
         
         for user in targets:
             try:
-                # 1. Gerar Pix (Nó 2) + INJETAR PAYLOAD DE SUCESSO
-                val = pay_node.amount if pay_node.amount > 0 else float(user["raw_amount"])
-                
-                res = service.process_payment(
-                    amount=val, gateway_name=pay_node.gateway,
-                    user_context={"id": int(user["telegram_id"]), "name": user["first_name"], "username": user["username"]},
-                    payment_screen_id="remarketing", 
-                    success_screen_id="custom_remarketing", # ID fictício
-                    extra_metadata={"custom_success_data": success_payload} # <--- O SEGREDO ESTÁ AQUI
-                )
-                
-                if not res["success"]: 
-                    count_fail += 1
-                    continue
-                
-                # Contexto
+                # Contexto para formatação
                 ctx = {
                     "first_name": user["first_name"],
-                    "amount": f"{val:.2f}",
-                    "pix_copia_cola": f"<code>{res['pix_data'].get('pix_copia_cola', '')}</code>"
+                    "amount": f"{user['raw_amount']:.2f}",
                 }
                 
-                # 2. Enviar Nó 1 (CTA)
+                # --- ENVIAR APENAS O NÓ 1 (CTA) ---
+                # O callback "remarketing_payment" será capturado pelo handler do bot
                 await self._send_generic_node(user["telegram_id"], msg_node, ctx)
-                
-                await asyncio.sleep(0.8) 
-                
-                # 3. Enviar Nó 2 (Pagamento)
-                qr_b64 = res["pix_data"].get("qrcode_base64", "")
-                pay_text = pay_node.text.format(**ctx)
-                if "{pix_copia_cola}" not in pay_node.text:
-                    pay_text += f"\n\n{ctx['pix_copia_cola']}"
-                
-                if qr_b64:
-                    if qr_b64.startswith("http"):
-                        await bot.send_photo(chat_id=user["telegram_id"], photo=qr_b64, caption=pay_text, parse_mode="HTML")
-                    else:
-                        f = MediaHelper.base64_to_buffered_input_file(qr_b64, "qr.png")
-                        await bot.send_photo(chat_id=user["telegram_id"], photo=f, caption=pay_text, parse_mode="HTML")
-                else:
-                    await bot.send_message(chat_id=user["telegram_id"], text=pay_text, parse_mode="HTML")
                 
                 count_success += 1
                 await asyncio.sleep(0.2)
@@ -213,6 +160,7 @@ class RemarketingState(rx.State):
         return rx.window_alert(f"Disparo concluído!\n✅ Sucesso: {count_success}\n❌ Falhas: {count_fail}")
 
     async def _send_generic_node(self, chat_id, block, ctx):
+        """Envia um nó genérico (mensagem com botões)"""
         text = block.text.format(**ctx)
         markup = None
         
@@ -222,12 +170,20 @@ class RemarketingState(rx.State):
                 raw_row = []
                 for b in row:
                     btn_dict = {"text": b.text}
-                    if b.type == "url" and b.url: btn_dict["url"] = b.url
-                    elif b.type == "callback" and b.callback: btn_dict["callback_data"] = b.callback
-                    else: btn_dict["callback_data"] = "noop"
+                    # CORREÇÃO: Usar b.callback corretamente
+                    if b.type == "url" and b.url: 
+                        btn_dict["url"] = b.url
+                    elif b.type == "callback":
+                        # O campo callback já contém o valor correto
+                        btn_dict["callback_data"] = b.callback if b.callback else "noop"
+                    else: 
+                        btn_dict["callback_data"] = "noop"
                     raw_row.append(btn_dict)
-                if raw_row: raw_btns.append(raw_row)
-            if raw_btns: markup = build_keyboard(raw_btns)
+                if raw_row: 
+                    raw_btns.append(raw_row)
+            if raw_btns: 
+                markup = build_keyboard(raw_btns)
+                print(f"🔍 DEBUG: Markup criado: {raw_btns}")  # Log para debug
 
         if block.video_url:
             await bot.send_video(chat_id, video=block.video_url, caption=text, reply_markup=markup, parse_mode="HTML")

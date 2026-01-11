@@ -684,5 +684,581 @@
             }
         },
         "timestamp": "2026-01-11 00:05:45"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038566,
+            "callback_query": {
+                "id": "3225387172759985516",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2556,
+                    "date": 1768146922,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 12:55:47"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038567,
+            "callback_query": {
+                "id": "3225387171611440515",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2556,
+                    "date": 1768146922,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 12:56:09"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038568,
+            "callback_query": {
+                "id": "3225387173707659077",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2557,
+                    "date": 1768147171,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 12:59:41"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038569,
+            "callback_query": {
+                "id": "3225387174697706910",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2558,
+                    "date": 1768147339,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:02:22"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038570,
+            "callback_query": {
+                "id": "3225387172188294132",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2559,
+                    "date": 1768147594,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:06:38"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038571,
+            "callback_query": {
+                "id": "3225387173199380520",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2560,
+                    "date": 1768147959,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:12:49"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038572,
+            "callback_query": {
+                "id": "3225387172286143266",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2561,
+                    "date": 1768148151,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:15:54"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038573,
+            "callback_query": {
+                "id": "3225387172053784166",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2562,
+                    "date": 1768148334,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:19:08"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038574,
+            "callback_query": {
+                "id": "3225387173033430220",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2563,
+                    "date": 1768148627,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:23:56"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038575,
+            "callback_query": {
+                "id": "3225387172319941481",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2563,
+                    "date": 1768148627,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:24:39"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038576,
+            "callback_query": {
+                "id": "3225387172637293936",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2563,
+                    "date": 1768148627,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "noop"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "noop"
+            }
+        },
+        "timestamp": "2026-01-11 13:24:56"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038577,
+            "callback_query": {
+                "id": "3225387173274633977",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2564,
+                    "date": 1768148793,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Olá 𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "remarketing_payment"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "remarketing_payment"
+            }
+        },
+        "timestamp": "2026-01-11 13:26:37"
     }
 ]

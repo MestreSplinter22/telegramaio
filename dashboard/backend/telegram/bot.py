@@ -11,15 +11,14 @@ from aiogram.client.default import DefaultBotProperties
 from dashboard.backend.telegram.handlers.start_handler import router as start_router
 from dashboard.backend.telegram.handlers.flow_handler import router as flow_router
 from dashboard.backend.telegram.handlers.join_handler import router as join_router
+from dashboard.backend.telegram.handlers.remarketing_handler import router as remarketing_router
+from dashboard.backend.telegram.handlers.debug_callback_handler import router as debug_router  # DEBUG
 
-# --- NOVA IMPORTAÇÃO DO MIDDLEWARE ---
-# Assumindo que logger.py está na mesma pasta que bot.py
+# --- IMPORTAÇÃO DO MIDDLEWARE ---
 try:
     from .logger import InteractionLoggerMiddleware
 except ImportError:
-    # Caso o Python não reconheça o import relativo, tentamos o absoluto
     from dashboard.backend.telegram.utils.logger import InteractionLoggerMiddleware
-# -------------------------------------
 
 # Configurar logging
 logging.basicConfig(
@@ -51,9 +50,7 @@ bot = Bot(
 dp = Dispatcher()
 
 # --- REGISTRO DO MIDDLEWARE ---
-# O outer_middleware captura o evento antes de chegar aos handlers (ideal para logs)
 dp.update.outer_middleware(InteractionLoggerMiddleware())
-# ------------------------------
 
 @dp.message(Command("help"))
 async def help_command(message: Message) -> None:
@@ -75,7 +72,6 @@ async def start_telegram_bot():
         
         # Registrar handlers no dispatcher
         logger.info("Registrando handlers...")
-        # Evita registrar os routers múltiplas vezes caso a função seja chamada novamente
         if start_router not in dp.sub_routers:
             dp.include_router(start_router)
         if flow_router not in dp.sub_routers:
@@ -83,6 +79,14 @@ async def start_telegram_bot():
         if join_router not in dp.sub_routers:
             dp.include_router(join_router)
             logger.info("Router de Join Request registrado.")
+        # NOVO: Registrar handler de remarketing ANTES do debug
+        if remarketing_router not in dp.sub_routers:
+            dp.include_router(remarketing_router)
+            logger.info("✅ Router de Remarketing registrado.")
+        # DEBUG: Registrar por último para capturar callbacks não tratados
+        if debug_router not in dp.sub_routers:
+            dp.include_router(debug_router)
+            logger.info("🔍 Router de Debug registrado (captura callbacks não tratados).")
         
         # Iniciar o polling
         logger.info("Iniciando polling...")
@@ -93,7 +97,7 @@ async def start_telegram_bot():
         bot_running = True
         application_instance = task
         dispatcher_instance = dp
-        logger.info("✅ Bot do Telegram iniciado com sucesso (Middleware Ativo)!")
+        logger.info("✅ Bot do Telegram iniciado com sucesso (Middleware Ativo + Remarketing Handler)!")
         
         return task
         
