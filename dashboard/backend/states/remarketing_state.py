@@ -5,6 +5,8 @@ from sqlmodel import select
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 import asyncio
+import json
+import os
 from pydantic import BaseModel
 
 from dashboard.backend.database import get_db_session
@@ -14,6 +16,10 @@ from dashboard.backend.telegram.bot import bot
 from dashboard.backend.telegram.common.keyboard_builder import build_keyboard
 from dashboard.backend.services.payment_service import PaymentService
 from dashboard.backend.telegram.utils.media_helper import MediaHelper
+
+# Caminho do arquivo JSON
+FLOWS_DIR = "dashboard/backend/telegram/flows"
+REMARKETING_JSON_PATH = os.path.join(FLOWS_DIR, "remarketing.json")
 
 # --- MODELOS ---
 class RemarketingButton(BaseModel):
@@ -43,30 +49,11 @@ class RemarketingState(rx.State):
     # --- DADOS TEMPORÁRIOS PARA O HANDLER ---
     _temp_success_data: Dict[str, Any] = {} 
 
-    # --- EDITOR FIXO (3 NÓS) ---
+    # --- EDITOR (Iniciado vazio, será carregado do JSON) ---
     editor_blocks: List[RemarketingBlock] = [
-        # NÓ 1: CTA 
-        RemarketingBlock(
-            type="message",
-            title="1. Mensagem de Oferta (CTA)",
-            text="Olá {first_name}! 🔔\n\nTemos uma condição especial para você finalizar seu pedido.",
-            buttons=[[RemarketingButton(text="💳 Quero Pagar Agora", type="callback", callback="remarketing_payment")]]
-        ),
-        # NÓ 2: PAGAMENTO
-        RemarketingBlock(
-            type="payment",
-            title="2. Configuração do Pagamento (Pix)",
-            text="Aqui está seu QR Code exclusivo de R$ {amount}:",
-            gateway="openpix",
-            amount=0.0
-        ),
-        # NÓ 3: SUCESSO (A ser enviado pelo Webhook)
-        RemarketingBlock(
-            type="webhook",
-            title="3. Mensagem de Confirmação",
-            text="Pagamento confirmado! Obrigado.",
-            buttons=[] 
-        )
+        RemarketingBlock(type="message", title="1. Mensagem de Oferta (CTA)"),
+        RemarketingBlock(type="payment", title="2. Configuração do Pagamento (Pix)"),
+        RemarketingBlock(type="webhook", title="3. Mensagem de Confirmação")
     ]
     
     # --- COMPUTED VARS ---
@@ -77,6 +64,119 @@ class RemarketingState(rx.State):
     @rx.var
     def all_selected_checked(self) -> bool:
         return (len(self.pending_users) > 0) and (len(self.selected_users) == len(self.pending_users))
+
+    # --- PERSISTÊNCIA JSON (NOVO) ---
+    def load_configuration(self):
+        """Carrega a configuração do arquivo remarketing.json para o editor."""
+        if not os.path.exists(REMARKETING_JSON_PATH):
+            print("⚠️ Arquivo remarketing.json não encontrado. Usando padrões.")
+            # Define padrões se arquivo não existir
+            self.editor_blocks[0].text = "Olá {first_name}! 🔔\n\nTemos uma oferta especial."
+            self.editor_blocks[0].buttons = [[RemarketingButton(text="💳 Quero Pagar Agora", type="callback", callback="remarketing_payment")]]
+            self.editor_blocks[1].text = "Pague agora seu Pix de R$ {amount}:"
+            self.editor_blocks[2].text = "Pagamento Confirmado!"
+            return
+
+        try:
+            with open(REMARKETING_JSON_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                screens = data.get("screens", {})
+
+                # Mapear Nó 1: Oferta
+                offer = screens.get("remarketing_offer", {})
+                self.editor_blocks[0].text = offer.get("text", "")
+                self.editor_blocks[0].image_url = offer.get("image_url", "")
+                self.editor_blocks[0].video_url = offer.get("video_url", "")
+                self.editor_blocks[0].buttons = self._parse_json_buttons(offer.get("buttons", []))
+
+                # Mapear Nó 2: Pagamento
+                payment = screens.get("remarketing_payment", {})
+                self.editor_blocks[1].text = payment.get("text", "")
+                self.editor_blocks[1].gateway = payment.get("gateway", "openpix")
+                # amount não costuma vir no JSON estático, mas se vier, carregamos
+                
+                # Mapear Nó 3: Sucesso
+                success = screens.get("remarketing_success", {})
+                self.editor_blocks[2].text = success.get("text", "")
+                self.editor_blocks[2].image_url = success.get("image_url", "")
+                self.editor_blocks[2].video_url = success.get("video_url", "")
+                self.editor_blocks[2].buttons = self._parse_json_buttons(success.get("buttons", []))
+                
+            print("✅ Configuração de remarketing carregada com sucesso.")
+            self.editor_blocks = list(self.editor_blocks) # Forçar refresh UI
+        except Exception as e:
+            print(f"❌ Erro ao carregar remarketing.json: {e}")
+
+    def save_configuration(self):
+        """Salva o estado atual do editor no arquivo remarketing.json."""
+        try:
+            # Converter botões para formato JSON
+            offer_btns = self._serialize_buttons(self.editor_blocks[0].buttons)
+            success_btns = self._serialize_buttons(self.editor_blocks[2].buttons)
+
+            data = {
+                "screens": {
+                    "remarketing_offer": {
+                        "text": self.editor_blocks[0].text,
+                        "image_url": self.editor_blocks[0].image_url,
+                        "video_url": self.editor_blocks[0].video_url,
+                        "buttons": offer_btns
+                    },
+                    "remarketing_payment": {
+                        "type": "payment",
+                        "text": self.editor_blocks[1].text,
+                        "gateway": self.editor_blocks[1].gateway,
+                        "webhook": "remarketing_success"
+                    },
+                    "remarketing_success": {
+                        "type": "webhook",
+                        "text": self.editor_blocks[2].text,
+                        "image_url": self.editor_blocks[2].image_url,
+                        "video_url": self.editor_blocks[2].video_url,
+                        "buttons": success_btns
+                    }
+                }
+            }
+
+            os.makedirs(FLOWS_DIR, exist_ok=True)
+            with open(REMARKETING_JSON_PATH, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            print(f"💾 remarketing.json salvo com sucesso em {REMARKETING_JSON_PATH}")
+        except Exception as e:
+            print(f"❌ Erro ao salvar remarketing.json: {e}")
+
+    # --- HELPER: PARSERS DE BOTÕES ---
+    def _parse_json_buttons(self, json_rows: List[List[Dict]]) -> List[List[RemarketingButton]]:
+        result = []
+        for row in json_rows:
+            new_row = []
+            for btn in row:
+                b_obj = RemarketingButton(text=btn.get("text", "Botão"))
+                if "url" in btn:
+                    b_obj.type = "url"
+                    b_obj.url = btn["url"]
+                elif "callback" in btn or "callback_data" in btn:
+                    b_obj.type = "callback"
+                    b_obj.callback = btn.get("callback") or btn.get("callback_data")
+                new_row.append(b_obj)
+            result.append(new_row)
+        return result
+
+    def _serialize_buttons(self, btn_rows: List[List[RemarketingButton]]) -> List[List[Dict]]:
+        result = []
+        for row in btn_rows:
+            new_row = []
+            for btn in row:
+                d = {"text": btn.text}
+                if btn.type == "url" and btn.url:
+                    d["url"] = btn.url
+                elif btn.type == "callback" and btn.callback:
+                    d["callback"] = btn.callback # Usar 'callback' para compatibilidade com o fluxo
+                new_row.append(d)
+            if new_row:
+                result.append(new_row)
+        return result
 
     # --- AÇÕES DE SELEÇÃO ---
     def toggle_all(self, checked: bool):
@@ -97,6 +197,7 @@ class RemarketingState(rx.State):
         self.loading_users = True
         yield
         try:
+            # ... (código existente de load users mantido) ...
             with get_db_session() as session:
                 cutoff = datetime.utcnow() - timedelta(minutes=15)
                 stmt = select(Transaction, User).where(
@@ -119,7 +220,6 @@ class RemarketingState(rx.State):
                         })
                         seen.add(user.telegram_id)
                         ids.append(user.telegram_id)
-                
                 self.pending_users = data
                 self.selected_users = ids
         finally:
@@ -128,58 +228,40 @@ class RemarketingState(rx.State):
 
     async def send_remarketing_campaign(self):
         """
-        CORRIGIDO: Envia apenas o CTA inicial.
-        O PIX será gerado quando o usuário clicar no botão via handler do bot.
+        Envia campanha e SALVA O JSON ANTES para garantir consistência.
         """
         if not self.selected_users:
             return rx.window_alert("Selecione pelo menos um usuário.")
         
+        # 1. SALVAR JSON ATUALIZADO NO DISCO
+        # Isso garante que o webhook (que lê o arquivo) pegue os textos novos
+        self.save_configuration()
+        
         targets = [u for u in self.pending_users if u["telegram_id"] in self.selected_users]
         
-        # Capturar dados do nó 3 (sucesso) para salvar nos metadados
-        success_node = self.editor_blocks[2]  # Nó de sucesso
-        
-        # Serializar os dados de sucesso para salvar na transação
+        # Capturar dados para o state temporário (backup em memória)
+        success_node = self.editor_blocks[2]
         success_data = {
             "text": success_node.text,
             "image_url": success_node.image_url,
             "video_url": success_node.video_url,
-            "buttons": []
+            "buttons": self._serialize_buttons(success_node.buttons)
         }
-        
-        # Converter botões para formato serializável
-        if success_node.buttons:
-            for row in success_node.buttons:
-                row_data = []
-                for btn in row:
-                    btn_dict = {"text": btn.text}
-                    if btn.type == "url" and btn.url:
-                        btn_dict["url"] = btn.url
-                    elif btn.type == "callback" and btn.callback:
-                        btn_dict["callback_data"] = btn.callback
-                    row_data.append(btn_dict)
-                if row_data:
-                    success_data["buttons"].append(row_data)
-        
-        # Salvar no state para ser usado pelo handler
-        # Vamos salvar em uma variável temporária que o handler pode acessar
         self._temp_success_data = success_data
         
-        msg_node = self.editor_blocks[0]  # Apenas o nó de CTA
+        msg_node = self.editor_blocks[0] # Nó de Oferta
         
         count_success = 0
         count_fail = 0
         
         for user in targets:
             try:
-                # Contexto para formatação
                 ctx = {
                     "first_name": user["first_name"],
                     "amount": f"{user['raw_amount']:.2f}",
                 }
                 
-                # --- ENVIAR APENAS O NÓ 1 (CTA) ---
-                # O callback "remarketing_payment" será capturado pelo handler do bot
+                # Enviar Nó 1 (CTA)
                 await self._send_generic_node(user["telegram_id"], msg_node, ctx)
                 
                 count_success += 1
@@ -189,40 +271,34 @@ class RemarketingState(rx.State):
                 print(f"Erro envio {user['telegram_id']}: {e}")
                 count_fail += 1
                 
-        return rx.window_alert(f"Disparo concluído!\n✅ Sucesso: {count_success}\n❌ Falhas: {count_fail}")
+        return rx.window_alert(f"Disparo concluído!\n💾 JSON Atualizado\n✅ Sucesso: {count_success}\n❌ Falhas: {count_fail}")
 
     async def _send_generic_node(self, chat_id, block, ctx):
-        """Envia um nó genérico (mensagem com botões)"""
         text = block.text.format(**ctx)
         markup = None
         
         if block.buttons:
-            raw_btns = []
-            for row in block.buttons:
-                raw_row = []
-                for b in row:
-                    btn_dict = {"text": b.text}
-                    # CORREÇÃO: Usar b.callback corretamente
-                    if b.type == "url" and b.url: 
-                        btn_dict["url"] = b.url
-                    elif b.type == "callback":
-                        # O campo callback já contém o valor correto
-                        btn_dict["callback_data"] = b.callback if b.callback else "noop"
-                    else: 
-                        btn_dict["callback_data"] = "noop"
-                    raw_row.append(btn_dict)
-                if raw_row: 
-                    raw_btns.append(raw_row)
-            if raw_btns: 
-                markup = build_keyboard(raw_btns)
-                print(f"🔍 DEBUG: Markup criado: {raw_btns}")  # Log para debug
+            # Usar o helper de serialização para garantir formato correto
+            btns_data = self._serialize_buttons(block.buttons)
+            # Adaptar para o build_keyboard que espera 'callback_data'
+            for row in btns_data:
+                for btn in row:
+                    if "callback" in btn:
+                        btn["callback_data"] = btn.pop("callback")
+            
+            if btns_data:
+                markup = build_keyboard(btns_data)
 
-        if block.video_url:
-            await bot.send_video(chat_id, video=block.video_url, caption=text, reply_markup=markup, parse_mode="HTML")
-        elif block.image_url:
-            await bot.send_photo(chat_id, photo=block.image_url, caption=text, reply_markup=markup, parse_mode="HTML")
-        else:
-            await bot.send_message(chat_id, text=text, reply_markup=markup, parse_mode="HTML")
+        try:
+            if block.video_url:
+                await bot.send_video(chat_id, video=block.video_url, caption=text, reply_markup=markup, parse_mode="HTML")
+            elif block.image_url:
+                await bot.send_photo(chat_id, photo=block.image_url, caption=text, reply_markup=markup, parse_mode="HTML")
+            else:
+                await bot.send_message(chat_id, text=text, reply_markup=markup, parse_mode="HTML")
+        except Exception as e:
+            print(f"Erro no envio telegram: {e}")
+            raise e
 
     # --- UPDATERS (Mantidos iguais) ---
     def update_field(self, idx: int, field: str, val: Any):

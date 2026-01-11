@@ -1404,5 +1404,53 @@
             }
         },
         "timestamp": "2026-01-11 14:42:48"
+    },
+    {
+        "user_id": 5045936267,
+        "log": {
+            "update_id": 310038582,
+            "callback_query": {
+                "id": "3225387173050114367",
+                "from_user": {
+                    "id": 5045936267,
+                    "is_bot": false,
+                    "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                    "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧",
+                    "username": "MestreSplinterOFC",
+                    "language_code": "pt-br"
+                },
+                "chat_instance": "-1844124063972105381",
+                "message": {
+                    "message_id": 2582,
+                    "date": 1768166490,
+                    "chat": {
+                        "id": 5045936267,
+                        "type": "private",
+                        "username": "MestreSplinterOFC",
+                        "first_name": "𝙈𝙚𝙨𝙩𝙧𝙚 𝙎𝙥𝙡𝙞𝙣𝙩𝙚𝙧",
+                        "last_name": "~ ⟦𝘾⟧⟦𝙤⟧⟦𝙙⟧⟦𝙚⟧⟦𝙧⟧ ~ ⟦𝙋⟧⟦𝙍⟧⟦𝙅⟧"
+                    },
+                    "from_user": {
+                        "id": 7117120727,
+                        "is_bot": true,
+                        "first_name": "BotDev_MestreSplinter",
+                        "username": "Dev_MestreSplinter_bot"
+                    },
+                    "text": "Oferta Especial de Remarketing",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "💳 Quero Pagar Agora",
+                                    "callback_data": "remarketing_payment"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "data": "remarketing_payment"
+            }
+        },
+        "timestamp": "2026-01-11 18:21:33"
     }
 ]

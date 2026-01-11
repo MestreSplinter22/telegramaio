@@ -258,7 +258,10 @@ def remarketing_page() -> rx.Component:
             ),
             width="100%", display="flex"
         ),
-        on_mount=RemarketingState.load_pending_users,
+        on_mount=[
+            RemarketingState.load_pending_users, # Carrega usuários
+            RemarketingState.load_configuration  # Carrega o JSON nos blocos de edição
+        ],
         background_color=THEME["app_bg"],
         min_height="100vh"
     )
