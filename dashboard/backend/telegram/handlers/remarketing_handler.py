@@ -3,6 +3,8 @@
 from aiogram import Router, F, types
 import reflex as rx
 import logging
+import json
+import os
 
 from dashboard.backend.models import Transaction
 from dashboard.backend.services.payment_service import PaymentService
@@ -10,6 +12,10 @@ from dashboard.backend.telegram.utils.media_helper import MediaHelper
 
 router = Router()
 logger = logging.getLogger(__name__)
+
+# Definir caminho do arquivo de fluxo do remarketing
+FLOWS_DIR = "dashboard/backend/telegram/flows"
+REMARKETING_FLOW_FILE = os.path.join(FLOWS_DIR, "remarketing.json")
 
 @router.callback_query(F.data == "remarketing_payment")
 async def handle_remarketing_payment(callback: types.CallbackQuery):
@@ -48,6 +54,40 @@ async def handle_remarketing_payment(callback: types.CallbackQuery):
             "amount": txn.amount,
             "text": "💳 <b>Pagamento Gerado!</b>\n\nAqui está seu QR Code de R$ {amount}:\n\n{pix_copia_cola}"
         }
+
+        # --- NOVO: SALVAR OS 3 NÓS NO ARQUIVO JSON ---
+        # Isso garante que o webhook encontre as referências de texto e botões
+        try:
+            remarketing_nodes = {
+                "screens": {
+                    "remarketing_offer": {
+                        "text": "Oferta Especial de Remarketing", 
+                        "buttons": [[{"text": "💳 Quero Pagar Agora", "callback": "remarketing_payment"}]]
+                    },
+                    "remarketing_payment": {
+                        "type": "payment",
+                        "text": payment_config["text"], # Salva o texto configurado dinamicamente
+                        "gateway": "openpix",
+                        "webhook": "remarketing_success"
+                    },
+                    "remarketing_success": {
+                        "type": "webhook",
+                        "text": "✅ <b>Pagamento de Remarketing Confirmado!</b>\n\n🎉 Parabéns <b>{first_name}</b>!\nRecebemos seu pagamento de R$ {amount}.\n\nSeu acesso/crédito foi liberado.",
+                        "buttons": [
+                            [{"text": "🚀 Acessar Grupo VIP", "url": "https://t.me/+D6_NwSvlSdI1M2Vh"}]
+                        ]
+                    }
+                }
+            }
+            
+            os.makedirs(FLOWS_DIR, exist_ok=True)
+            with open(REMARKETING_FLOW_FILE, "w", encoding="utf-8") as f:
+                json.dump(remarketing_nodes, f, indent=2, ensure_ascii=False)
+            logger.info(f"💾 Nós de remarketing salvos em: {REMARKETING_FLOW_FILE}")
+            
+        except Exception as e:
+            logger.error(f"❌ Erro ao salvar JSON de remarketing: {e}")
+        # -----------------------------------------------
         
         # 3. Mensagem de processamento
         processing_msg = await callback.message.answer(
@@ -57,23 +97,17 @@ async def handle_remarketing_payment(callback: types.CallbackQuery):
         logger.info("✅ Mensagem de processamento enviada")
         
         try:
-            # 4. Gerar PIX AGORA (não antes)
+            # 4. Gerar PIX AGORA
             logger.info("🔄 Iniciando geração de PIX...")
             service = PaymentService()
             
-            # BUSCAR DADOS DE SUCESSO DO STATE (se disponível)
+            # Tentar buscar metadados extras se disponíveis
             success_metadata = {}
             try:
-                # Importar o state para acessar os dados temporários
                 from dashboard.backend.states.remarketing_state import RemarketingState
-                
-                # Tentar acessar a instância do state
-                # Nota: Isso é uma simplificação - em produção você pode querer salvar isso em cache/redis
                 success_metadata = getattr(RemarketingState, '_temp_success_data', {})
-                if success_metadata:
-                    logger.info(f"✅ Dados de sucesso customizados encontrados!")
-            except Exception as e:
-                logger.warning(f"⚠️ Não foi possível acessar dados de sucesso: {e}")
+            except:
+                pass
             
             result = service.process_payment(
                 amount=payment_config["amount"],
@@ -83,8 +117,8 @@ async def handle_remarketing_payment(callback: types.CallbackQuery):
                     "name": user_name,
                     "username": callback.from_user.username or "user"
                 },
-                payment_screen_id="remarketing_payment",
-                success_screen_id="remarketing_success",
+                payment_screen_id="remarketing_payment", # ID que será buscado no JSON
+                success_screen_id="remarketing_success", # ID que será buscado no JSON
                 extra_metadata={"remarketing_success_data": success_metadata} if success_metadata else None
             )
             
@@ -100,39 +134,24 @@ async def handle_remarketing_payment(callback: types.CallbackQuery):
             qr_b64 = pix_data.get("qrcode_base64", "")
             pix_copia_cola = pix_data.get("pix_copia_cola", "")
             
-            logger.info(f"📋 Dados PIX: QR={bool(qr_b64)}, Copia e Cola={bool(pix_copia_cola)}")
-            
-            # 6. Formatar texto
+            # 6. Formatar texto usando o config
             caption_text = payment_config["text"].replace("{amount}", f"{payment_config['amount']:.2f}")
             caption_text = caption_text.replace("{pix_copia_cola}", f"<code>{pix_copia_cola}</code>")
             
             # 7. Deletar mensagem de processamento
             await processing_msg.delete()
-            logger.info("✅ Mensagem de processamento deletada")
             
             # 8. Enviar QR Code
             if qr_b64:
                 if qr_b64.startswith("http"):
-                    await callback.message.answer_photo(
-                        photo=qr_b64, 
-                        caption=caption_text, 
-                        parse_mode="HTML"
-                    )
-                    logger.info("✅ QR Code enviado via URL")
+                    await callback.message.answer_photo(photo=qr_b64, caption=caption_text, parse_mode="HTML")
                 else:
                     photo_file = MediaHelper.base64_to_buffered_input_file(qr_b64, "qr.png")
-                    await callback.message.answer_photo(
-                        photo=photo_file, 
-                        caption=caption_text, 
-                        parse_mode="HTML"
-                    )
-                    logger.info("✅ QR Code enviado via Base64")
+                    await callback.message.answer_photo(photo=photo_file, caption=caption_text, parse_mode="HTML")
             else:
                 await callback.message.answer(caption_text, parse_mode="HTML")
-                logger.info("✅ Mensagem enviada sem QR Code")
             
             await callback.answer("✅ QR Code gerado!")
-            logger.info("🎉 Processo concluído com sucesso!")
             
         except Exception as e:
             logger.error(f"❌ Erro ao gerar PIX no remarketing: {e}", exc_info=True)

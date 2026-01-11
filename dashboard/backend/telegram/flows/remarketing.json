@@ -1,0 +1,33 @@
+{
+  "screens": {
+    "remarketing_offer": {
+      "text": "Oferta Especial de Remarketing",
+      "buttons": [
+        [
+          {
+            "text": "💳 Quero Pagar Agora",
+            "callback": "remarketing_payment"
+          }
+        ]
+      ]
+    },
+    "remarketing_payment": {
+      "type": "payment",
+      "text": "💳 <b>Pagamento Gerado!</b>\n\nAqui está seu QR Code de R$ {amount}:\n\n{pix_copia_cola}",
+      "gateway": "openpix",
+      "webhook": "remarketing_success"
+    },
+    "remarketing_success": {
+      "type": "webhook",
+      "text": "✅ <b>Pagamento de Remarketing Confirmado!</b>\n\n🎉 Parabéns <b>{first_name}</b>!\nRecebemos seu pagamento de R$ {amount}.\n\nSeu acesso/crédito foi liberado.",
+      "buttons": [
+        [
+          {
+            "text": "🚀 Acessar Grupo VIP",
+            "url": "https://t.me/+D6_NwSvlSdI1M2Vh"
+          }
+        ]
+      ]
+    }
+  }
+}

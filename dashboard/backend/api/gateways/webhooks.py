@@ -1,6 +1,5 @@
-"""
-Módulo para lidar com webhooks de diferentes gateways
-"""
+# dashboard/backend/api/gateways/webhooks.py
+
 from fastapi import Request
 from typing import Optional, Dict, Any
 import json
@@ -19,7 +18,6 @@ from .constants import (
 )
 import reflex as rx
 
-
 class WebhookService:
     """
     Serviço para processar webhooks de diferentes gateways
@@ -28,7 +26,7 @@ class WebhookService:
     @staticmethod
     async def process_suitpay_webhook(request: Request) -> Dict[str, Any]:
         """
-        Processa webhook da SuitPay
+        Processa webhook da SuitPay (Mantido inalterado)
         """
         try:
             data = await request.json()
@@ -36,44 +34,32 @@ class WebhookService:
         except:
             return {"status": "error", "msg": ERROR_INVALID_JSON}
 
-        # Validação simples de status
         if data.get("statusTransaction") != WEBHOOK_STATUS_PAID_OUT:
             return {"status": "ignored", "reason": "Not PAID_OUT"}
 
         request_number = data.get("requestNumber")
         
-        # Busca transação pendente compatível
-        txn = None
-        
-        # Filtra transações pendentes para otimizar
         with rx.session() as session:
             txns = session.query(Transaction).filter(Transaction.status == "pending").all()
-            
+            txn = None
             for t in txns:
-                # Verifica se o ID da requisição está nos metadados
                 if t.extra_data and (str(request_number) in t.extra_data):
                     txn = t
                     break
             
             if txn:
-                # Valida valor (evita fraudes de pagar R$ 0,01 para recarga de R$ 100)
                 valor_pago = float(data.get("value", 0))
                 if abs(txn.amount - valor_pago) > VALUE_TOLERANCE:
-                    print(f"❌ Fraude Detectada: Valor esperado {txn.amount}, pago {valor_pago}")
                     return {"status": "error", "msg": ERROR_VALUE_MISMATCH}
 
-                # Confirma Pagamento
                 txn.status = "completed"
                 session.add(txn)
                 
-                # Credita Saldo ao Usuário
                 user = session.query(User).filter(User.telegram_id == txn.user_id).first()
                 if user:
                     user.balance += txn.amount
-                    user.total_spent += txn.amount  # Opcional: ajustar lógica contábil
+                    user.total_spent += txn.amount
                     session.add(user)
-                    
-                    # Notifica via Bot
                     try:
                         await bot.send_message(
                             chat_id=user.telegram_id,
@@ -84,10 +70,8 @@ class WebhookService:
                         print(f"Erro ao notificar Telegram: {e}")
                 
                 session.commit()
-                print(f"✅ Transação {txn.id} liquidada com sucesso.")
                 return {"response": "OK"}
                 
-        print(f"⚠️ Transação não encontrada para requestNumber: {request_number}")
         return {"status": "not_found"}
 
     @staticmethod
@@ -95,6 +79,9 @@ class WebhookService:
         """
         Processa webhook da OpenPix com suporte a mensagens customizadas do remarketing
         """
+        # DEFINIÇÃO DO CAMINHO DO ARQUIVO AQUI DENTRO PARA EVITAR ERROS
+        REMARKETING_FLOW_PATH = "dashboard/backend/telegram/flows/remarketing.json"
+        
         try:
             data = await request.json()
         except:
@@ -112,7 +99,6 @@ class WebhookService:
 
         print(f"🔔 [Webhooks] Webhook OpenPix Confirmado: {txid}")
 
-        # Completar transação
         with rx.session() as session:
             txn = session.query(Transaction).filter(
                 Transaction.status == "pending",
@@ -136,13 +122,12 @@ class WebhookService:
                     
                     custom_message_sent = False
                     
-                    # --- PRIORIDADE 1: DADOS DE REMARKETING (remarketing_success_data) ---
+                    # --- TENTATIVA 1: DADOS DE REMARKETING (Metadados Diretos) ---
                     try:
                         extra_data = json.loads(txn.extra_data) if txn.extra_data else {}
                         success_screen_id = extra_data.get("success_screen_id")
                         remarketing_data = extra_data.get("remarketing_success_data")
                         
-                        # Se existe success_screen_id = "remarketing_success" E dados customizados
                         if success_screen_id == "remarketing_success" and remarketing_data:
                             print(f"✨ [Webhooks] Detectado pagamento de REMARKETING com dados customizados para {txid}")
                             
@@ -195,99 +180,96 @@ class WebhookService:
                             print("✅ [Webhooks] Mensagem de remarketing customizada enviada!")
                             
                     except Exception as e_remarketing:
-                        print(f"❌ Erro ao processar remarketing: {e_remarketing}")
+                        print(f"❌ Erro remarketing prioridade 1: {e_remarketing}")
                     
-                    # --- PRIORIDADE 2: ARQUIVO DE FLUXO (para fluxos normais) ---
+                    # --- TENTATIVA 2: ARQUIVO DE FLUXO (Mesclando start_flow.json e remarketing.json) ---
                     if not custom_message_sent:
                         try:
-                            print(f"🔍 [Webhooks] Tentando buscar fluxo no arquivo para TXID: {txid}")
+                            print(f"🔍 [Webhooks] Buscando fluxo nos arquivos JSON para TXID: {txid}")
                             
-                            # 1. Carregar o fluxo para consultar os nós
+                            screens = {}
+                            
+                            # 1. Carregar fluxo principal (start_flow.json)
                             if os.path.exists(FLOW_FILE_PATH):
                                 with open(FLOW_FILE_PATH, "r", encoding="utf-8") as f:
-                                    flow_data = json.load(f)
-                                screens = flow_data.get("screens", {})
-                                
-                                # 2. Identificar qual era a tela de pagamento
-                                payment_screen_id = None
+                                    main_flow = json.load(f)
+                                    screens.update(main_flow.get("screens", {}))
+                            
+                            # 2. Carregar e MESCLAR fluxo de remarketing (remarketing.json)
+                            if os.path.exists(REMARKETING_FLOW_PATH):
                                 try:
-                                    extra_data = json.loads(txn.extra_data) if txn.extra_data else {}
-                                    payment_screen_id = extra_data.get("screen_id")
+                                    with open(REMARKETING_FLOW_PATH, "r", encoding="utf-8") as rf:
+                                        rem_flow = json.load(rf)
+                                        # Mescla apenas a chave "screens" se existir, ou o próprio dict se for direto
+                                        rem_screens = rem_flow.get("screens", rem_flow) 
+                                        screens.update(rem_screens)
+                                    print("📂 [Webhooks] Arquivo remarketing.json carregado e mesclado.")
                                 except Exception as e:
-                                    print(f"❌ Erro ao parsear extra_data: {e}")
-                                
-                                # 3. Se encontrou o nó de pagamento, verificar se tem webhook
-                                if payment_screen_id and payment_screen_id in screens:
-                                    payment_node = screens[payment_screen_id]
-                                    target_node_id = payment_node.get("webhook")
-                                    print(f"🔗 Webhook aponta para: {target_node_id}")
-                                    
-                                    # 4. Se tem nó de sucesso, buscar a mensagem
-                                    if target_node_id and target_node_id in screens:
-                                        success_node = screens[target_node_id]
-                                        message_text = success_node.get("text", "")
-                                        
-                                        if message_text:
-                                            # Formatar texto
-                                            formatted_text = message_text.replace("{amount}", f"{txn.amount:.2f}")\
-                                                                         .replace("{txid}", txid)
-                                            
-                                            # Construir Teclado
-                                            markup = None
-                                            if "buttons" in success_node and success_node["buttons"]:
-                                                try:
-                                                    print(f"🔘 [Webhooks] Criando botões: {success_node['buttons']}")
-                                                    markup = build_keyboard(success_node["buttons"])
-                                                except Exception as kb_err:
-                                                    print(f"❌ Erro ao criar teclado: {kb_err}")
+                                    print(f"⚠️ Falha ao ler remarketing.json: {e}")
+                            else:
+                                print(f"⚠️ Arquivo remarketing.json não encontrado em: {REMARKETING_FLOW_PATH}")
 
-                                            # Enviar com reply_markup usando HTML para evitar conflitos com underline
-                                            await bot.send_message(
-                                                chat_id=user.telegram_id,
-                                                text=formatted_text,
-                                                parse_mode="HTML",
-                                                reply_markup=markup,
-                                                disable_web_page_preview=True
-                                            )
-                                            custom_message_sent = True
-                                            print(f"✅ [Webhooks] Mensagem via arquivo enviada!")
-                                        else:
-                                            print(f"⚠️ Texto vazio no nó {target_node_id}")
+                            # 3. Identificar tela de pagamento
+                            payment_screen_id = None
+                            try:
+                                extra_data = json.loads(txn.extra_data) if txn.extra_data else {}
+                                payment_screen_id = extra_data.get("screen_id")
+                            except: pass
+                            
+                            # 4. Processar Webhook
+                            if payment_screen_id and payment_screen_id in screens:
+                                payment_node = screens[payment_screen_id]
+                                target_node_id = payment_node.get("webhook")
+                                print(f"🔗 Webhook aponta para nó: {target_node_id}")
+                                
+                                if target_node_id and target_node_id in screens:
+                                    success_node = screens[target_node_id]
+                                    message_text = success_node.get("text", "")
+                                    
+                                    if message_text:
+                                        # Formatações
+                                        formatted_text = message_text.replace("{amount}", f"{txn.amount:.2f}")\
+                                                                     .replace("{txid}", txid)\
+                                                                     .replace("{first_name}", user.first_name)
+                                        
+                                        markup = None
+                                        if "buttons" in success_node and success_node["buttons"]:
+                                            markup = build_keyboard(success_node["buttons"])
+
+                                        await bot.send_message(
+                                            chat_id=user.telegram_id,
+                                            text=formatted_text,
+                                            parse_mode="HTML",
+                                            reply_markup=markup,
+                                            disable_web_page_preview=True
+                                        )
+                                        custom_message_sent = True
+                                        print(f"✅ [Webhooks] Mensagem enviada via JSON com sucesso!")
                                     else:
-                                        print(f"⚠️ Nó de sucesso não encontrado")
+                                        print(f"⚠️ Texto vazio no nó {target_node_id}")
                                 else:
-                                    print(f"⚠️ Nó de pagamento não encontrado")
+                                    print(f"⚠️ Nó de sucesso '{target_node_id}' não encontrado nos JSONs carregados.")
+                            else:
+                                print(f"⚠️ Nó de pagamento '{payment_screen_id}' não encontrado.")
+
                         except Exception as e:
                             print(f"❌ Erro ao processar mensagem via arquivo: {e}")
                     
                     # --- FALLBACK FINAL ---
                     if not custom_message_sent:
                         print("🔄 Usando mensagem padrão como fallback final")
-                        try:
-                            await bot.send_message(
-                                chat_id=user.telegram_id,
-                                text=f"✅ <b>Pagamento Confirmado!</b>\n\n💰 + R$ {txn.amount:.2f}",
-                                parse_mode="HTML"
-                            )
-                        except Exception as e:
-                            print(f"❌ Erro ao enviar mensagem padrão: {e}")
+                        await bot.send_message(
+                            chat_id=user.telegram_id,
+                            text=f"✅ <b>Pagamento Confirmado!</b>\n\n💰 + R$ {txn.amount:.2f}",
+                            parse_mode="HTML"
+                        )
                 
                 session.commit()
                 return {"status": "ok"}
         
         return {"status": "not_found"}
 
-
 class EfiWebhookService:
-    """
-    Serviço para processar webhook da Efí (mantido para compatibilidade futura)
-    """
-    
     @staticmethod
     async def process_efi_webhook(request: Request) -> Dict[str, Any]:
-        """
-        Processa webhook da Efí
-        """
-        # (Mantendo o endpoint para caso você use Efí no futuro)
-        # ... código do webhook da Efí se necessário ...
         return {"status": "ok"}
