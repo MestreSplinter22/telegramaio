@@ -60,6 +60,21 @@ async def handle_remarketing_payment(callback: types.CallbackQuery):
             # 4. Gerar PIX AGORA (não antes)
             logger.info("🔄 Iniciando geração de PIX...")
             service = PaymentService()
+            
+            # BUSCAR DADOS DE SUCESSO DO STATE (se disponível)
+            success_metadata = {}
+            try:
+                # Importar o state para acessar os dados temporários
+                from dashboard.backend.states.remarketing_state import RemarketingState
+                
+                # Tentar acessar a instância do state
+                # Nota: Isso é uma simplificação - em produção você pode querer salvar isso em cache/redis
+                success_metadata = getattr(RemarketingState, '_temp_success_data', {})
+                if success_metadata:
+                    logger.info(f"✅ Dados de sucesso customizados encontrados!")
+            except Exception as e:
+                logger.warning(f"⚠️ Não foi possível acessar dados de sucesso: {e}")
+            
             result = service.process_payment(
                 amount=payment_config["amount"],
                 gateway_name=payment_config["gateway"],
@@ -69,7 +84,8 @@ async def handle_remarketing_payment(callback: types.CallbackQuery):
                     "username": callback.from_user.username or "user"
                 },
                 payment_screen_id="remarketing_payment",
-                success_screen_id="remarketing_success"
+                success_screen_id="remarketing_success",
+                extra_metadata={"remarketing_success_data": success_metadata} if success_metadata else None
             )
             
             if not result["success"]:

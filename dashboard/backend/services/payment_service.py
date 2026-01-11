@@ -53,12 +53,12 @@ class PaymentService:
 
     def create_transaction(self, user_id: str, amount: float, gateway_name: str, 
                           pix_data: Dict[str, Any], success_screen_id: Optional[str] = None, 
-                          payment_screen_id: Optional[str] = None):
+                          payment_screen_id: Optional[str] = None, extra_metadata: Optional[Dict[str, Any]] = None):
         """Cria uma transação no banco de dados."""
         import logging
         logger = logging.getLogger(__name__)
         logger.info(f"📝 Criando transação - payment_screen_id: {payment_screen_id}")
-        """Cria uma transação no banco de dados."""
+        
         with rx.session() as session:
             extra_data_payload = {
                 "txid": pix_data.get("txid"), 
@@ -74,6 +74,11 @@ class PaymentService:
                 logger.info(f"💾 Salvando screen_id {payment_screen_id} nos metadados")
             else:
                 logger.warning("⚠️ payment_screen_id não foi fornecido!")
+
+            # ADICIONAR METADADOS EXTRAS (para remarketing)
+            if extra_metadata:
+                extra_data_payload.update(extra_metadata)
+                logger.info(f"💾 Metadados extras adicionados: {list(extra_metadata.keys())}")
 
             logger.info(f"📦 Payload extra_data: {extra_data_payload}")
             
@@ -92,7 +97,7 @@ class PaymentService:
 
     def process_payment(self, amount: float, gateway_name: Optional[str], 
                        user_context: Dict[str, Any], success_screen_id: Optional[str] = None,
-                       payment_screen_id: Optional[str] = None) -> Dict[str, Any]:
+                       payment_screen_id: Optional[str] = None, extra_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Processa um pagamento, gerenciando gateway, usuário e transação."""
         # 1. Busca Gateway
         gateway = self.get_active_gateway(gateway_name)
@@ -113,7 +118,7 @@ class PaymentService:
         if not pix_data or "error" in pix_data:
             return {"success": False, "error": pix_data.get("error", "Erro ao gerar PIX.")}
 
-        # 4. Salva Transação
+        # 4. Salva Transação (com metadados extras se fornecido)
         transaction = self.create_transaction(
             user_id=user.telegram_id,
             amount=amount,
@@ -124,7 +129,8 @@ class PaymentService:
                 "external_id": pix_data.get("external_id")
             },
             success_screen_id=success_screen_id,
-            payment_screen_id=payment_screen_id
+            payment_screen_id=payment_screen_id,
+            extra_metadata=extra_metadata
         )
 
         return {

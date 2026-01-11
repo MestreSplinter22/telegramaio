@@ -40,6 +40,9 @@ class RemarketingState(rx.State):
     # --- SELEÇÃO ---
     selected_users: List[str] = [] 
 
+    # --- DADOS TEMPORÁRIOS PARA O HANDLER ---
+    _temp_success_data: Dict[str, Any] = {} 
+
     # --- EDITOR FIXO (3 NÓS) ---
     editor_blocks: List[RemarketingBlock] = [
         # NÓ 1: CTA 
@@ -132,6 +135,35 @@ class RemarketingState(rx.State):
             return rx.window_alert("Selecione pelo menos um usuário.")
         
         targets = [u for u in self.pending_users if u["telegram_id"] in self.selected_users]
+        
+        # Capturar dados do nó 3 (sucesso) para salvar nos metadados
+        success_node = self.editor_blocks[2]  # Nó de sucesso
+        
+        # Serializar os dados de sucesso para salvar na transação
+        success_data = {
+            "text": success_node.text,
+            "image_url": success_node.image_url,
+            "video_url": success_node.video_url,
+            "buttons": []
+        }
+        
+        # Converter botões para formato serializável
+        if success_node.buttons:
+            for row in success_node.buttons:
+                row_data = []
+                for btn in row:
+                    btn_dict = {"text": btn.text}
+                    if btn.type == "url" and btn.url:
+                        btn_dict["url"] = btn.url
+                    elif btn.type == "callback" and btn.callback:
+                        btn_dict["callback_data"] = btn.callback
+                    row_data.append(btn_dict)
+                if row_data:
+                    success_data["buttons"].append(row_data)
+        
+        # Salvar no state para ser usado pelo handler
+        # Vamos salvar em uma variável temporária que o handler pode acessar
+        self._temp_success_data = success_data
         
         msg_node = self.editor_blocks[0]  # Apenas o nó de CTA
         

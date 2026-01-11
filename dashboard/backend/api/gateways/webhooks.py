@@ -93,7 +93,7 @@ class WebhookService:
     @staticmethod
     async def process_openpix_webhook(request: Request) -> Dict[str, Any]:
         """
-        Processa webhook da OpenPix
+        Processa webhook da OpenPix com suporte a mensagens customizadas do remarketing
         """
         try:
             data = await request.json()
@@ -113,7 +113,6 @@ class WebhookService:
         print(f"🔔 [Webhooks] Webhook OpenPix Confirmado: {txid}")
 
         # Completar transação
-        
         with rx.session() as session:
             txn = session.query(Transaction).filter(
                 Transaction.status == "pending",
@@ -137,43 +136,68 @@ class WebhookService:
                     
                     custom_message_sent = False
                     
-                    # --- 1. TENTATIVA PRIORITÁRIA: DADOS CUSTOMIZADOS (REMARKETING) ---
+                    # --- PRIORIDADE 1: DADOS DE REMARKETING (remarketing_success_data) ---
                     try:
                         extra_data = json.loads(txn.extra_data) if txn.extra_data else {}
-                        custom_success = extra_data.get("custom_success_data")
-
-                        if custom_success:
-                            print(f"✨ [Webhooks] Encontrado payload de remarketing para {txid}")
-                            message_text = custom_success.get("text", "")
+                        success_screen_id = extra_data.get("success_screen_id")
+                        remarketing_data = extra_data.get("remarketing_success_data")
+                        
+                        # Se existe success_screen_id = "remarketing_success" E dados customizados
+                        if success_screen_id == "remarketing_success" and remarketing_data:
+                            print(f"✨ [Webhooks] Detectado pagamento de REMARKETING com dados customizados para {txid}")
                             
-                            if message_text:
-                                formatted_text = message_text.replace("{amount}", f"{txn.amount:.2f}")\
-                                                             .replace("{txid}", txid)\
-                                                             .replace("{first_name}", user.first_name)
-                                
-                                markup = None
-                                if custom_success.get("buttons"):
-                                    try:
-                                        markup = build_keyboard(custom_success["buttons"])
-                                    except Exception as kb_e:
-                                        print(f"⚠️ Erro ao criar teclado dinâmico: {kb_e}")
-                                
-                                img_url = custom_success.get("image_url")
-                                vid_url = custom_success.get("video_url")
-                                
-                                if vid_url:
-                                    await bot.send_video(chat_id=user.telegram_id, video=vid_url, caption=formatted_text, parse_mode="HTML", reply_markup=markup)
-                                elif img_url:
-                                    await bot.send_photo(chat_id=user.telegram_id, photo=img_url, caption=formatted_text, parse_mode="HTML", reply_markup=markup)
-                                else:
-                                    await bot.send_message(chat_id=user.telegram_id, text=formatted_text, parse_mode="HTML", reply_markup=markup)
-                                
-                                custom_message_sent = True
-                                print("✅ [Webhooks] Mensagem dinâmica enviada com sucesso!")
-                    except Exception as e_custom:
-                        print(f"❌ Erro ao processar payload de remarketing: {e_custom}")
-
-                    # --- 2. TENTATIVA SECUNDÁRIA: LÓGICA ORIGINAL DE ARQUIVO (FALLBACK) ---
+                            # Extrair dados
+                            text = remarketing_data.get("text", "🎉 Pagamento Confirmado!")
+                            image_url = remarketing_data.get("image_url", "")
+                            video_url = remarketing_data.get("video_url", "")
+                            buttons_data = remarketing_data.get("buttons", [])
+                            
+                            # Formatar texto
+                            formatted_text = text.replace("{amount}", f"{txn.amount:.2f}") \
+                                                .replace("{txid}", txid) \
+                                                .replace("{first_name}", user.first_name)
+                            
+                            # Construir teclado se houver botões
+                            markup = None
+                            if buttons_data:
+                                try:
+                                    markup = build_keyboard(buttons_data)
+                                    print(f"🔘 [Webhooks] Teclado criado com {len(buttons_data)} linha(s)")
+                                except Exception as kb_err:
+                                    print(f"❌ Erro ao criar teclado: {kb_err}")
+                            
+                            # Enviar mídia apropriada
+                            if video_url:
+                                await bot.send_video(
+                                    chat_id=user.telegram_id,
+                                    video=video_url,
+                                    caption=formatted_text,
+                                    parse_mode="HTML",
+                                    reply_markup=markup
+                                )
+                            elif image_url:
+                                await bot.send_photo(
+                                    chat_id=user.telegram_id,
+                                    photo=image_url,
+                                    caption=formatted_text,
+                                    parse_mode="HTML",
+                                    reply_markup=markup
+                                )
+                            else:
+                                await bot.send_message(
+                                    chat_id=user.telegram_id,
+                                    text=formatted_text,
+                                    parse_mode="HTML",
+                                    reply_markup=markup
+                                )
+                            
+                            custom_message_sent = True
+                            print("✅ [Webhooks] Mensagem de remarketing customizada enviada!")
+                            
+                    except Exception as e_remarketing:
+                        print(f"❌ Erro ao processar remarketing: {e_remarketing}")
+                    
+                    # --- PRIORIDADE 2: ARQUIVO DE FLUXO (para fluxos normais) ---
                     if not custom_message_sent:
                         try:
                             print(f"🔍 [Webhooks] Tentando buscar fluxo no arquivo para TXID: {txid}")
@@ -236,7 +260,7 @@ class WebhookService:
                         except Exception as e:
                             print(f"❌ Erro ao processar mensagem via arquivo: {e}")
                     
-                    # --- 3. FALLBACK FINAL ---
+                    # --- FALLBACK FINAL ---
                     if not custom_message_sent:
                         print("🔄 Usando mensagem padrão como fallback final")
                         try:
